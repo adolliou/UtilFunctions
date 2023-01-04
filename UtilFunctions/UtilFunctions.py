@@ -19,14 +19,14 @@ class UtilFunctions:
         for ii, fits_path_to_find in enumerate(tqdm(list_to_find, desc="find_closest_time")):
             with fits.open(fits_path_to_find) as hdul:
                 hdu = hdul[window_to_find]
-                date_obs_to_find = Time(hdu.header["DATE_OBS"])
+                date_obs_to_find = Time(hdu.header["DATE-AVG"])
                 if time_delay:
                     dsun_obs_to_find = hdu.header["DSUN_OBS"]
                 time_diff = []
                 for jj, fits_path_ref in enumerate(list_ref):
                     with fits.open(fits_path_ref) as hdul_tmp:
                         hdu_tmp = hdul_tmp[window_ref]
-                        date_obs_ref = Time(hdu_tmp.header["DATE_OBS"])
+                        date_obs_ref = Time(hdu_tmp.header["DATE-AVG"])
 
                         if time_delay:
                             dsun_obs_ref = hdu_tmp.header["DSUN_OBS"]

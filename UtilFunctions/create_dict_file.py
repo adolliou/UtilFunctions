@@ -12,7 +12,7 @@ def create_dict_file(path_instrument: str, suffix: str, sort_dict=True):
     paths = glob(os.path.join(path_instrument, suffix))
     data_dict['path_instrument'] = path_instrument
     data_dict['path'] = paths
-    data_dict['date-obs'] = []
+    data_dict['date-avg'] = []
     data_dict['dsun-obs'] = []
     data_dict['telescop'] = []
 
@@ -22,8 +22,8 @@ def create_dict_file(path_instrument: str, suffix: str, sort_dict=True):
             idx = 1
         else:
             idx = 0
-        data_dict['date-obs'].append(astropy.time.Time(f[idx].header['DATE-OBS']))
-        data_dict['dsun-obs'].append(f[idx].header['DSUN-OBS'])
+        data_dict['date-avg'].append(astropy.time.Time(f[idx].header['DATE-AVG']))
+        data_dict['dsun-obs'].append(f[idx].header['DSUN_OBS'])
         data_dict['telescop'].append(f[idx].header['TELESCOP'])
 
     if sort_dict:
@@ -33,11 +33,11 @@ def create_dict_file(path_instrument: str, suffix: str, sort_dict=True):
 
 
 def _sort_dict_file(dict_file: dict):
-    ref_time = dict_file["date-obs"][0]
-    time = [(n - ref_time).to(u.s).value for n in dict_file["date-obs"]]
+    ref_time = dict_file["date-avg"][0]
+    time = [(n - ref_time).to(u.s).value for n in dict_file["date-avg"]]
     sort = np.argsort(time)
     dict_file["path"] = dict_file["path"][sort]
-    dict_file["date-obs"] = dict_file["date-obs"][sort]
+    dict_file["date-avg"] = dict_file["date-avg"][sort]
     dict_file["dsun-obs"] = dict_file["dsun-obs"][sort]
 
     dict_file["telescop"] = dict_file["telescop"][sort]
@@ -45,17 +45,17 @@ def _sort_dict_file(dict_file: dict):
 
 
 def select_time_interval(dict_file: dict, date_start=None, date_stop=None):
-    selection1 = np.ones(len(dict_file["date-obs"]), dtype="bool")
-    selection2 = np.ones(len(dict_file["date-obs"]), dtype="bool")
+    selection1 = np.ones(len(dict_file["date-avg"]), dtype="bool")
+    selection2 = np.ones(len(dict_file["date-avg"]), dtype="bool")
 
     if date_start is not None:
-        selection1 = (np.array(dict_file["date-obs"]) >= date_start)
+        selection1 = (np.array(dict_file["date-avg"]) >= date_start)
     if date_stop is not None:
-        selection2 = (np.array(dict_file["date-obs"]) <= date_stop)
+        selection2 = (np.array(dict_file["date-avg"]) <= date_stop)
     selection = selection1 & selection2
 
     dict_file["path"] = dict_file["path"][selection]
-    dict_file["date-obs"] = dict_file["date-obs"][selection]
+    dict_file["date-avg"] = dict_file["date-avg"][selection]
     dict_file["dsun-obs"] = dict_file["dsun-obs"][selection]
     dict_file["telescop"] = dict_file["telescop"][selection]
 
