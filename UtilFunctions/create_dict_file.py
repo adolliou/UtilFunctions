@@ -29,6 +29,7 @@ def create_dict_file(path_instrument: str, suffix: str, window=None, sort_dict=T
         data_dict['date-avg'].append(astropy.time.Time(f[idx].header['DATE-AVG']))
         data_dict['dsun-obs'].append(f[idx].header['DSUN_OBS'])
         data_dict['telescop'].append(f[idx].header['TELESCOP'])
+    data_dict['path'] = np.array(data_dict['path'])
     data_dict['date-avg'] = np.array(data_dict['date-avg'])
     data_dict['dsun-obs'] = np.array(data_dict['dsun-obs'])
     data_dict['telescop'] = np.array(data_dict['telescop'])
