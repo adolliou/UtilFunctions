@@ -10,6 +10,7 @@ def create_dict_file(path_instrument: str, suffix: str, window=None, sort_dict=T
     data_dict = {}
 
     paths = glob(os.path.join(path_instrument, suffix))
+    print("create dictionary file with files in the folder %s " % path_instrument)
     data_dict['path_instrument'] = path_instrument
     data_dict['path'] = paths
     data_dict['date-avg'] = []
