@@ -11,8 +11,6 @@ def create_dict_file(path_instrument: str, suffix: str, window=None, sort_dict=T
 
     paths = glob(os.path.join(path_instrument, suffix))
     print("create dictionary file with files in the folder %s " % path_instrument)
-    print(paths)
-
     data_dict['path_instrument'] = path_instrument
     data_dict['path'] = paths
     data_dict['date-avg'] = []
@@ -45,7 +43,6 @@ def _sort_dict_file(dict_file: dict):
     dict_file["path"] = dict_file["path"][sort]
     dict_file["date-avg"] = dict_file["date-avg"][sort]
     dict_file["dsun-obs"] = dict_file["dsun-obs"][sort]
-
     dict_file["telescop"] = dict_file["telescop"][sort]
     return dict_file
 
