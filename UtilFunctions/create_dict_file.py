@@ -40,6 +40,8 @@ def _sort_dict_file(dict_file: dict):
     ref_time = dict_file["date-avg"][0]
     time = [(n - ref_time).to(u.s).value for n in dict_file["date-avg"]]
     sort = np.argsort(time)
+    print(sort)
+    print(dict_file["path"])
     dict_file["path"] = dict_file["path"][sort]
     dict_file["date-avg"] = dict_file["date-avg"][sort]
     dict_file["dsun-obs"] = dict_file["dsun-obs"][sort]
