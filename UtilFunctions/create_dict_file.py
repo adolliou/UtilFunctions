@@ -6,7 +6,7 @@ import os
 import astropy.units as u
 
 
-def create_dict_file(path_instrument: str, suffix: str, sort_dict=True):
+def create_dict_file(path_instrument: str, suffix: str, window=None, sort_dict=True):
     data_dict = {}
 
     paths = glob(os.path.join(path_instrument, suffix))
@@ -18,10 +18,13 @@ def create_dict_file(path_instrument: str, suffix: str, sort_dict=True):
 
     for kk, path in enumerate(data_dict['path']):
         f = fits.open(path)
-        if len(f) > 1:
-            idx = 1
+        if window is None:
+            if len(f) > 1:
+                idx = 1
+            else:
+                idx = 0
         else:
-            idx = 0
+            idx = window
         data_dict['date-avg'].append(astropy.time.Time(f[idx].header['DATE-AVG']))
         data_dict['dsun-obs'].append(f[idx].header['DSUN_OBS'])
         data_dict['telescop'].append(f[idx].header['TELESCOP'])
