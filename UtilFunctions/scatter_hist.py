@@ -1,7 +1,7 @@
 import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib.colors import LogNorm
-from plot import PlottingFunctions
+from PlottingFunctions.plotting_histograms import PlottingFunctions
 
 
 def scatter_hist(x, y, ax, ax_histx, ax_histy):
