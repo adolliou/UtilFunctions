@@ -3,7 +3,6 @@ import astropy.units as u
 from astropy.time import Time
 import astropy.constants
 import numpy as np
-from create_dict_file import *
 from tqdm import tqdm
 from astropy.wcs import WCS
 import cv2
