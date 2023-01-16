@@ -1,7 +1,7 @@
 import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib.colors import LogNorm
-from PlottingFunctions.plotting_histograms import PlottingFunctions
+from . import plotting_histograms
 
 
 def scatter_hist(x, y, ax, ax_histx, ax_histy):
@@ -369,12 +369,13 @@ def scatter_hist_3(x1, y1, x2, y2, ax, channel: int, limit_corr=0, binstyle='max
         ax.clabel(cs, inline=True, fontsize=10)
     if ax_histx is not None:
         # ax_histx.hist(x2, bins=bins1,histtype='step', color = 'b', label='not cmpf', density = True)
-        PlottingFunctions.normalised_histogram(x=x2, ax=ax_histx, bins=bins1, color='b')
+        plotting_histograms.PlottingFunctions.normalised_histogram(x=x2, ax=ax_histx, bins=bins1, color='b')
         # ax_histx.legend(loc='center left', bbox_to_anchor=(1.035, 0.5))
     if ax_histy is not None:
         # ax_histy.hist(y2, bins=bins2, orientation='horizontal', color='b', histtype='step', label='not cmpf',
         #              density=True)
-        PlottingFunctions.normalised_histogram(x=y2, ax=ax_histy, bins=bins2, color='b', orientation='horizontal')
+        plotting_histograms.PlottingFunctions.normalised_histogram(x=y2, ax=ax_histy, bins=bins2, color='b',
+                                                                   orientation='horizontal')
 
     if binstyle == 'maxcorr_tau':
         if ax_histx is not None:
@@ -385,12 +386,13 @@ def scatter_hist_3(x1, y1, x2, y2, ax, channel: int, limit_corr=0, binstyle='max
     else:
         if ax_histx is not None:
             # ax_histx.hist(x1, bins=bins1, color='r', label='cmpf', histtype='step', density=True)
-            PlottingFunctions.normalised_histogram(x=x1, ax=ax_histx, bins=bins1, color='r')
+            plotting_histograms.PlottingFunctions.normalised_histogram(x=x1, ax=ax_histx, bins=bins1, color='r')
 
         if ax_histy is not None:
             # ax_histy.hist(y1, bins=bins2, orientation='horizontal', color = 'r', label='cmpf', histtype='step',
             #          density = True)
-            PlottingFunctions.normalised_histogram(x=y1, ax=ax_histy, bins=bins2, color='r', orientation='horizontal')
+            plotting_histograms.PlottingFunctions.normalised_histogram(x=y1, ax=ax_histy, bins=bins2, color='r',
+                                                                       orientation='horizontal')
 
     # ax_histy.legend()
     if limit_hist1d_x is not None:
@@ -488,25 +490,28 @@ def scatter_hist_4(x1, y1, x2, y2, x3, y3, ax, ax_histx, ax_histy, channel: int,
     if show_hist_x:
         if show_background & (ax_histx is not None):
             # ax_histx.hist(x2, bins=bins1,histtype='step', color = 'b', label='not cmpf', density = True)
-            PlottingFunctions.normalised_histogram(x=x2, ax=ax_histx, bins=bins1, color='b')
-        PlottingFunctions.normalised_histogram(x=x1, ax=ax_histx, bins=bins1, color='r')
-        PlottingFunctions.normalised_histogram(x=x3, ax=ax_histx, bins=bins1, color='green')
+            plotting_histograms.PlottingFunctions.normalised_histogram(x=x2, ax=ax_histx, bins=bins1, color='b')
+        plotting_histograms.PlottingFunctions.normalised_histogram(x=x1, ax=ax_histx, bins=bins1, color='r')
+        plotting_histograms.PlottingFunctions.normalised_histogram(x=x3, ax=ax_histx, bins=bins1, color='green')
 
         # ax_histx.hist(x1, bins=bins1, color='r', label='cmpf', histtype='step', density=True)
         # ax_histx.hist(x3, bins=bins1, color='green', label='SLC', histtype='step', density=True)
     if show_hist_y & (ax_histy is not None):
-        PlottingFunctions.normalised_histogram(x=y1, ax=ax_histy, bins=bins2, color='r', orientation='horizontal')
+        plotting_histograms.PlottingFunctions.normalised_histogram(x=y1, ax=ax_histy, bins=bins2, color='r',
+                                                                   orientation='horizontal')
 
         # ax_histy.hist(y1, bins=bins2, orientation='horizontal', color='r', label='cmpf', histtype='step',
         #              density=True)
         if show_background:
             # ax_histy.hist(y2, bins=bins2, orientation='horizontal', color='b', histtype='step', label='not cmpf',
             #          density=True)
-            PlottingFunctions.normalised_histogram(x=y2, ax=ax_histy, bins=bins2, color='b', orientation='horizontal')
+            plotting_histograms.PlottingFunctions.normalised_histogram(x=y2, ax=ax_histy, bins=bins2, color='b',
+                                                                       orientation='horizontal')
 
         # ax_histy.hist(y3, bins=bins2, orientation='horizontal', color='green', histtype='step', label='SLC',
         #              density=True)
-        PlottingFunctions.normalised_histogram(x=y3, ax=ax_histy, bins=bins2, color='green', orientation='horizontal')
+        plotting_histograms.PlottingFunctions.normalised_histogram(x=y3, ax=ax_histy, bins=bins2, color='green',
+                                                                   orientation='horizontal')
 
     # ax_histx.legend(loc='center left', bbox_to_anchor=(1.035, 0.5))
     if (limit_hist1d_x is not None) & (ax_histx is not None):
