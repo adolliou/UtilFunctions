@@ -5,6 +5,33 @@ from astropy.wcs import WCS
 
 class SpiceUtil:
     @staticmethod
+    def slit_pxl(header):
+
+        """ Compute the first and last pixel of the slit from a FITS header """
+        ybin = header['NBIN2']
+        h_detector = 1024 / ybin
+        if header['DETECTOR'] == 'SW':
+            h_slit = 600 / ybin
+        elif header['DETECTOR'] == 'LW':
+            h_slit = 626 / ybin
+        else:
+            raise ValueError(f"unknown detector: {header['DETECTOR']}")
+        slit_beg = (h_detector - h_slit) / 2
+        slit_end = h_detector - slit_beg
+        slit_beg = slit_beg - header['PXBEG2'] / ybin + 1
+        slit_end = slit_end - header['PXBEG2'] / ybin + 1
+        slit_beg = int(np.ceil(slit_beg))
+        slit_end = int(np.floor(slit_end))
+        return slit_beg, slit_end
+
+    @staticmethod
+    def vertical_edges_limits(header):
+        iymin, iymax = SpiceUtil.slit_pxl(header)
+        iymin += int(20 / header['NBIN2'])
+        iymax -= int(20 / header['NBIN2'])
+        return iymin, iymax
+
+    @staticmethod
     def create_intensity_map(path_to_l3, index_amplitude=0, index_width=2):
         hdul = fits.open(path_to_l3)
         hdu_results = hdul[0]
@@ -61,4 +88,3 @@ class SpiceUtil:
                                                     indexing='ij')  # t dépend de x,
             longitude_small, latitude_small, utc_small = w_xyt.pixel_to_world(x_small, y_small, z_small)
             return longitude_small, latitude_small, utc_small
-

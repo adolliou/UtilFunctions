@@ -34,6 +34,8 @@ def create_dict_file(path_instrument: str, suffix: str, window=None, sort_dict=T
     data_dict['dsun-obs'] = np.array(data_dict['dsun-obs'])
     data_dict['telescop'] = np.array(data_dict['telescop'])
 
+    print("%i FITS files added in the dict_file." % len(data_dict["path"]))
+
     if sort_dict:
         return _sort_dict_file(data_dict)
     else:
