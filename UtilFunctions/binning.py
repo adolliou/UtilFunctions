@@ -49,7 +49,7 @@ class Binning:
         return output
 
     @staticmethod
-    def _binned_coordinates(wcs_xy: wcs.WCS, size: tuple):
+    def binned_coordinates(wcs_xy: wcs.WCS, size: tuple):
         idx_lon = np.where(np.array(wcs_xy.wcs.ctype, dtype="str") == "HPLN-TAN")[0][0]
         idx_lat = np.where(np.array(wcs_xy.wcs.ctype, dtype="str") == "HPLT-TAN")[0][0]
 
@@ -72,7 +72,7 @@ class Binning:
         for now, just do kernels with odd shapes, or the fits will be displaced
         """
         data_binned = self.downsampling_uniform_filter(data=data_yx, size=size)
-        x_new, y_new = self._binned_coordinates(wcs_xy=wcs_xy, size=size)
+        x_new, y_new = self.binned_coordinates(wcs_xy=wcs_xy, size=size)
         CommonUtil.interpol2d(image=data_binned, x=x_new, y=y_new, fill=-32762, dst=data_binned, order=1)
 
         data_binned[data_binned == -32762] = np.nan
