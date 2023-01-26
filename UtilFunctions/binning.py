@@ -21,7 +21,10 @@ def rebin_factor(a, factor, function):
     pixel values into macropixel values
     function must have an axis kwarg, like np.sum. np.mean...
     """
-    assert not np.any(np.mod(np.array(a.shape, dtype=int), np.array(factor, dtype=int)))
+    if np.any(np.mod(np.array(a.shape, dtype=int), np.array(factor, dtype=int))):
+        print(f"{factor=}")
+        print(f"{a.shape=}")
+        raise ValueError("modulos not null")
     ndim = a.ndim
     compression_pairs = [(s // f, f) for (s, f) in zip(a.shape, factor)]
     print(f'{compression_pairs=}')
@@ -52,11 +55,20 @@ class Binning:
     def binned_coordinates(wcs_xy: wcs.WCS, size: tuple):
         idx_lon = np.where(np.array(wcs_xy.wcs.ctype, dtype="str") == "HPLN-TAN")[0][0]
         idx_lat = np.where(np.array(wcs_xy.wcs.ctype, dtype="str") == "HPLT-TAN")[0][0]
+        idx_utc = np.where(np.array(wcs_xy.wcs.ctype, dtype="str") == "UTC")[0][0]
 
-        x, y = np.meshgrid(np.arange(wcs_xy.pixel_shape[idx_lon]), np.arange(wcs_xy.pixel_shape[idx_lat]), )
+        x, y, t = np.meshgrid(np.arange(wcs_xy.pixel_shape[idx_lon]), np.arange(wcs_xy.pixel_shape[idx_lat]),
+                              np.arange(wcs_xy.pixel_shape[idx_utc]), )
 
         x_new = np.array([
-            (x[yy * (size[0]), xx * (size[1])] + x[yy * (size[0]) + size[0], xx * (size[1]) + size[1]]) / 2 for
+            (x[yy * (size[0]), xx * (size[1]), tt]
+             + x[yy * (size[0]) + size[0], xx * (size[1]) + size[1]], tt) / 2 for
+            xx in range(int(len(x) - 1) / (size[1])) for yy in range(int(len(y) - 1) / (size[0]))
+            for tt in range(int(len(t) - 1))
+        ], dtype=np.float64)
+
+        y_new = np.array([
+            (y[yy * (size[0]), xx * (size[1])] + y[yy * (size[0]) + size[0], xx * (size[1]) + size[1]]) / 2 for
             xx in range(int(len(x) - 1) / (size[1])) for yy in range(int(len(y) - 1) / (size[0]))
         ], dtype=np.float64)
 
