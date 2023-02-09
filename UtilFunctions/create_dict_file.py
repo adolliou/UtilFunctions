@@ -81,5 +81,6 @@ def remove_paths_with_str(dict_file: dict, str_to_remove: str):
     dict_file["date-avg"] = dict_file["date-avg"][selection_to_rm]
     dict_file["dsun-obs"] = dict_file["dsun-obs"][selection_to_rm]
     dict_file["telescop"] = dict_file["telescop"][selection_to_rm]
-
     print(f"removed {selection_to_rm.sum()} files in dict")
+
+    return dict_file
