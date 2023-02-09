@@ -70,3 +70,14 @@ def select_time_interval(dict_file: dict, date_start=None, date_stop=None):
     dict_file["telescop"] = dict_file["telescop"][selection]
 
     return dict_file
+
+
+def remove_paths_with_str(dict_file: dict, str_to_remove: str):
+    selection_to_rm = np.array((str_to_remove in dict_file["path"]), dtype="bool")
+    for ii, path in enumerate(dict_file["path"]):
+        selection_to_rm[ii] = str_to_remove in path
+
+    dict_file["path"] = dict_file["path"][selection_to_rm]
+    dict_file["date-avg"] = dict_file["date-avg"][selection_to_rm]
+    dict_file["dsun-obs"] = dict_file["dsun-obs"][selection_to_rm]
+    dict_file["telescop"] = dict_file["telescop"][selection_to_rm]
