@@ -75,7 +75,7 @@ def select_time_interval(dict_file: dict, date_start=None, date_stop=None):
 def remove_paths_with_str(dict_file: dict, str_to_remove: str):
     selection_to_rm = np.zeros(len(dict_file["path"]), dtype="bool")
     for ii, path in enumerate(dict_file["path"]):
-        selection_to_rm[ii] = str_to_remove in path
+        selection_to_rm[ii] = str_to_remove in os.path.basename(path)
 
     dict_file["path"] = dict_file["path"][selection_to_rm]
     dict_file["date-avg"] = dict_file["date-avg"][selection_to_rm]
