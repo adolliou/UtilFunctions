@@ -8,7 +8,8 @@ from matplotlib.gridspec import GridSpec
 from astropy.visualization import ImageNormalize, LogStretch
 import matplotlib.patches as patches
 import matplotlib.colors as colors
-
+import os
+import pathlib
 class CmapUtil:
 
     @staticmethod
@@ -24,7 +25,7 @@ class CmapUtil:
     @staticmethod
     def get_idl3():
         # The following values describe color table 3 for IDL (Red Temperature)
-        return np.loadtxt('idl_3.csv', delimiter=',')
+        return np.loadtxt(os.path.join(pathlib.Path(__file__), 'idl_3.csv'), delimiter=',')
 
     @staticmethod
     def _cmap_from_rgb(r, g, b, name):
