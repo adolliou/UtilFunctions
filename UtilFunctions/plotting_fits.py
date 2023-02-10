@@ -2,14 +2,24 @@ from matplotlib import pyplot as plt
 import numpy as np
 from . import eui_util
 from UtilFunctions.common_util import CommonUtil
-
 from astropy.wcs import WCS
 import astropy.units as u
 from matplotlib.gridspec import GridSpec
 from astropy.visualization import ImageNormalize, LogStretch
 import matplotlib.patches as patches
+import matplotlib.colors as colors
 
 class CmapUtil:
+
+    @staticmethod
+    def create_cdict(r, g, b):
+        """
+        Create the color tuples in the correct format.
+        """
+        i = np.linspace(0, 1, r.size)
+        cdict = {name: list(zip(i, el / 255.0, el / 255.0))
+                 for el, name in [(r, 'red'), (g, 'green'), (b, 'blue')]}
+        return cdict
 
     @staticmethod
     def get_idl3():
@@ -18,12 +28,12 @@ class CmapUtil:
 
     @staticmethod
     def _cmap_from_rgb(r, g, b, name):
-        cdict = create_cdict(r, g, b)
+        cdict = CmapUtil.create_cdict(r, g, b)
         return colors.LinearSegmentedColormap(name, cdict)
 
     @staticmethod
     def create_aia_wave_dict():
-        idl_3 = get_idl3()
+        idl_3 = CmapUtil.get_idl3()
         r0, g0, b0 = idl_3[:, 0], idl_3[:, 1], idl_3[:, 2]
 
         c0 = np.arange(256, dtype='f')
@@ -58,14 +68,14 @@ class CmapUtil:
         wavelength : `~astropy.units.quantity`
             Wavelength for the desired AIA color table.
         """
-        aia_wave_dict = create_aia_wave_dict()
+        aia_wave_dict = CmapUtil.create_aia_wave_dict()
         try:
             r, g, b = aia_wave_dict[wavelength]
         except KeyError:
             raise ValueError("Invalid AIA wavelength. Valid values are "
                              "1600,1700,4500,94,131,171,193,211,304,335.")
 
-        return _cmap_from_rgb(r, g, b, 'SDO AIA {:s}'.format(str(wavelength)))
+        return CmapUtil._cmap_from_rgb(r, g, b, 'SDO AIA {:s}'.format(str(wavelength)))
 
 class PlotFits:
 
