@@ -23,10 +23,9 @@ class CmapUtil:
         return cdict
 
     @staticmethod
-    def get_idl3():
+    def get_idl3(path_idl3: str):
         # The following values describe color table 3 for IDL (Red Temperature)
-        return np.loadtxt(os.path.join(pathlib.Path(__file__).parent.absolute(),
-                                       'UtilFunctions', 'idl_3.csv'), delimiter=',')
+        return np.loadtxt(path_idl3, delimiter=',')
 
     @staticmethod
     def _cmap_from_rgb(r, g, b, name):
@@ -34,8 +33,8 @@ class CmapUtil:
         return colors.LinearSegmentedColormap(name, cdict)
 
     @staticmethod
-    def create_aia_wave_dict():
-        idl_3 = CmapUtil.get_idl3()
+    def create_aia_wave_dict(path_idl3: str):
+        idl_3 = CmapUtil.get_idl3(path_idl3)
         r0, g0, b0 = idl_3[:, 0], idl_3[:, 1], idl_3[:, 2]
 
         c0 = np.arange(256, dtype='f')
@@ -58,7 +57,7 @@ class CmapUtil:
         return aia_wave_dict
 
     @staticmethod
-    def aia_color_table(wavelength: u.angstrom):
+    def aia_color_table(wavelength: u.angstrom, path_idl3: str):
         """
         Returns one of the fundamental color tables for SDO AIA images.
 
@@ -70,7 +69,7 @@ class CmapUtil:
         wavelength : `~astropy.units.quantity`
             Wavelength for the desired AIA color table.
         """
-        aia_wave_dict = CmapUtil.create_aia_wave_dict()
+        aia_wave_dict = CmapUtil.create_aia_wave_dict(path_idl3)
         try:
             r, g, b = aia_wave_dict[wavelength]
         except KeyError:
