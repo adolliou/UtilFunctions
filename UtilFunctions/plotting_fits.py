@@ -25,7 +25,7 @@ class CmapUtil:
     @staticmethod
     def get_idl3():
         # The following values describe color table 3 for IDL (Red Temperature)
-        return np.loadtxt(os.path.join(pathlib.Path(__file__), 'idl_3.csv'), delimiter=',')
+        return np.loadtxt(os.path.join(pathlib.Path(__file__).parent.absolute(), 'idl_3.csv'), delimiter=',')
 
     @staticmethod
     def _cmap_from_rgb(r, g, b, name):
