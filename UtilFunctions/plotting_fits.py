@@ -9,8 +9,67 @@ from matplotlib.gridspec import GridSpec
 from astropy.visualization import ImageNormalize, LogStretch
 import matplotlib.patches as patches
 
+class CmapUtil:
+
+    @staticmethod
+    def get_idl3():
+        # The following values describe color table 3 for IDL (Red Temperature)
+        return np.loadtxt('idl_3.csv', delimiter=',')
+
+    @staticmethod
+    def _cmap_from_rgb(r, g, b, name):
+        cdict = create_cdict(r, g, b)
+        return colors.LinearSegmentedColormap(name, cdict)
+
+    @staticmethod
+    def create_aia_wave_dict():
+        idl_3 = get_idl3()
+        r0, g0, b0 = idl_3[:, 0], idl_3[:, 1], idl_3[:, 2]
+
+        c0 = np.arange(256, dtype='f')
+        c1 = (np.sqrt(c0) * np.sqrt(255.0)).astype('f')
+        c2 = (np.arange(256) ** 2 / 255.0).astype('f')
+        c3 = ((c1 + c2 / 2.0) * 255.0 / (c1.max() + c2.max() / 2.0)).astype('f')
+
+        aia_wave_dict = {
+            1600 * u.angstrom: (c3, c3, c2),
+            1700 * u.angstrom: (c1, c0, c0),
+            4500 * u.angstrom: (c0, c0, b0 / 2.0),
+            94 * u.angstrom: (c2, c3, c0),
+            131 * u.angstrom: (g0, r0, r0),
+            171 * u.angstrom: (r0, c0, b0),
+            193 * u.angstrom: (c1, c0, c2),
+            211 * u.angstrom: (c1, c0, c3),
+            304 * u.angstrom: (r0, g0, b0),
+            335 * u.angstrom: (c2, c0, c1)
+        }
+        return aia_wave_dict
+
+    @staticmethod
+    def aia_color_table(wavelength: u.angstrom):
+        """
+        Returns one of the fundamental color tables for SDO AIA images.
+
+        Based on aia_lct.pro part of SDO/AIA on SSWIDL written by Karel
+        Schrijver (2010/04/12).
+
+        Parameters
+        ----------
+        wavelength : `~astropy.units.quantity`
+            Wavelength for the desired AIA color table.
+        """
+        aia_wave_dict = create_aia_wave_dict()
+        try:
+            r, g, b = aia_wave_dict[wavelength]
+        except KeyError:
+            raise ValueError("Invalid AIA wavelength. Valid values are "
+                             "1600,1700,4500,94,131,171,193,211,304,335.")
+
+        return _cmap_from_rgb(r, g, b, 'SDO AIA {:s}'.format(str(wavelength)))
 
 class PlotFits:
+
+
 
     @staticmethod
     def plot_fov_rectangle(data, slc=None, path_save=None, show=True, plot_colorbar=True, norm=None, angle=0):
