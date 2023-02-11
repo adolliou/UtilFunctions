@@ -10,7 +10,7 @@ class MakeMovie:
         print(f'{files=}')
         if nb_frame is None:
             nb_frame = len(files) - start_frame
-        spawnline = f'ffmpeg -r {frames_ps} -s {resolution} -start_number "' + f'{start_frame}' + '" -i "' + \
+        spawnline = f'ffmpeg -framerate 1 -r {frames_ps} -s {resolution} -start_number "' + f'{start_frame}' + '" -i "' + \
                     os.path.join(frame_folder, f'%05d.{suffix}') \
                     + '" -vframes "' + f'{nb_frame}' + '" -c:v libx264 -pix_fmt yuv420p -y "' + \
                     path_save + '"'
