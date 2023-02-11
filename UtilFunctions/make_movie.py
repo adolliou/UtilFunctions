@@ -5,9 +5,8 @@ from glob import glob
 class MakeMovie:
     @staticmethod
     def encode(frame_folder: str, path_save: str, start_frame=0, nb_frame=None, suffix="png", resolution="640:480"):
-        print(frame_folder)
         files = glob(os.path.join(frame_folder, f'*.{suffix}'))
-        print(files)
+        print(f'{files=}')
         if nb_frame is None:
             nb_frame = len(files) - start_frame
         spawnline = f'ffmpeg -r 10 -s {resolution} -start_number "' + f'{start_frame}' + '" -i "' + \
