@@ -4,7 +4,7 @@ from astropy.io import fits
 import astropy.time
 import os
 import astropy.units as u
-
+from tqdm import tqdm
 
 def create_dict_file(path_instrument: str, suffix: str, window=None, sort_dict=True):
     data_dict = {}
@@ -17,7 +17,7 @@ def create_dict_file(path_instrument: str, suffix: str, window=None, sort_dict=T
     data_dict['dsun-obs'] = []
     data_dict['telescop'] = []
 
-    for kk, path in enumerate(data_dict['path']):
+    for kk, path in enumerate(tqdm(data_dict['path'], desc="Adding files to dict")):
         f = fits.open(path)
         if window is None:
             if len(f) > 1:
