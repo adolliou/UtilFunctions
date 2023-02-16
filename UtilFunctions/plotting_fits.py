@@ -10,6 +10,8 @@ import matplotlib.patches as patches
 import matplotlib.colors as colors
 import os
 import pathlib
+
+
 class CmapUtil:
 
     @staticmethod
@@ -78,9 +80,8 @@ class CmapUtil:
 
         return CmapUtil._cmap_from_rgb(r, g, b, 'SDO AIA {:s}'.format(str(wavelength)))
 
+
 class PlotFits:
-
-
 
     @staticmethod
     def plot_fov_rectangle(data, slc=None, path_save=None, show=True, plot_colorbar=True, norm=None, angle=0):
@@ -233,14 +234,18 @@ class PlotFits:
             fig.savefig(path_save)
 
     @staticmethod
-    def _build_regular_grid(longitude, latitude):
+    def _build_regular_grid(longitude, latitude, lonlims=None, latlims=None):
         dlon = np.abs((longitude[1, 1] - longitude[0, 0]).to(u.deg).value)
         dlat = np.abs((latitude[1, 1] - latitude[0, 0]).to(u.deg).value)
-        longitude_grid, latitude_grid = np.meshgrid(
-            np.arange(np.min(CommonUtil.ang2pipi(longitude).to(u.deg).value),
-                      np.max(CommonUtil.ang2pipi(longitude).to(u.deg).value), dlon),
-            np.arange(np.min(CommonUtil.ang2pipi(latitude).to(u.deg).value),
-                      np.max(CommonUtil.ang2pipi(latitude).to(u.deg).value), dlat))
+        longitude1D = np.arange(np.min(CommonUtil.ang2pipi(longitude).to(u.deg).value),
+                                np.max(CommonUtil.ang2pipi(longitude).to(u.deg).value), dlon)
+        latitude1D = np.arange(np.min(CommonUtil.ang2pipi(latitude).to(u.deg).value),
+                               np.max(CommonUtil.ang2pipi(latitude).to(u.deg).value), dlat)
+        if (lonlims is not None) or (latlims is not None):
+            longitude1D = longitude1D[(longitude1D > lonlims[0]) & (longitude1D < lonlims[1])]
+            latitude1D = latitude1D[(latitude1D > latlims[0]) & (latitude1D < latlims[1])]
+
+        longitude_grid, latitude_grid = np.meshgrid(longitude1D, latitude1D)
 
         longitude_grid = longitude_grid * u.deg
         latitude_grid = latitude_grid * u.deg

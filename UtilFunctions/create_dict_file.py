@@ -6,6 +6,7 @@ import os
 import astropy.units as u
 from tqdm import tqdm
 
+
 def create_dict_file(path_instrument: str, suffix: str, window=None, sort_dict=True):
     data_dict = {}
 
