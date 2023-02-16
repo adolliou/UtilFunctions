@@ -234,9 +234,9 @@ class PlotFits:
             fig.savefig(path_save)
 
     @staticmethod
-    def _build_regular_grid(longitude, latitude, lonlims=None, latlims=None):
-        dlon = np.abs((longitude[1, 1] - longitude[0, 0]).to(u.deg).value)
-        dlat = np.abs((latitude[1, 1] - latitude[0, 0]).to(u.deg).value)
+    def build_regular_grid(longitude, latitude, lonlims=None, latlims=None):
+        dlon = np.abs((longitude[1, 1] - longitude[0, 0]).to("deg").value)
+        dlat = np.abs((latitude[1, 1] - latitude[0, 0]).to("deg").value)
         longitude1D = np.arange(np.min(CommonUtil.ang2pipi(longitude).to(u.deg).value),
                                 np.max(CommonUtil.ang2pipi(longitude).to(u.deg).value), dlon)
         latitude1D = np.arange(np.min(CommonUtil.ang2pipi(latitude).to(u.deg).value),
@@ -253,3 +253,25 @@ class PlotFits:
         latitude_grid = latitude_grid * u.deg
 
         return longitude_grid, latitude_grid
+
+    @staticmethod
+    def extend_regular_grid(longitude_grid, latitude_grid, delta_longitude, delta_latitude):
+        dlon = np.abs((longitude_grid[1, 1] - longitude_grid[0, 0]).to("deg").value)
+        dlat = np.abs((latitude_grid[1, 1] - latitude_grid[0, 0]).to("deg").value)
+        delta_longitude_deg = CommonUtil.ang2pipi(delta_longitude).to("deg").value
+        delta_latitude_deg = CommonUtil.ang2pipi(delta_latitude).to("deg").value
+
+        longitude1D = np.arange(np.min(CommonUtil.ang2pipi(longitude_grid).to(u.deg).value - 0.5 * delta_longitude_deg),
+                                np.max(CommonUtil.ang2pipi(longitude_grid).to(u.deg).value) + 0.5 * delta_longitude_deg,
+                                dlon)
+        latitude1D = np.arange(np.min(CommonUtil.ang2pipi(latitude_grid).to(u.deg).value - 0.5 * delta_latitude_deg),
+                               np.max(CommonUtil.ang2pipi(latitude_grid).to(u.deg).value) + 0.5 * delta_latitude_deg,
+                               dlat)
+
+        longitude_grid_ext, latitude_grid_ext = np.meshgrid(longitude1D, latitude1D)
+        longitude_grid_ext = longitude_grid_ext * u.deg
+        latitude_grid_ext = latitude_grid_ext * u.deg
+
+        return longitude_grid_ext, latitude_grid_ext
+
+
