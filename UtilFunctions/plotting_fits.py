@@ -242,8 +242,10 @@ class PlotFits:
         latitude1D = np.arange(np.min(CommonUtil.ang2pipi(latitude).to(u.deg).value),
                                np.max(CommonUtil.ang2pipi(latitude).to(u.deg).value), dlat)
         if (lonlims is not None) or (latlims is not None):
-            longitude1D = longitude1D[(longitude1D > lonlims[0]) & (longitude1D < lonlims[1])]
-            latitude1D = latitude1D[(latitude1D > latlims[0]) & (latitude1D < latlims[1])]
+            longitude1D = longitude1D[(longitude1D > CommonUtil.ang2pipi(lonlims[0]).to("arcsec").value) &
+                                      (longitude1D < CommonUtil.ang2pipi(lonlims[1]).to("arcsec").value)]
+            latitude1D = latitude1D[(latitude1D > CommonUtil.ang2pipi(latlims[0]).to("arcsec").value) &
+                                    (latitude1D < CommonUtil.ang2pipi(latlims[1]).to("arcsec").value)]
 
         longitude_grid, latitude_grid = np.meshgrid(longitude1D, latitude1D)
 
