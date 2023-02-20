@@ -16,3 +16,36 @@ class EUIUtil:
         dsun_obs_large = w.to_header()["DSUN_OBS"]
         return common_util.UtilFunctions.ang2pipi(longitude),\
             common_util.UtilFunctions.ang2pipi(latitude), dsun_obs_large
+
+    @staticmethod
+    def diff_rot(lat, wvl='default'):
+        ''' Return the angular velocity difference between differential and
+        Carrington rotation.
+        Parameters
+        ==========
+        lat : float
+            The latitude, in radians
+        wvl : str (default: 'default'
+            The wavelength, or the band to return the rotation from.
+        Returns
+        =======
+        corr : float
+            The difference in angular velocities between the differential and
+            Carrington rotations, in radians per second:
+                Δω(θ) = ω_Car - ω_diff(θ)
+                with ω_Car = 360° / (25.38 days)
+                and  ω_diff(θ) = A + B sin² θ + C sin⁴ θ
+        '''
+        p = {
+            # ° day⁻¹; Hortin (2003):
+            'EIT 171': (14.56, -2.65, 0.96),
+            'EIT 195': (14.50, -2.14, 0.66),
+            'EIT 284': (14.60, -0.71, -1.18),
+            'EIT 304': (14.51, -3.12, 0.34),
+        }
+        p['default'] = p['EIT 195']
+        A, B, C = p[wvl]
+        A_car = 360 / 25.38  # ° day⁻¹
+        corr = A - A_car + B * np.sin(lat) ** 2 + C * np.sin(lat) ** 4  # ° day⁻¹
+        corr = np.deg2rad(corr / 86400)  # rad s⁻¹
+        return corr
