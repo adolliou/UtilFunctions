@@ -12,6 +12,17 @@ import scipy
 class CommonUtil:
 
     @staticmethod
+    def find_closest_dict_index(utc_eui, dict_file_reference, threshold_time):
+
+        delta_time = np.array([np.abs((utc_eui - n).to(u.s).value) for n in dict_file_reference["date-avg"]])
+
+        closest_index = delta_time.argmin()
+        delta_time_min = delta_time[closest_index]
+        if delta_time_min > threshold_time:
+            raise ValueError("Delta time between EUI and SPICE file "
+                             "equal to %2f s > %.2f" % (delta_time_min, threshold_time))
+        return closest_index, delta_time_min
+    @staticmethod
     def find_closest_time(list_to_find: list, list_ref: list, window_to_find=-1, window_ref=-1, time_delay=True,
                           maximal_threshold=15 * u.s):
         """

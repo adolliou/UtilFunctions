@@ -4,6 +4,7 @@ from astropy.wcs import WCS
 
 
 class SpiceUtil:
+
     @staticmethod
     def slit_pxl(header):
 
