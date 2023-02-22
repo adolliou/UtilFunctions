@@ -12,9 +12,9 @@ import scipy
 class CommonUtil:
 
     @staticmethod
-    def find_closest_dict_index(utc_eui, dict_file_reference, threshold_time):
+    def find_closest_dict_index(utc_to_find, dict_file_reference, threshold_time):
 
-        delta_time = np.array([np.abs((utc_eui - n).to(u.s).value) for n in dict_file_reference["date-avg"]])
+        delta_time = np.array([np.abs((utc_to_find - n).to(u.s).value) for n in dict_file_reference["date-avg"]])
 
         closest_index = delta_time.argmin()
         delta_time_min = delta_time[closest_index]
