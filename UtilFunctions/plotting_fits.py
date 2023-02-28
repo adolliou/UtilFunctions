@@ -128,6 +128,10 @@ class PlotFits:
         x, y = w.world_to_pixel(longitude_grid, latitude_grid)
         image_on_regular_grid = CommonUtil.interpol2d(data_main, x=x, y=y, fill=-32762, order=1)
         image_on_regular_grid[image_on_regular_grid == -32762] = np.nan
+
+        dlon = (longitude_grid[1, 1] - longitude_grid[0, 0]).to("arcsec").value
+        dlat = (latitude_grid[1, 1] - latitude_grid[0, 0]).to("arcsec").value
+
         return_im = False
         if fig is None:
             fig = plt.figure()
@@ -137,8 +141,10 @@ class PlotFits:
         if norm is None:
             norm = ImageNormalize(stretch=LogStretch(5))
         im = ax.imshow(image_on_regular_grid, origin="lower", interpolation="none", norm=norm,
-                       extent=[longitude_grid[0, 0].to(u.arcsec).value, longitude_grid[-1, -1].to(u.arcsec).value,
-                               latitude_grid[0, 0].to(u.arcsec).value, latitude_grid[-1, -1].to(u.arcsec).value])
+                       extent=[longitude_grid[0, 0].to(u.arcsec).value - 0.5*dlon,
+                               longitude_grid[-1, -1].to(u.arcsec).value + 0.5*dlon,
+                               latitude_grid[0, 0].to(u.arcsec).value - 0.5*dlat,
+                               latitude_grid[-1, -1].to(u.arcsec).value + 0.5*dlat])
         # im = ax.imshow(data_main, origin="lower", interpolation="none", norm=norm,)
 
         if show_xlabel:
@@ -174,6 +180,8 @@ class PlotFits:
                                                   x=x_contour, y=y_contour,
                                                   order=1, fill=-32768)
         image_contour_cut[image_contour_cut == -32768] = np.nan
+        dlon = (longitude_grid[1, 1] - longitude_grid[0, 0]).to("arcsec").value
+        dlat = (latitude_grid[1, 1] - latitude_grid[0, 0]).to("arcsec").value
 
         return_im = True
         if fig is None:
@@ -184,14 +192,18 @@ class PlotFits:
         if norm is None:
             norm = ImageNormalize(stretch=LogStretch(5))
         im = ax.imshow(image_main_cut, origin="lower", interpolation="none", norm=norm,
-                       extent=[longitude_main[0, 0].to(u.arcsec).value, longitude_main[-1, -1].to(u.arcsec).value,
-                               latitude_main[0, 0].to(u.arcsec).value, latitude_main[-1, -1].to(u.arcsec).value])
+                       extent=[longitude_grid[0, 0].to(u.arcsec).value - 0.5*dlon,
+                               longitude_grid[-1, -1].to(u.arcsec).value + 0.5*dlon,
+                               latitude_grid[0, 0].to(u.arcsec).value - 0.5*dlat,
+                               latitude_grid[-1, -1].to(u.arcsec).value + 0.5*dlat])
         if levels is None:
             max_small = np.nanmax(image_contour_cut)
             levels = [0.5 * max_small]
         ax.contour(image_contour_cut, levels=levels, origin='lower', linewidths=0.5, colors='w',
-                   extent=[longitude_main[0, 0].to(u.arcsec).value, longitude_main[-1, -1].to(u.arcsec).value,
-                           latitude_main[0, 0].to(u.arcsec).value, latitude_main[-1, -1].to(u.arcsec).value])
+                   extent=[longitude_grid[0, 0].to(u.arcsec).value - 0.5 * dlon,
+                           longitude_grid[-1, -1].to(u.arcsec).value + 0.5 * dlon,
+                           latitude_grid[0, 0].to(u.arcsec).value - 0.5 * dlat,
+                           latitude_grid[-1, -1].to(u.arcsec).value + 0.5 * dlat])
         if show_xlabel:
             ax.set_xlabel("Solar-X [arcsec]")
         if show_ylabel:

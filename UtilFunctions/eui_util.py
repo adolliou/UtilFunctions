@@ -14,8 +14,8 @@ class EUIUtil:
         # should reproject on a new coordinate grid first : suppose slits at the same time :
         longitude, latitude = w.pixel_to_world(x, y)
         dsun_obs_large = w.to_header()["DSUN_OBS"]
-        return common_util.UtilFunctions.ang2pipi(longitude),\
-            common_util.UtilFunctions.ang2pipi(latitude), dsun_obs_large
+        return common_util.CommonUtil.ang2pipi(longitude),\
+            common_util.CommonUtil.ang2pipi(latitude), dsun_obs_large
 
     @staticmethod
     def diff_rot(lat, wvl='default'):
