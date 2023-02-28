@@ -5,7 +5,7 @@ from astropy.wcs import WCS
 
 class EUIUtil:
     @staticmethod
-    def extract_EUI_coordinates(hdr):
+    def extract_EUI_coordinates(hdr, dsun_not=False):
         w = WCS(hdr)
         idx_lon = np.where(np.array(w.wcs.ctype, dtype="str") == "HPLN-TAN")[0][0]
         idx_lat = np.where(np.array(w.wcs.ctype, dtype="str") == "HPLT-TAN")[0][0]
@@ -14,8 +14,11 @@ class EUIUtil:
         # should reproject on a new coordinate grid first : suppose slits at the same time :
         longitude, latitude = w.pixel_to_world(x, y)
         dsun_obs_large = w.to_header()["DSUN_OBS"]
-        return common_util.CommonUtil.ang2pipi(longitude),\
-            common_util.CommonUtil.ang2pipi(latitude), dsun_obs_large
+        if dsun_not:
+            return common_util.CommonUtil.ang2pipi(longitude),\
+                common_util.CommonUtil.ang2pipi(latitude), dsun_obs_large
+        else:
+            return common_util.CommonUtil.ang2pipi(longitude), common_util.CommonUtil.ang2pipi(latitude)
 
     @staticmethod
     def diff_rot(lat, wvl='default'):
