@@ -13,8 +13,9 @@ class EUIUtil:
                            np.arange(w.pixel_shape[idx_lat]), )  # t dépend de x,
         # should reproject on a new coordinate grid first : suppose slits at the same time :
         longitude, latitude = w.pixel_to_world(x, y)
-        dsun_obs_large = w.to_header()["DSUN_OBS"]
         if dsun:
+            dsun_obs_large = hdr["DSUN_OBS"]
+
             return common_util.CommonUtil.ang2pipi(longitude),\
                 common_util.CommonUtil.ang2pipi(latitude), dsun_obs_large
         else:
