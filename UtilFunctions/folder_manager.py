@@ -57,6 +57,7 @@ class ResultFolderManager(FolderManager):
     def __init__(self, dict_input):
         list_needed_keys = ["results_folder", "sequence_folder_name", "name_function", ]
         super().__init__(dict_input, list_needed_keys)
+        self._initialise_result_folder(dict_input)
 
     def _initialise_result_folder(self, dict_input):
         results_folder = os.path.join(dict_input["results_folder"])
