@@ -21,7 +21,7 @@ class FolderManager(dict):
 class InputFolderManager(FolderManager):
     def __init__(self, dict_input):
         list_needed_keys = ["data_folder", "sequence_folder_name",
-                            "input_folder", "input_subfolder", "input_level"]
+                            "in_folder", "in_subfolder", "in_level"]
         super().__init__(dict_input, list_needed_keys)
         self._initialize_input_folder(dict_input)
 
