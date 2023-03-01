@@ -27,9 +27,9 @@ class InputFolderManager(FolderManager):
 
     def _initialize_input_folder(self, dict_input):
         path_spice_old_level = os.path.join(dict_input["data_folder"], dict_input["sequence_folder_name"],
-                                            dict_input["old_folder"], dict_input["old_subfolder"])
+                                            dict_input["in_folder"], dict_input["in_subfolder"])
         self["in"] = {"path": path_spice_old_level,
-                      "level": dict_input["old_level"]}
+                      "level": dict_input["in_level"]}
         if "in_suffix" in dict_input:
             self["in"]["suffix"] = dict_input["in_suffix"]
 
@@ -43,14 +43,14 @@ class OutputFolderManager(FolderManager):
 
     def _initialize_output_folder(self, dict_input):
         path_spice_new_level = os.path.join(dict_input["data_folder"], dict_input["sequence_folder_name"],
-                                            dict_input["new_folder"], dict_input["new_subfolder"], )
+                                            dict_input["out_folder"], dict_input["out_subfolder"], )
 
         Path(os.path.join(dict_input["data_folder"], dict_input["sequence_folder_name"],
-                          dict_input["new_folder"])).mkdir(parents=False, exist_ok=True)
+                          dict_input["out_folder"])).mkdir(parents=False, exist_ok=True)
 
         Path(path_spice_new_level).mkdir(parents=False, exist_ok=True)
         self["out"] = {"path": path_spice_new_level,
-                       "level": dict_input["new_level"]}
+                       "level": dict_input["out_level"]}
 
 
 class ResultFolderManager(FolderManager):
