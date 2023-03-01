@@ -6,29 +6,38 @@ from datetime import datetime
 
 class FolderManager(dict):
     def __init__(self, dict_input, list_needed_keys: list):
+        super().__init__()
         self._assert_correct_dict(dict_input, list_needed_keys)
 
     @staticmethod
     def _assert_correct_dict(dict_input, list_needed_keys: list):
         assertion = np.array([(n in dict_input) for n in list_needed_keys], dtype="bool")
-        if assertion.sul != len(assertion):
+        if assertion.sul != len(list_needed_keys):
             raise ValueError("Not correct dict keys in the input")
 
 
-class OutputFolderManager(FolderManager):
+class InputFolderManager(FolderManager):
     def __init__(self, dict_input):
         list_needed_keys = ["data_folder", "sequence_folder_name",
-                            "old_folder", "old_subfolder", "old_level",
-                            "new_folder", "new_subfolder", "new_level"]
+                            "input_folder", "input_subfolder", "input_level"]
         super().__init__(dict_input, list_needed_keys)
-        self._initialize_output_folder(dict_input)
         self._initialize_input_folder(dict_input)
 
     def _initialize_input_folder(self, dict_input):
         path_spice_old_level = os.path.join(dict_input["data_folder"], dict_input["sequence_folder_name"],
                                             dict_input["old_folder"], dict_input["old_subfolder"])
-        self["old"] = {"path": path_spice_old_level,
-                       "level": dict_input["old_level"]}
+        self["in"] = {"path": path_spice_old_level,
+                      "level": dict_input["old_level"]}
+        if "in_suffix" in dict_input:
+            self["in"]["suffix"] = dict_input["in_suffix"]
+
+
+class OutputFolderManager(FolderManager):
+    def __init__(self, dict_input):
+        list_needed_keys = ["data_folder", "sequence_folder_name",
+                            "out_folder", "out_subfolder", "out_level"]
+        super().__init__(dict_input, list_needed_keys)
+        self._initialize_output_folder(dict_input)
 
     def _initialize_output_folder(self, dict_input):
         path_spice_new_level = os.path.join(dict_input["data_folder"], dict_input["sequence_folder_name"],
@@ -38,7 +47,7 @@ class OutputFolderManager(FolderManager):
                           dict_input["new_folder"])).mkdir(parents=False, exist_ok=True)
 
         Path(path_spice_new_level).mkdir(parents=False, exist_ok=True)
-        self["new"] = {"path": path_spice_new_level,
+        self["out"] = {"path": path_spice_new_level,
                        "level": dict_input["new_level"]}
 
 
