@@ -13,6 +13,8 @@ class FolderManager(dict):
     def _assert_correct_dict(dict_input, list_needed_keys: list):
         assertion = np.array([(n in dict_input) for n in list_needed_keys], dtype="bool")
         if assertion.sum() != len(list_needed_keys):
+            print(f"{dict_input=}")
+            print(f"{list_needed_keys=}")
             raise ValueError("Not correct dict keys in the input")
 
 
