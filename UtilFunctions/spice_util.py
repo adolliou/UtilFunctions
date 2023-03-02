@@ -95,12 +95,10 @@ class SpiceUtil:
         w = WCS(hdr)
         w_xyt = w.dropaxis(2)
 
-
         if "ZNAXIS1" in hdr:
             naxis1 = hdr["ZNAXIS1"]
             naxis2 = hdr["ZNAXIS2"]
             naxis3 = hdr["ZNAXIS3"]
-
         else:
             naxis1 = hdr["NAXIS1"]
             naxis2 = hdr["NAXIS2"]
@@ -120,4 +118,3 @@ class SpiceUtil:
         hdr["CRPIX2"] = (naxis2 + 1) / 2
 
         return hdr
-
