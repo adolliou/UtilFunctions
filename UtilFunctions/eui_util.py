@@ -15,8 +15,7 @@ class EUIUtil:
         longitude, latitude = w.pixel_to_world(x, y)
         if dsun:
             dsun_obs_large = hdr["DSUN_OBS"]
-
-            return common_util.CommonUtil.ang2pipi(longitude),\
+            return common_util.CommonUtil.ang2pipi(longitude), \
                 common_util.CommonUtil.ang2pipi(latitude), dsun_obs_large
         else:
             return common_util.CommonUtil.ang2pipi(longitude), common_util.CommonUtil.ang2pipi(latitude)
