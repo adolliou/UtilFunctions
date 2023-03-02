@@ -56,14 +56,20 @@ class EUIUtil:
     @staticmethod
     def recenter_crpix_in_header(hdr):
         w = WCS(hdr)
-        x_mid = (hdr["NAXIS1"] - 1) / 2
-        y_mid = (hdr["NAXIS2"] - 1) / 2
+        if "ZNAXIS1" in hdr:
+            naxis1 = hdr["ZNAXIS1"]
+            naxis2 = hdr["ZNAXIS2"]
+        else:
+            naxis1 = hdr["NAXIS1"]
+            naxis2 = hdr["NAXIS2"]
+        x_mid = (naxis1 - 1) / 2
+        y_mid = (naxis2 - 1) / 2
         lon_mid, lat_mid = w.pixel_to_world(np.array([x_mid]), np.array([y_mid]))
         lon_mid = lon_mid[0].to(hdr["CUNIT1"]).value
         lat_mid = lat_mid[0].to(hdr["CUNIT2"]).value
         hdr["CRVAL1"] = lon_mid
         hdr["CRVAL2"] = lat_mid
-        hdr["CRPIX1"] = (hdr["NAXIS1"] + 1) / 2
-        hdr["CRPIX2"] = (hdr["NAXIS2"] + 1) / 2
+        hdr["CRPIX1"] = (naxis1 + 1) / 2
+        hdr["CRPIX2"] = (naxis2 + 1) / 2
 
         return hdr
