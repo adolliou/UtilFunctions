@@ -89,3 +89,35 @@ class SpiceUtil:
                                                     indexing='ij')  # t dépend de x,
             longitude_small, latitude_small, utc_small = w_xyt.pixel_to_world(x_small, y_small, z_small)
             return longitude_small, latitude_small, utc_small
+
+    @staticmethod
+    def recenter_crpix_in_header_L2(hdr):
+        w = WCS(hdr)
+        w_xyt = w.dropaxis(2)
+
+
+        if "ZNAXIS1" in hdr:
+            naxis1 = hdr["ZNAXIS1"]
+            naxis2 = hdr["ZNAXIS2"]
+            naxis3 = hdr["ZNAXIS3"]
+
+        else:
+            naxis1 = hdr["NAXIS1"]
+            naxis2 = hdr["NAXIS2"]
+            naxis3 = hdr["NAXIS3"]
+
+        x_mid = (naxis1 - 1) / 2
+        y_mid = (naxis2 - 1) / 2
+        t_mid = (naxis3 - 1) / 2
+
+        lon_mid, lat_mid, utc_mid = w_xyt.pixel_to_world(np.array([x_mid]), np.array([y_mid]), np.array(t_mid))
+        lon_mid = lon_mid[0].to(hdr["CUNIT1"]).value
+        lat_mid = lat_mid[0].to(hdr["CUNIT2"]).value
+
+        hdr["CRVAL1"] = lon_mid
+        hdr["CRVAL2"] = lat_mid
+        hdr["CRPIX1"] = (naxis1 + 1) / 2
+        hdr["CRPIX2"] = (naxis2 + 1) / 2
+
+        return hdr
+
