@@ -93,7 +93,7 @@ class SpiceUtil:
         w_xyt = w.dropaxis(2)
 
         if return_type == 'xy':
-            w_xyt = w_xyt.wcs.pc[2, 0] = 0
+            w_xyt.wcs.pc[2, 0] = 0
             w_xy = w_xyt.dropaxis(2)
             idx_lon = np.where(np.array(w_xy.wcs.ctype, dtype="str") == "HPLN-TAN")[0][0]
             idx_lat = np.where(np.array(w_xy.wcs.ctype, dtype="str") == "HPLT-TAN")[0][0]
