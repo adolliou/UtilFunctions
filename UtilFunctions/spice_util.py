@@ -91,6 +91,33 @@ class SpiceUtil:
             return longitude_small, latitude_small, utc_small
 
     @staticmethod
+    def extract_spice_coordinates_l2(hdr, return_type='xy'):
+        w = WCS(hdr)
+        w_xyt = w.dropaxis(2)
+
+        if return_type == 'xy':
+            w_xyt = w_xyt.wcs.pc[2, 0] = 0
+            w_xy = w_xyt.dropaxis(2)
+            idx_lon = np.where(np.array(w_xy.wcs.ctype, dtype="str") == "HPLN-TAN")[0][0]
+            idx_lat = np.where(np.array(w_xy.wcs.ctype, dtype="str") == "HPLT-TAN")[0][0]
+            x_small, y_small = np.meshgrid(np.arange(w_xy.pixel_shape[idx_lon]),
+                                           np.arange(w_xy.pixel_shape[idx_lat]),
+                                           indexing='ij')  # t dépend de x,
+            # should reproject on a new coordinate grid first : suppose slits at the same time :
+            longitude_small, latitude_small = w_xy.pixel_to_world(x_small, y_small)
+            return longitude_small, latitude_small
+        elif return_type == 'xyt':
+            idx_lon = np.where(np.array(w_xyt.wcs.ctype, dtype="str") == "HPLN-TAN")[0][0]
+            idx_lat = np.where(np.array(w_xyt.wcs.ctype, dtype="str") == "HPLT-TAN")[0][0]
+            idx_utc = np.where(np.array(w_xyt.wcs.ctype, dtype="str") == "UTC")[0][0]
+            x_small, y_small, z_small = np.meshgrid(np.arange(w_xyt.pixel_shape[idx_lon]),
+                                                    np.arange(w_xyt.pixel_shape[idx_lat]),
+                                                    np.arange(w_xyt.pixel_shape[idx_utc]),
+                                                    indexing='ij')  # t dépend de x,
+            longitude_small, latitude_small, utc_small = w_xyt.pixel_to_world(x_small, y_small, z_small)
+            return longitude_small, latitude_small, utc_small
+
+    @staticmethod
     def recenter_crpix_in_header_L2(hdr):
         w = WCS(hdr)
         w_xyt = w.dropaxis(2)
