@@ -32,6 +32,8 @@ class InputFolderManager(FolderManager):
                       "level": dict_input["in_level"]}
         if "in_suffix" in dict_input:
             self["in"]["suffix"] = dict_input["in_suffix"]
+        if "in_window" in dict_input:
+            self["in"]["window"] = dict_input["in_window"]
 
 
 class OutputFolderManager(FolderManager):
@@ -51,6 +53,9 @@ class OutputFolderManager(FolderManager):
         Path(path_spice_new_level).mkdir(parents=False, exist_ok=True)
         self["out"] = {"path": path_spice_new_level,
                        "level": dict_input["out_level"]}
+        if "out_window" in dict_input:
+            self["out"]["window"] = dict_input["out_window"]
+
 
 
 class ResultFolderManager(FolderManager):
