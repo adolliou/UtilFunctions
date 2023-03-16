@@ -138,4 +138,4 @@ class SpiceUtil:
         hdr["CRPIX1"] = (naxis1 + 1) / 2
         hdr["CRPIX2"] = (naxis2 + 1) / 2
 
-        return hdr
+        return hdr.copy()
