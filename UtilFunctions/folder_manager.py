@@ -69,6 +69,7 @@ class ResultFolderManager(FolderManager):
         Path(results_folder).mkdir(parents=False, exist_ok=True)
 
         results_folder = os.path.join(results_folder, dict_input["sequence_folder_name"])
+        Path(results_folder).mkdir(parents=False, exist_ok=True)
 
         results_folder = os.path.join(results_folder, dict_input['name_function'])
         Path(results_folder).mkdir(parents=False, exist_ok=True)
