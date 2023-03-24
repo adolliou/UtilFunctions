@@ -69,7 +69,7 @@ class CommonUtil:
 
         coords = np.stack((y.ravel(), x.ravel()), axis=0)
         if dst is None:
-            dst = np.empty(image.shape, type=np.float64)
+            dst = np.empty(image.shape, dtype=np.float64)
         map_coordinates(image, coords, order=order, mode='constant', cval=fill, output=dst.ravel(), prefilter=False)
 
         return dst
