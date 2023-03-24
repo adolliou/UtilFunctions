@@ -71,5 +71,3 @@ class EUIUtil:
         hdr["CRVAL2"] = lat_mid
         hdr["CRPIX1"] = (naxis1 + 1) / 2
         hdr["CRPIX2"] = (naxis2 + 1) / 2
-
-        return hdr.copy()

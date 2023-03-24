@@ -27,12 +27,12 @@ def rebin_factor(a, factor, function):
         raise ValueError("modulos not null")
     ndim = a.ndim
     compression_pairs = [(s // f, f) for (s, f) in zip(a.shape, factor)]
-    print(f'{compression_pairs=}')
+    # print(f'{compression_pairs=}')
     flattened = [l for p in compression_pairs for l in p]
-    print(f'{flattened=}')
+    # print(f'{flattened=}')
     a = a.reshape(flattened)
     axes = tuple(1 + 2 * i for i in range(ndim))
-    print(f'{axes=}')
+    # print(f'{axes=}')
     return function(a, axis=axes)
 
 class Binning:
