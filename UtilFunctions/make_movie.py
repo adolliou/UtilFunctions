@@ -16,7 +16,7 @@ class MakeMovie:
         #             path_save + '"'
         spawnline = f'ffmpeg -framerate 1 -s {resolution} -start_number "' + f'{start_frame}' + '" -i "' + \
                     os.path.join(frame_folder, f'%05d.{suffix}') \
-                    + '" -vframes "' + f'{nb_frame}' + '" -c:v libx264 -r 1 -flvflags no_duration_filesize "' + \
+                    + '" -vframes "' + f'{nb_frame}' + '" -c:v libx264 -r 4 -flvflags no_duration_filesize "' + \
                     path_save + '"'
         # spawnline = f'ffmpeg -r {frames_ps} -s {resolution} -start_number "' + f'{start_frame}' + '" -i "' + \
         #             os.path.join(frame_folder, f'%05d.{suffix}') \
