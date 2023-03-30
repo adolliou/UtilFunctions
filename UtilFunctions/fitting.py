@@ -5,7 +5,7 @@ from matplotlib import pyplot as plt
 class FittingUtil:
 
     @staticmethod
-    def gaussian(x: np.array, I: np.float64, mu: np.float64, sigma: np.float64, back:np.float64):
+    def gaussian(x: np.array, I: np.float64, mu: np.float64, sigma: np.float64, back: np.float64):
         return I * np.exp(-((x - mu) ** 2) / (2 * sigma ** 2)) + back
 
     @staticmethod
@@ -22,7 +22,7 @@ class PlotSpectrum:
     @staticmethod
     def _get_edges(x: np.array):
 
-        edges = [x[n+1] - x[n] for n in range(len(x)-1)]
+        edges = [x[n + 1] - x[n] for n in range(len(x) - 1)]
         edges.insert(0, x[0] - edges[0])
         edges.append(x[-1] + edges[-1])
         return edges
@@ -39,13 +39,13 @@ class PlotSpectrum:
         sort = lam.argsort()
         lam = lam[sort]
         spectrum = spectrum[sort]
-        edges_lam = PlotSpectrum._get_edges(lam.to("angstrom").value)
-        ax.stairs(spectrum, edges=edges_lam, label=label, color=color, linewidth=linewidth_stair,)
+        edges_lam = PlotSpectrum._get_edges(lam)
+        ax.stairs(spectrum, edges=edges_lam, label=label, color=color, linewidth=linewidth_stair, )
         if error_spectrum is not None:
             ax.errorbar(x=lam, y=spectrum, yerr=error_spectrum, linestyle="", marker="", capsize=1,
                         elinewidth=linewidth_stair, color=color)
         if fitting_function is not None:
-            if fitting_function=="gaussian":
+            if fitting_function == "gaussian":
                 fit = FittingUtil.gaussian(lam, **kwargs_fitting)
             elif fitting_function == "multiple_gaussian":
                 fit = FittingUtil.multiple_gaussian(lam, **kwargs_fitting)
@@ -54,11 +54,3 @@ class PlotSpectrum:
             ax.legend()
         if save_path is not None:
             fig.savefig(save_path)
-
-
-
-
-
-
-
-
