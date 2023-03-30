@@ -39,7 +39,7 @@ class PlotSpectrum:
         sort = lam.argsort()
         lam = lam[sort]
         spectrum = spectrum[sort]
-        edges_lam = PlotSpectrum._get_edges(lam)
+        edges_lam = PlotSpectrum._get_edges(lam.to("angstrom").value)
         ax.stairs(spectrum, edges=edges_lam, label=label, color=color, linewidth=linewidth_stair,)
         if error_spectrum is not None:
             ax.errorbar(x=lam, y=spectrum, yerr=error_spectrum, linestyle="", marker="", capsize=1,
