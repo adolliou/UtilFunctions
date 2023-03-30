@@ -27,7 +27,8 @@ class PlotSpectrum:
         edges.append(x[-1] + edges[-1])
         return edges
 
-    def plot_spectrum(self, lam: np.array, spectrum: np.array, error_spectrum=None, label="rd", color="r",
+    @staticmethod
+    def plot_spectrum(lam: np.array, spectrum: np.array, error_spectrum=None, label="rd", color="r",
                       linewidth_stair=0.5, linewidth_fit=0.5,
                       fig=None, ax=None, show_legend=True, save_path=None, fitting_function=None, **kwargs_fitting, ):
 
@@ -38,7 +39,7 @@ class PlotSpectrum:
         sort = lam.argsort()
         lam = lam[sort]
         spectrum = spectrum[sort]
-        edges_lam = self._get_edges(lam)
+        edges_lam = PlotSpectrum._get_edges(lam)
         ax.stairs(spectrum, edges=edges_lam, label=label, color=color, linewidth=linewidth_stair,)
         if error_spectrum is not None:
             ax.errorbar(x=lam, y=spectrum, yerr=error_spectrum, linestyle="", marker="", capsize=1,
