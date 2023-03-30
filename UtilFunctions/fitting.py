@@ -23,8 +23,8 @@ class PlotSpectrum:
     def _get_edges(x: np.array):
 
         edges = [x[n + 1] - x[n] for n in range(len(x) - 1)]
-        edges.insert(0, x[0] - edges[0])
-        edges.append(x[-1] + edges[-1])
+        edges.insert(0, 2*x[0] - edges[0])
+        edges.append(2*x[-1] - edges[-1])
         return edges
 
     @staticmethod
