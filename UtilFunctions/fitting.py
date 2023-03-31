@@ -10,11 +10,12 @@ class FittingUtil:
 
     @staticmethod
     def multiple_gaussian(x: np.array, I: list, mu: list, sigma: list, back: np.float64):
-        breakpoint()
 
         s = back
         s += np.array([I_ * np.exp(-((x - mu_) ** 2) / (2 * sigma_ ** 2)) for I_, mu_, sigma_ in zip(I, mu, sigma)],
                       dtype=np.float64)
+        breakpoint()
+
         return s.sum()
 
 
