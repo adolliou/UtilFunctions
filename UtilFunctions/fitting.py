@@ -12,7 +12,7 @@ class FittingUtil:
     def multiple_gaussian(x, I: list, mu: list, sigma: list, back: np.float64):
         s = back
 
-        s = np.array([I_ * np.exp(-((x - mu_) ** 2) / (2 * sigma_ ** 2)) for I_, mu_, sigma_ in zip(I, mu, sigma)],
+        s += np.array([I_ * np.exp(-((x - mu_) ** 2) / (2 * sigma_ ** 2)) for I_, mu_, sigma_ in zip(I, mu, sigma)],
                      dtype=np.float64)
         return s.sum()
 
@@ -55,7 +55,7 @@ class PlotSpectrum:
         lam = lam[start:stop+1]
         spectrum = spectrum[start:stop+1]
         edges_lam = PlotSpectrum._get_edges(lam)
-        ax.stairs(spectrum, edges=edges_lam, label=label, color=color, linewidth=linewidth_stair, )
+        ax.stairs(spectrum, edges=edges_lam, label=label, color=color, linewidth=linewidth_stair,)
         if error_spectrum is not None:
             ax.errorbar(x=lam, y=spectrum, yerr=error_spectrum, linestyle="", marker="", capsize=1,
                         elinewidth=linewidth_stair, color=color)
@@ -69,4 +69,4 @@ class PlotSpectrum:
             ax.legend()
         if save_path is not None:
             fig.savefig(save_path)
-        return edges_lam, spectrum
+        return edges_lam, spectrum, fit
