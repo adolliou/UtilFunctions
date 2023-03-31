@@ -54,3 +54,4 @@ class PlotSpectrum:
             ax.legend()
         if save_path is not None:
             fig.savefig(save_path)
+        return edges_lam, spectrum
