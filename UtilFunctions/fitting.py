@@ -9,11 +9,11 @@ class FittingUtil:
         return I * np.exp(-((x - mu) ** 2) / (2 * sigma ** 2)) + back
 
     @staticmethod
-    def multiple_gaussian(x, I: list, mu: list, sigma: list, back: np.float64):
+    def multiple_gaussian(x: np.array, I: list, mu: list, sigma: list, back: np.float64):
         s = back
 
         s += np.array([I_ * np.exp(-((x - mu_) ** 2) / (2 * sigma_ ** 2)) for I_, mu_, sigma_ in zip(I, mu, sigma)],
-                     dtype=np.float64)
+                      dtype=np.float64)
         return s.sum()
 
 
@@ -52,11 +52,11 @@ class PlotSpectrum:
             tt = len(spectrum) - 1 - kk
             if (stop == len(spectrum) - 1) & (isnan[tt]):
                 stop = tt
-        lam = lam[start:stop+1]
-        spectrum = spectrum[start:stop+1]
-        error_spectrum = error_spectrum[start:stop+1]
+        lam = lam[start:stop + 1]
+        spectrum = spectrum[start:stop + 1]
+        error_spectrum = error_spectrum[start:stop + 1]
         edges_lam = PlotSpectrum._get_edges(lam)
-        ax.stairs(spectrum, edges=edges_lam, label=label, color=color, linewidth=linewidth_stair,)
+        ax.stairs(spectrum, edges=edges_lam, label=label, color=color, linewidth=linewidth_stair, )
         if error_spectrum is not None:
             ax.errorbar(x=lam, y=spectrum, yerr=error_spectrum, linestyle="", marker="", capsize=1,
                         elinewidth=linewidth_stair, color=color)
@@ -64,6 +64,7 @@ class PlotSpectrum:
             if fitting_function == "gaussian":
                 fit = FittingUtil.gaussian(lam, **kwargs_fitting)
             elif fitting_function == "multiple_gaussian":
+                breakpoint()
                 fit = FittingUtil.multiple_gaussian(lam, **kwargs_fitting)
         ax.plot(lam, fit, color=color, linewidth=linewidth_fit, label="_nolegend_")
         if show_legend:
