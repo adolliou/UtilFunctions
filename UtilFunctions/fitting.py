@@ -40,19 +40,23 @@ class PlotSpectrum:
         lam = lam[sort]
         spectrum = spectrum[sort]
         isnan = np.isnan(spectrum)
-        start = 0
-        for kk in range(len(spectrum)):
-            if (start == 0) & (isnan[kk]):
-                start = kk
-        if start == len(spectrum) - 1:
-            return np.array([]), np.array([])
-        stop = len(spectrum) - 1
-        for kk in range(len(spectrum)):
-            tt = len(spectrum) - 1 - kk
-            if (stop == len(spectrum) - 1) & (isnan[tt]):
-                stop = tt
-        lam = lam[start:stop + 1]
-        spectrum = spectrum[start:stop + 1]
+        spectrum = spectrum[~isnan]
+        lam = lam[~isnan]
+        if error_spectrum is not None:
+            error_spectrum = error_spectrum[~isnan]
+        # start = 0
+        # for kk in range(len(spectrum)):
+        #     if (start == 0) & (isnan[kk]):
+        #         start = kk
+        # if start == len(spectrum) - 1:
+        #     return np.array([]), np.array([])
+        # stop = len(spectrum) - 1
+        # for kk in range(len(spectrum)):
+        #     tt = len(spectrum) - 1 - kk
+        #     if (stop == len(spectrum) - 1) & (isnan[tt]):
+        #         stop = tt
+        # lam = lam[start:stop + 1]
+        # spectrum = spectrum[start:stop + 1]
         error_spectrum = error_spectrum[start:stop + 1]
         edges_lam = PlotSpectrum._get_edges(lam)
         ax.stairs(spectrum, edges=edges_lam, label=label, color=color, linewidth=linewidth_stair, )
