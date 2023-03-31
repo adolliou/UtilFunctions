@@ -10,8 +10,9 @@ class FittingUtil:
 
     @staticmethod
     def multiple_gaussian(x: np.array, I: list, mu: list, sigma: list, back: np.float64):
-        s = back
+        breakpoint()
 
+        s = back
         s += np.array([I_ * np.exp(-((x - mu_) ** 2) / (2 * sigma_ ** 2)) for I_, mu_, sigma_ in zip(I, mu, sigma)],
                       dtype=np.float64)
         return s.sum()
@@ -64,7 +65,6 @@ class PlotSpectrum:
             if fitting_function == "gaussian":
                 fit = FittingUtil.gaussian(lam, **kwargs_fitting)
             elif fitting_function == "multiple_gaussian":
-                breakpoint()
                 fit = FittingUtil.multiple_gaussian(lam, **kwargs_fitting)
         ax.plot(lam, fit, color=color, linewidth=linewidth_fit, label="_nolegend_")
         if show_legend:
