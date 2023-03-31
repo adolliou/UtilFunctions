@@ -54,6 +54,7 @@ class PlotSpectrum:
                 stop = tt
         lam = lam[start:stop+1]
         spectrum = spectrum[start:stop+1]
+        error_spectrum = error_spectrum[start:stop+1]
         edges_lam = PlotSpectrum._get_edges(lam)
         ax.stairs(spectrum, edges=edges_lam, label=label, color=color, linewidth=linewidth_stair,)
         if error_spectrum is not None:
