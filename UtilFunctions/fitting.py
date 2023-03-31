@@ -22,9 +22,9 @@ class PlotSpectrum:
     @staticmethod
     def _get_edges(x: np.array):
 
-        edges = [x[n] + (x[n + 1] - x[n])/2 for n in range(len(x) - 1)]
-        edges.append(x[-1] + (x[-1] - x[-2])/2)
-        edges.insert(0, x[0] - (x[1] - x[0])/2)
+        edges = [x[n] + (x[n + 1] - x[n]) / 2 for n in range(len(x) - 1)]
+        edges.append(x[-1] + (x[-1] - x[-2]) / 2)
+        edges.insert(0, x[0] - (x[1] - x[0]) / 2)
         return edges
 
     @staticmethod
@@ -37,8 +37,23 @@ class PlotSpectrum:
         if ax is None:
             ax = fig.add_subplot()
         sort = lam.argsort()
+
         lam = lam[sort]
         spectrum = spectrum[sort]
+        isnan = np.isnan(spectrum)
+        start = 0
+        for kk in range(len(spectrum)):
+            if (start == 0) & (isnan[kk]):
+                start = kk
+        if start == len(spectrum) - 1:
+            return np.array([]), np.array([])
+        stop = len(spectrum) - 1
+        for kk in range(len(spectrum)):
+            tt = len(spectrum) - 1 - kk
+            if (stop == len(spectrum) - 1) & (isnan[tt]):
+                stop = tt
+        lam = lam[start:stop+1]
+        spectrum = spectrum[start:stop+1]
         edges_lam = PlotSpectrum._get_edges(lam)
         ax.stairs(spectrum, edges=edges_lam, label=label, color=color, linewidth=linewidth_stair, )
         if error_spectrum is not None:
