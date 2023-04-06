@@ -30,7 +30,7 @@ class PlotSpectrum:
     def plot_spectrum(lam: np.array, spectrum: np.array, error_spectrum=None, label="rd", color="r",
                       linewidth_stair=0.5, linewidth_fit=0.5,
                       fig=None, ax=None, show_legend=True, save_path=None, fitting_function=None, kwargs_fitting=None,
-                      kwargs_sigma_fitting=None, sigma=3
+                      kwargs_sigma_fitting=None, sigma=1
                       ):
 
         if fig is None:
@@ -52,21 +52,34 @@ class PlotSpectrum:
         if error_spectrum is not None:
             ax.errorbar(x=lam, y=spectrum, yerr=error_spectrum, linestyle="", marker="", capsize=1,
                         elinewidth=linewidth_stair, color=color)
+        fits_sigma = None
+        fit = None
         if fitting_function is not None:
+
             if fitting_function == "gaussian":
                 fit = FittingUtil.gaussian(lam, **kwargs_fitting)
                 if (kwargs_sigma_fitting is not None) & (kwargs_fitting is not None):
-                    fits_sigma = PlotSpectrum._extract_all_possible_fits(kwargs_fitting,
-                                                            kwargs_sigma_fitting, lam,
-                                                            sigma)
-
-
+                    kwargs_list = PlotSpectrum._extract_all_possible_fitting_kwargs(kwargs_fitting,
+                                                                                    kwargs_sigma_fitting,
+                                                                                    sigma)
+                    fits_sigma = np.empty((len(kwargs_list), len(lam)), dtype=np.float64)
+                    for ii, kwarg_tmp in enumerate(kwargs_list):
+                        fits_sigma[ii, :] = FittingUtil.gaussian(lam, **kwarg_tmp)
 
             elif fitting_function == "multiple_gaussian":
                 fit = FittingUtil.multiple_gaussian(lam, **kwargs_fitting)
-                fits_sigma = PlotSpectrum._extract_all_possible_fits(kwargs_fitting,
-                                                                     kwargs_sigma_fitting, lam,
-                                                                     sigma)
+                if (kwargs_sigma_fitting is not None) & (kwargs_fitting is not None):
+                    kwargs_fitting_extended = PlotSpectrum._extend_kwarg(kwargs_fitting)
+                    kwargs_fitting_sigma_extended = PlotSpectrum._extend_kwarg(kwargs_sigma_fitting)
+
+                    kwargs_list = PlotSpectrum._extract_all_possible_fitting_kwargs(kwargs_fitting_extended,
+                                                                                    kwargs_fitting_sigma_extended,
+                                                                                    sigma)
+                    fits_sigma = np.empty((len(kwargs_list), len(lam)), dtype=np.float64)
+                    for ii, kwarg_tmp in enumerate(kwargs_list):
+                        kwarg_tmp_reduced = PlotSpectrum._extend_kwarg(kwarg_tmp, inverse=True)
+                        fits_sigma[ii, :] = FittingUtil.multiple_gaussian(lam, **kwarg_tmp_reduced)
+
         ax.plot(lam, fit, color=color, linewidth=linewidth_fit, label="_nolegend_")
         if show_legend:
             ax.legend()
@@ -75,15 +88,33 @@ class PlotSpectrum:
         return edges_lam, spectrum, lam, fit, fits_sigma
 
     @staticmethod
-    def _extract_all_possible_fits(kwargs_fitting, kwargs_sigma_fitting, lam, sigma):
-        fits_sigma = []
+    def _extend_kwarg(kwargs_fitting, inverse=False):
+        if inverse:
+            keys = kwargs_fitting.keys()
+            kwargs_fitting_reduced = {}
+            for key in keys:
+                for ii in range(len(kwargs_fitting[key])):
+                    kwargs_fitting_reduced[key][ii] = kwargs_fitting[f"{key}_{ii}"]
+            return kwargs_fitting_reduced
+        else:
+            keys = kwargs_fitting.keys()
+            kwargs_fitting_extended = {}
+            for key in keys:
+                for ii in range(len(kwargs_fitting[key])):
+                    kwargs_fitting_extended[f"{key}_{ii}"] = kwargs_fitting[key][ii]
+            return kwargs_fitting_extended
+
+    @staticmethod
+    def _extract_all_possible_fitting_kwargs(kwargs_fitting, kwargs_sigma_fitting, sigma):
+        list_kwarg_sigma = []
         keys = kwargs_sigma_fitting.keys()
         for ii in range(len(keys)):
             for subset in itertools.combinations(keys, ii):
                 kwargs_fit_tmp = kwargs_fitting
                 for key in subset:
                     kwargs_fit_tmp[key] += 0.5 * sigma * kwargs_sigma_fitting[key]
-                    fits_sigma.append(FittingUtil.gaussian(lam, **kwargs_fit_tmp))
+                    list_kwarg_sigma.append(kwargs_fit_tmp)
+                    kwargs_fit_tmp = kwargs_fitting
                     kwargs_fit_tmp[key] -= 0.5 * sigma * kwargs_sigma_fitting[key]
-                    fits_sigma.append(FittingUtil.gaussian(lam, **kwargs_fit_tmp))
-        return fits_sigma
+                    list_kwarg_sigma.append(kwargs_fit_tmp)
+        return list_kwarg_sigma
