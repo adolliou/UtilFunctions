@@ -5,6 +5,8 @@ import astropy.time
 import os
 import astropy.units as u
 from tqdm import tqdm
+import copy
+
 
 
 def create_dict_file(path_instrument: str, suffix: str, window=None, sort_dict=True):
@@ -45,19 +47,21 @@ def create_dict_file(path_instrument: str, suffix: str, window=None, sort_dict=T
 
 def _sort_dict_file(dict_file: dict):
     ref_time = dict_file["date-avg"][0]
+    d = copy.deepcopy(dict_file)
     time = [(n - ref_time).to(u.s).value for n in dict_file["date-avg"]]
     sort = np.argsort(time)
 
-    dict_file["path"] = dict_file["path"][sort]
-    dict_file["date-avg"] = dict_file["date-avg"][sort]
-    dict_file["dsun-obs"] = dict_file["dsun-obs"][sort]
-    dict_file["telescop"] = dict_file["telescop"][sort]
-    return dict_file
+    d["path"] = dict_file["path"][sort]
+    d["date-avg"] = dict_file["date-avg"][sort]
+    d["dsun-obs"] = dict_file["dsun-obs"][sort]
+    d["telescop"] = dict_file["telescop"][sort]
+    return d
 
 
-def select_time_interval(dict_file: dict, date_start=None, date_stop=None):
+def select_time_interval(dict_file: dict, date_start=None, date_stop=None, ):
     selection1 = np.ones(len(dict_file["date-avg"]), dtype="bool")
     selection2 = np.ones(len(dict_file["date-avg"]), dtype="bool")
+    d = copy.deepcopy(dict_file)
 
     if date_start is not None:
         selection1 = (np.array(dict_file["date-avg"]) >= date_start)
@@ -65,24 +69,26 @@ def select_time_interval(dict_file: dict, date_start=None, date_stop=None):
         selection2 = (np.array(dict_file["date-avg"]) <= date_stop)
     selection = selection1 & selection2
 
-    dict_file["path"] = dict_file["path"][selection]
-    dict_file["date-avg"] = dict_file["date-avg"][selection]
-    dict_file["dsun-obs"] = dict_file["dsun-obs"][selection]
-    dict_file["telescop"] = dict_file["telescop"][selection]
+    d["path"] = dict_file["path"][selection]
+    d["date-avg"] = dict_file["date-avg"][selection]
+    d["dsun-obs"] = dict_file["dsun-obs"][selection]
+    d["telescop"] = dict_file["telescop"][selection]
 
-    return dict_file
+    return d
 
 
 def remove_paths_with_str(dict_file: dict, str_to_remove: str):
+    d = copy.deepcopy(dict_file)
+
     selection_to_rm = np.zeros(len(dict_file["path"]), dtype="bool")
     for ii, path in enumerate(dict_file["path"]):
         selection_to_rm[ii] = str_to_remove in os.path.basename(path)
     selection_to_keep = ~selection_to_rm
 
-    dict_file["path"] = dict_file["path"][selection_to_keep]
-    dict_file["date-avg"] = dict_file["date-avg"][selection_to_keep]
-    dict_file["dsun-obs"] = dict_file["dsun-obs"][selection_to_keep]
-    dict_file["telescop"] = dict_file["telescop"][selection_to_keep]
+    d["path"] = dict_file["path"][selection_to_keep]
+    d["date-avg"] = dict_file["date-avg"][selection_to_keep]
+    d["dsun-obs"] = dict_file["dsun-obs"][selection_to_keep]
+    d["telescop"] = dict_file["telescop"][selection_to_keep]
     print(f"removed {selection_to_rm.sum()} files in dict")
 
-    return dict_file
+    return d
