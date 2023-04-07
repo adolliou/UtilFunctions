@@ -72,9 +72,10 @@ class PlotSpectrum:
                 fit = FittingUtil.multiple_gaussian(lam, **kwargs_fitting)
                 size_index = len(kwargs_fitting["I"])
                 if (kwargs_sigma_fitting is not None) & (kwargs_fitting is not None):
-                    kwargs_fitting_extended = PlotSpectrum._extend_kwarg(kwargs_fitting, keys=["I", "mu", "sigma"])
+                    kwargs_fitting_extended = PlotSpectrum._extend_kwarg(kwargs_fitting,
+                                                                         single_key="back")
                     kwargs_fitting_sigma_extended = PlotSpectrum._extend_kwarg(kwargs_sigma_fitting,
-                                                                               keys=["I", "mu", "sigma"])
+                                                                               single_key="back")
 
                     kwargs_list = PlotSpectrum._extract_all_possible_fitting_kwargs(kwargs_fitting_extended,
                                                                                     kwargs_fitting_sigma_extended,
