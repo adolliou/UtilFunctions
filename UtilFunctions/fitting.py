@@ -81,7 +81,7 @@ class PlotSpectrum:
                     fits_sigma = np.empty((len(kwargs_list), len(lam)), dtype=np.float64)
                     for ii, kwarg_tmp in enumerate(kwargs_list):
                         kwarg_tmp_reduced = PlotSpectrum._extend_kwarg(kwarg_tmp, inverse=True,
-                                                                       keys=["I", "mu", "sigma"])
+                                                                       leave_key_alone="back")
                         fits_sigma[ii, :] = FittingUtil.multiple_gaussian(lam, **kwarg_tmp_reduced)
 
         ax.plot(lam, fit, color=color, linewidth=linewidth_fit, label="_nolegend_")
@@ -92,14 +92,15 @@ class PlotSpectrum:
         return edges_lam, spectrum, lam, fit, fits_sigma
 
     @staticmethod
-    def _extend_kwarg(kwargs_fitting, inverse=False, keys=None):
+    def _extend_kwarg(kwargs_fitting, inverse=False, keys=None, leave_key_alone=None):
         if inverse:
             if keys is None:
                 keys = kwargs_fitting.keys()
             kwargs_fitting_reduced = {}
             for key in keys:
                 for ii in range(len(kwargs_fitting[key])):
-                    kwargs_fitting_reduced[key][ii] = kwargs_fitting[f"{key}_{ii}"]
+                    if leave_key_alone != key:
+                        kwargs_fitting_reduced[key][ii] = kwargs_fitting[f"{key}_{ii}"]
             return kwargs_fitting_reduced
         else:
             if keys is None:
@@ -107,7 +108,8 @@ class PlotSpectrum:
             kwargs_fitting_extended = {}
             for key in keys:
                 for ii in range(len(kwargs_fitting[key])):
-                    kwargs_fitting_extended[f"{key}_{ii}"] = kwargs_fitting[key][ii]
+                    if leave_key_alone != key:
+                        kwargs_fitting_extended[f"{key}_{ii}"] = kwargs_fitting[key][ii]
             return kwargs_fitting_extended
 
     @staticmethod
