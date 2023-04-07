@@ -1,3 +1,5 @@
+import copy
+
 import numpy as np
 from matplotlib import pyplot as plt
 import itertools
@@ -111,7 +113,7 @@ class PlotSpectrum:
         keys = kwargs_sigma_fitting.keys()
         for ii in range(len(keys)):
             for subset in itertools.combinations(keys, ii):
-                kwargs_fit_tmp = kwargs_fitting
+                kwargs_fit_tmp = copy.deepcopy(kwargs_fitting)
                 for key in subset:
                     kwargs_fit_tmp[key] += 0.5 * sigma * kwargs_sigma_fitting[key]
                     list_kwarg_sigma.append(kwargs_fit_tmp)
