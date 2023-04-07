@@ -114,11 +114,11 @@ class PlotSpectrum:
                 keys = kwargs_fitting.keys()
             kwargs_fitting_extended = {}
             for key in keys:
-                for ii in range(len(kwargs_fitting[key])):
-                    if single_key != key:
+                if single_key != key:
+                    for ii in range(len(kwargs_fitting[key])):
                         kwargs_fitting_extended[f"{key}_{ii}"] = copy.deepcopy(kwargs_fitting[key][ii])
-                    else:
-                        kwargs_fitting_extended[f"{key}"] = copy.deepcopy(kwargs_fitting[key])
+                else:
+                    kwargs_fitting_extended[f"{key}"] = copy.deepcopy(kwargs_fitting[key])
             return kwargs_fitting_extended
 
     @staticmethod
