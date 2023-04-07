@@ -82,7 +82,7 @@ class PlotSpectrum:
                     fits_sigma = np.empty((len(kwargs_list), len(lam)), dtype=np.float64)
                     for ii, kwarg_tmp in enumerate(kwargs_list):
                         kwarg_tmp_reduced = PlotSpectrum._extend_kwarg(kwarg_tmp, inverse=True, size_index=size_index,
-                                                                       leave_key_alone="back",
+                                                                       single_key="back",
                                                                        keys=["I", "mu", "sigma", "back"])
                         fits_sigma[ii, :] = FittingUtil.multiple_gaussian(lam, **kwarg_tmp_reduced)
 
@@ -94,13 +94,13 @@ class PlotSpectrum:
         return edges_lam, spectrum, lam, fit, fits_sigma
 
     @staticmethod
-    def _extend_kwarg(kwargs_fitting, inverse=False, keys=None, leave_key_alone=None, size_index=2):
+    def _extend_kwarg(kwargs_fitting, inverse=False, keys=None, single_key=None, size_index=2):
         if inverse:
             if keys is None:
                 keys = kwargs_fitting.keys()
             kwargs_fitting_reduced = {}
             for key in keys:
-                if leave_key_alone != key:
+                if single_key != key:
                     kwargs_fitting_reduced[key] = []
                     for ii in range(size_index):
                         kwargs_fitting_reduced[key].append(copy.deepcopy(kwargs_fitting[f"{key}_{ii}"]))
@@ -114,8 +114,10 @@ class PlotSpectrum:
             kwargs_fitting_extended = {}
             for key in keys:
                 for ii in range(len(kwargs_fitting[key])):
-                    if leave_key_alone != key:
+                    if single_key != key:
                         kwargs_fitting_extended[f"{key}_{ii}"] = copy.deepcopy( kwargs_fitting[key][ii])
+                    else:
+                        kwargs_fitting_extended[f"{key}"] = copy.deepcopy( kwargs_fitting[key])
             return kwargs_fitting_extended
 
     @staticmethod
