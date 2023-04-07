@@ -70,6 +70,7 @@ class PlotSpectrum:
 
             elif fitting_function == "multiple_gaussian":
                 fit = FittingUtil.multiple_gaussian(lam, **kwargs_fitting)
+                size_index = len(kwargs_fitting["I"])
                 if (kwargs_sigma_fitting is not None) & (kwargs_fitting is not None):
                     kwargs_fitting_extended = PlotSpectrum._extend_kwarg(kwargs_fitting, keys=["I", "mu", "sigma"])
                     kwargs_fitting_sigma_extended = PlotSpectrum._extend_kwarg(kwargs_sigma_fitting,
@@ -80,7 +81,7 @@ class PlotSpectrum:
                                                                                     sigma)
                     fits_sigma = np.empty((len(kwargs_list), len(lam)), dtype=np.float64)
                     for ii, kwarg_tmp in enumerate(kwargs_list):
-                        kwarg_tmp_reduced = PlotSpectrum._extend_kwarg(kwarg_tmp, inverse=True, size_index=2,
+                        kwarg_tmp_reduced = PlotSpectrum._extend_kwarg(kwarg_tmp, inverse=True, size_index=size_index,
                                                                        leave_key_alone="back")
                         fits_sigma[ii, :] = FittingUtil.multiple_gaussian(lam, **kwarg_tmp_reduced)
 
