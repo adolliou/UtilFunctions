@@ -71,6 +71,7 @@ class PlotSpectrum:
             elif fitting_function == "multiple_gaussian":
                 fit = FittingUtil.multiple_gaussian(lam, **kwargs_fitting)
                 if (kwargs_sigma_fitting is not None) & (kwargs_fitting is not None):
+                    breakpoint()
                     kwargs_fitting_extended = PlotSpectrum._extend_kwarg(kwargs_fitting)
                     kwargs_fitting_sigma_extended = PlotSpectrum._extend_kwarg(kwargs_sigma_fitting)
 
@@ -101,6 +102,7 @@ class PlotSpectrum:
         else:
             keys = kwargs_fitting.keys()
             kwargs_fitting_extended = {}
+            breakpoint()
             for key in keys:
                 for ii in range(len(kwargs_fitting[key])):
                     kwargs_fitting_extended[f"{key}_{ii}"] = kwargs_fitting[key][ii]
