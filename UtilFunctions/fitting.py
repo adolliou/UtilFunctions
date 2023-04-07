@@ -82,7 +82,8 @@ class PlotSpectrum:
                     fits_sigma = np.empty((len(kwargs_list), len(lam)), dtype=np.float64)
                     for ii, kwarg_tmp in enumerate(kwargs_list):
                         kwarg_tmp_reduced = PlotSpectrum._extend_kwarg(kwarg_tmp, inverse=True, size_index=size_index,
-                                                                       leave_key_alone="back")
+                                                                       leave_key_alone="back",
+                                                                       keys=["I", "mu", "sigma", "back"])
                         fits_sigma[ii, :] = FittingUtil.multiple_gaussian(lam, **kwarg_tmp_reduced)
 
         ax.plot(lam, fit, color=color, linewidth=linewidth_fit, label="_nolegend_")
