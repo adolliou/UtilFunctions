@@ -115,9 +115,10 @@ class PlotSpectrum:
             for subset in itertools.combinations(keys, ii):
                 kwargs_fit_tmp = copy.deepcopy(kwargs_fitting)
                 for key in subset:
+                    print(f"f{subset=}")
                     kwargs_fit_tmp[key] += 0.5 * sigma * kwargs_sigma_fitting[key]
-                    list_kwarg_sigma.append(kwargs_fit_tmp)
-                    kwargs_fit_tmp = kwargs_fitting
+                    list_kwarg_sigma.append(copy.deepcopy(kwargs_fit_tmp))
+                    kwargs_fit_tmp = copy.deepcopy(kwargs_fitting)
                     kwargs_fit_tmp[key] -= 0.5 * sigma * kwargs_sigma_fitting[key]
-                    list_kwarg_sigma.append(kwargs_fit_tmp)
+                    list_kwarg_sigma.append(copy.deepcopy(kwargs_fit_tmp))
         return list_kwarg_sigma
