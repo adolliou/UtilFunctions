@@ -71,16 +71,17 @@ class PlotSpectrum:
             elif fitting_function == "multiple_gaussian":
                 fit = FittingUtil.multiple_gaussian(lam, **kwargs_fitting)
                 if (kwargs_sigma_fitting is not None) & (kwargs_fitting is not None):
-                    breakpoint()
-                    kwargs_fitting_extended = PlotSpectrum._extend_kwarg(kwargs_fitting)
-                    kwargs_fitting_sigma_extended = PlotSpectrum._extend_kwarg(kwargs_sigma_fitting)
+                    kwargs_fitting_extended = PlotSpectrum._extend_kwarg(kwargs_fitting, keys=["I", "mu", "sigma"])
+                    kwargs_fitting_sigma_extended = PlotSpectrum._extend_kwarg(kwargs_sigma_fitting,
+                                                                               keys=["I", "mu", "sigma"])
 
                     kwargs_list = PlotSpectrum._extract_all_possible_fitting_kwargs(kwargs_fitting_extended,
                                                                                     kwargs_fitting_sigma_extended,
                                                                                     sigma)
                     fits_sigma = np.empty((len(kwargs_list), len(lam)), dtype=np.float64)
                     for ii, kwarg_tmp in enumerate(kwargs_list):
-                        kwarg_tmp_reduced = PlotSpectrum._extend_kwarg(kwarg_tmp, inverse=True)
+                        kwarg_tmp_reduced = PlotSpectrum._extend_kwarg(kwarg_tmp, inverse=True,
+                                                                       keys=["I", "mu", "sigma"])
                         fits_sigma[ii, :] = FittingUtil.multiple_gaussian(lam, **kwarg_tmp_reduced)
 
         ax.plot(lam, fit, color=color, linewidth=linewidth_fit, label="_nolegend_")
@@ -91,18 +92,19 @@ class PlotSpectrum:
         return edges_lam, spectrum, lam, fit, fits_sigma
 
     @staticmethod
-    def _extend_kwarg(kwargs_fitting, inverse=False):
+    def _extend_kwarg(kwargs_fitting, inverse=False, keys=None):
         if inverse:
-            keys = kwargs_fitting.keys()
+            if keys is None:
+                keys = kwargs_fitting.keys()
             kwargs_fitting_reduced = {}
             for key in keys:
                 for ii in range(len(kwargs_fitting[key])):
                     kwargs_fitting_reduced[key][ii] = kwargs_fitting[f"{key}_{ii}"]
             return kwargs_fitting_reduced
         else:
-            keys = kwargs_fitting.keys()
+            if keys is None:
+                keys = kwargs_fitting.keys()
             kwargs_fitting_extended = {}
-            breakpoint()
             for key in keys:
                 for ii in range(len(kwargs_fitting[key])):
                     kwargs_fitting_extended[f"{key}_{ii}"] = kwargs_fitting[key][ii]
