@@ -110,14 +110,20 @@ class PlotSpectrum:
     def _extract_all_possible_fitting_kwargs(kwargs_fitting, kwargs_sigma_fitting, sigma):
         list_kwarg_sigma = []
         keys = kwargs_sigma_fitting.keys()
-        for ii in range(len(keys)):
-            for subset in itertools.combinations(keys, ii):
+        keys_plus_minus = []
+        for key in keys:
+            keys_plus_minus.append(f"{key}_plus")
+            keys_plus_minus.append(f"{key}_minus")
+        for ii in range(len(keys_plus_minus)):
+            for subset in itertools.combinations(keys_plus_minus, ii):
                 kwargs_fit_tmp = copy.deepcopy(kwargs_fitting)
+                kwargs_fit_cp = copy.deepcopy(kwargs_fitting)
                 for key in subset:
-                    # print(f"f{subset=}")
-                    kwargs_fit_tmp[key] += 0.5 * sigma * kwargs_sigma_fitting[key]
-                    list_kwarg_sigma.append(copy.deepcopy(kwargs_fit_tmp))
-                    kwargs_fit_tmp = copy.deepcopy(kwargs_fitting)
-                    kwargs_fit_tmp[key] -= 0.5 * sigma * kwargs_sigma_fitting[key]
-                    list_kwarg_sigma.append(copy.deepcopy(kwargs_fit_tmp))
+                    if "plus" in key:
+                        key_or = key.replace("_plus", "")
+                        kwargs_fit_tmp[key_or] = kwargs_fit_cp + 0.5 * sigma * kwargs_sigma_fitting[key_or]
+                    elif "minus" in key:
+                        key_or = key.replace("_minus", "")
+                        kwargs_fit_tmp[key_or] = kwargs_fit_cp - 0.5 * sigma * kwargs_sigma_fitting[key_or]
+                list_kwarg_sigma.append(copy.deepcopy(kwargs_fit_tmp))
         return list_kwarg_sigma
