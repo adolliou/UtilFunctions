@@ -65,7 +65,6 @@ class PlotSpectrum:
                                                                                     kwargs_sigma_fitting,
                                                                                     sigma)
                     fits_sigma = np.empty((len(kwargs_list), len(lam)), dtype=np.float64)
-                    breakpoint()
                     for ii, kwarg_tmp in enumerate(kwargs_list):
                         fits_sigma[ii, :] = FittingUtil.gaussian(lam, **kwarg_tmp)
 
@@ -115,7 +114,7 @@ class PlotSpectrum:
             for subset in itertools.combinations(keys, ii):
                 kwargs_fit_tmp = copy.deepcopy(kwargs_fitting)
                 for key in subset:
-                    print(f"f{subset=}")
+                    # print(f"f{subset=}")
                     kwargs_fit_tmp[key] += 0.5 * sigma * kwargs_sigma_fitting[key]
                     list_kwarg_sigma.append(copy.deepcopy(kwargs_fit_tmp))
                     kwargs_fit_tmp = copy.deepcopy(kwargs_fitting)
