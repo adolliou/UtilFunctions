@@ -121,9 +121,9 @@ class PlotSpectrum:
                 for key in subset:
                     if "plus" in key:
                         key_or = key.replace("_plus", "")
-                        kwargs_fit_tmp[key_or] = kwargs_fit_cp + 0.5 * sigma * kwargs_sigma_fitting[key_or]
+                        kwargs_fit_tmp[key_or] = kwargs_fit_cp[key_or] + 0.5 * sigma * kwargs_sigma_fitting[key_or]
                     elif "minus" in key:
                         key_or = key.replace("_minus", "")
-                        kwargs_fit_tmp[key_or] = kwargs_fit_cp - 0.5 * sigma * kwargs_sigma_fitting[key_or]
+                        kwargs_fit_tmp[key_or] = kwargs_fit_cp[key_or] - 0.5 * sigma * kwargs_sigma_fitting[key_or]
                 list_kwarg_sigma.append(copy.deepcopy(kwargs_fit_tmp))
         return list_kwarg_sigma
