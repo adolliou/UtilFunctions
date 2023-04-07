@@ -63,6 +63,7 @@ class PlotSpectrum:
                                                                                     kwargs_sigma_fitting,
                                                                                     sigma)
                     fits_sigma = np.empty((len(kwargs_list), len(lam)), dtype=np.float64)
+                    breakpoint()
                     for ii, kwarg_tmp in enumerate(kwargs_list):
                         fits_sigma[ii, :] = FittingUtil.gaussian(lam, **kwarg_tmp)
 
