@@ -258,7 +258,7 @@ class PlotFits:
                                       (longitude1D < CommonUtil.ang2pipi(lonlims[1]).to("deg").value)]
             latitude1D = latitude1D[(latitude1D > CommonUtil.ang2pipi(latlims[0]).to("deg").value) &
                                     (latitude1D < CommonUtil.ang2pipi(latlims[1]).to("deg").value)]
-
+        breakpoint()
         longitude_grid, latitude_grid = np.meshgrid(longitude1D, latitude1D)
 
         longitude_grid = longitude_grid * u.deg
