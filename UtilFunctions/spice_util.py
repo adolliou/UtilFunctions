@@ -137,3 +137,28 @@ class SpiceUtil:
         hdr["CRVAL2"] = lat_mid
         hdr["CRPIX1"] = (naxis1 + 1) / 2
         hdr["CRPIX2"] = (naxis2 + 1) / 2
+
+    @staticmethod
+    def extract_l3_data(path_spice: str, line: dict, index_line: int):
+
+        with fits.open(path_spice) as hdul_spice:
+
+            hdu = hdul_spice[line["window"][index_line]]
+            hdr = hdu.header
+            data = hdu.data
+            data_amplitude = hdu.data.copy()[:, :, line["amplitude"][index_line]]
+            data_width = hdu.data.copy()[:, :, line["width"][index_line]]
+            data_chi2 = hdu.data.copy()[:, :, line["chi2"][index_line]]
+            data_back = hdu.data.copy()[:, :, line["background"][index_line]]
+            data_lambda = hdu.data.copy()[:, :, line["lambda"][index_line]]
+
+            data_amplitude = np.where(data_chi2 == 0, np.nan, data_amplitude)
+            data_amplitude = np.where(data_amplitude == hdu.header["ANA_MISS"], np.nan, data_amplitude)
+            data_width = np.where(data_chi2 == 0, np.nan, data_width)
+            data_width = np.where(data_amplitude == hdu.header["ANA_MISS"], np.nan, data_width)
+            data_chi2 = np.where(data_amplitude == hdu.header["ANA_MISS"], np.nan, data_chi2)
+            data_back = np.where(data_chi2 == 0, np.nan, data_back)
+            data_back = np.where(data_amplitude == hdu.header["ANA_MISS"], np.nan, data_back)
+            data_lambda = np.where(data_chi2 == 0, np.nan, data_lambda)
+            data_lambda = np.where(data_amplitude == hdu.header["ANA_MISS"], np.nan, data_lambda)
+            data_radiance = data_amplitude * data_width * np.sqrt(2 * np.pi) * 0.424660900

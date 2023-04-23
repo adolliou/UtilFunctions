@@ -87,7 +87,7 @@ class PlotSpectrum:
                                                                        keys=["I", "mu", "sigma", "back"])
                         fits_sigma[ii, :] = FittingUtil.multiple_gaussian(lam, **kwarg_tmp_reduced)
 
-        ax.plot(lam, fit, color=color, linewidth=linewidth_fit, label="_nolegend_")
+            ax.plot(lam, fit, color=color, linewidth=linewidth_fit, label="_nolegend_")
         if show_legend:
             ax.legend()
         if save_path is not None:
