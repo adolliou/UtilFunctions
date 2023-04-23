@@ -74,7 +74,7 @@ class SpiceUtil:
             idx_lon = np.where(np.array(w_xy.wcs.ctype, dtype="str") == "HPLN-TAN")[0][0]
             idx_lat = np.where(np.array(w_xy.wcs.ctype, dtype="str") == "HPLT-TAN")[0][0]
             x_small, y_small = np.meshgrid(np.arange(w_xy.pixel_shape[idx_lon]),
-                                           np.arange(w_xy.pixel_shape[idx_lat]),)
+                                           np.arange(w_xy.pixel_shape[idx_lat]), )
             longitude_small, latitude_small = w_xy.pixel_to_world(x_small, y_small)
             return longitude_small, latitude_small
         elif return_type == 'xyt':
@@ -83,7 +83,7 @@ class SpiceUtil:
             idx_utc = np.where(np.array(w_xyt.wcs.ctype, dtype="str") == "UTC")[0][0]
             x_small, y_small, z_small = np.meshgrid(np.arange(w_xyt.pixel_shape[idx_lon]),
                                                     np.arange(w_xyt.pixel_shape[idx_lat]),
-                                                    np.arange(w_xyt.pixel_shape[idx_utc]),)
+                                                    np.arange(w_xyt.pixel_shape[idx_utc]), )
             longitude_small, latitude_small, utc_small = w_xyt.pixel_to_world(x_small, y_small, z_small)
             return longitude_small, latitude_small, utc_small
 
@@ -98,7 +98,7 @@ class SpiceUtil:
             idx_lon = np.where(np.array(w_xy.wcs.ctype, dtype="str") == "HPLN-TAN")[0][0]
             idx_lat = np.where(np.array(w_xy.wcs.ctype, dtype="str") == "HPLT-TAN")[0][0]
             x_small, y_small = np.meshgrid(np.arange(w_xy.pixel_shape[idx_lon]),
-                                           np.arange(w_xy.pixel_shape[idx_lat]),)
+                                           np.arange(w_xy.pixel_shape[idx_lat]), )
             longitude_small, latitude_small = w_xy.pixel_to_world(x_small, y_small)
             return longitude_small, latitude_small
         elif return_type == 'xyt':
@@ -107,7 +107,7 @@ class SpiceUtil:
             idx_utc = np.where(np.array(w_xyt.wcs.ctype, dtype="str") == "UTC")[0][0]
             x_small, y_small, z_small = np.meshgrid(np.arange(w_xyt.pixel_shape[idx_lon]),
                                                     np.arange(w_xyt.pixel_shape[idx_lat]),
-                                                    np.arange(w_xyt.pixel_shape[idx_utc]),)
+                                                    np.arange(w_xyt.pixel_shape[idx_utc]), )
             longitude_small, latitude_small, utc_small = w_xyt.pixel_to_world(x_small, y_small, z_small)
             return longitude_small, latitude_small, utc_small
 
@@ -142,23 +142,25 @@ class SpiceUtil:
     def extract_l3_data(path_spice: str, line: dict, index_line: int):
 
         with fits.open(path_spice) as hdul_spice:
-
             hdu = hdul_spice[line["window"][index_line]]
-            hdr = hdu.header
             data = hdu.data
-            data_amplitude = hdu.data.copy()[:, :, line["amplitude"][index_line]]
-            data_width = hdu.data.copy()[:, :, line["width"][index_line]]
-            data_chi2 = hdu.data.copy()[:, :, line["chi2"][index_line]]
-            data_back = hdu.data.copy()[:, :, line["background"][index_line]]
-            data_lambda = hdu.data.copy()[:, :, line["lambda"][index_line]]
+            data_l3 = {"amplitude": data[:, :, line["amplitude"][index_line]],
+                       "width": data[:, :, line["width"][index_line]],
+                       "chi2": data[:, :, line["chi2"][index_line]],
+                       "background": data[:, :, line["background"][index_line]],
+                       "lambda": data[:, :, line["lambda"][index_line]]}
+            data_l3["chi2"] = np.where(data_l3["amplitude"] == hdu.header["ANA_MISS"], np.nan, data_l3["chi2"])
 
-            data_amplitude = np.where(data_chi2 == 0, np.nan, data_amplitude)
-            data_amplitude = np.where(data_amplitude == hdu.header["ANA_MISS"], np.nan, data_amplitude)
-            data_width = np.where(data_chi2 == 0, np.nan, data_width)
-            data_width = np.where(data_amplitude == hdu.header["ANA_MISS"], np.nan, data_width)
-            data_chi2 = np.where(data_amplitude == hdu.header["ANA_MISS"], np.nan, data_chi2)
-            data_back = np.where(data_chi2 == 0, np.nan, data_back)
-            data_back = np.where(data_amplitude == hdu.header["ANA_MISS"], np.nan, data_back)
-            data_lambda = np.where(data_chi2 == 0, np.nan, data_lambda)
-            data_lambda = np.where(data_amplitude == hdu.header["ANA_MISS"], np.nan, data_lambda)
-            data_radiance = data_amplitude * data_width * np.sqrt(2 * np.pi) * 0.424660900
+            data_l3["amplitude"] = np.where(data_l3["chi2"] == 0, np.nan, data_l3["amplitude"])
+            data_l3["amplitude"] = np.where(data_l3["amplitude"] == hdu.header["ANA_MISS"], np.nan,
+                                            data_l3["amplitude"])
+            data_l3["width"] = np.where(data_l3["chi2"] == 0, np.nan, data_l3["width"])
+            data_l3["width"] = np.where(data_l3["amplitude"] == hdu.header["ANA_MISS"], np.nan, data_l3["width"])
+            data_l3["background"] = np.where(data_l3["chi2"] == 0, np.nan, data_l3["background"])
+            data_l3["background"] = np.where(data_l3["amplitude"] == hdu.header["ANA_MISS"], np.nan,
+                                             data_l3["background"])
+            data_l3["lambda"] = np.where(data_l3["chi2"] == 0, np.nan, data_l3["lambda"])
+            data_l3["lambda"] = np.where(data_l3["amplitude"] == hdu.header["ANA_MISS"], np.nan, data_l3["lambda"])
+            data_l3["radiance"] = data_l3["amplitude"] * data_l3["width"] * np.sqrt(2 * np.pi) * 0.424660900
+
+            return data_l3
