@@ -139,10 +139,10 @@ class SpiceUtil:
         hdr["CRPIX2"] = (naxis2 + 1) / 2
 
     @staticmethod
-    def extract_l3_data(path_spice: str, line: dict, index_line: int):
+    def extract_l3_data(path_spice: str, line: dict, index_line: int, window=0):
 
         with fits.open(path_spice) as hdul_spice:
-            hdu = hdul_spice[line["window"][index_line]]
+            hdu = hdul_spice[window]
             data = hdu.data
             data_l3 = {"amplitude": data[:, :, line["amplitude"][index_line]],
                        "width": data[:, :, line["width"][index_line]],
