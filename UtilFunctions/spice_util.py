@@ -156,7 +156,7 @@ class SpiceUtil:
 
             for key in ["amplitude", "width", "background", "lambda"]:
                 data_l3[key] = np.where(data_l3["chi2"] == 0, np.nan, data_l3[key])
-                data_l3[key] = np.where(data_l3["amplitude"] == hdu.header["ANA_MISS"], np.nan,
+                data_l3[key] = np.where(data_l3[key] == hdu.header["ANA_MISS"], np.nan,
                                         data_l3[key])
 
             data_l3["radiance"] = data_l3["amplitude"] * data_l3["width"] * np.sqrt(2 * np.pi) * 0.424660900
