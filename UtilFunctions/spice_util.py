@@ -154,16 +154,11 @@ class SpiceUtil:
                        "lambda": data[:, :, line["lambda"][index_line]]}
             data_l3["chi2"] = np.where(data_l3["amplitude"] == hdu.header["ANA_MISS"], np.nan, data_l3["chi2"])
 
-            data_l3["amplitude"] = np.where(data_l3["chi2"] == 0, np.nan, data_l3["amplitude"])
-            data_l3["amplitude"] = np.where(data_l3["amplitude"] == hdu.header["ANA_MISS"], np.nan,
-                                            data_l3["amplitude"])
-            data_l3["width"] = np.where(data_l3["chi2"] == 0, np.nan, data_l3["width"])
-            data_l3["width"] = np.where(data_l3["amplitude"] == hdu.header["ANA_MISS"], np.nan, data_l3["width"])
-            data_l3["background"] = np.where(data_l3["chi2"] == 0, np.nan, data_l3["background"])
-            data_l3["background"] = np.where(data_l3["amplitude"] == hdu.header["ANA_MISS"], np.nan,
-                                             data_l3["background"])
-            data_l3["lambda"] = np.where(data_l3["chi2"] == 0, np.nan, data_l3["lambda"])
-            data_l3["lambda"] = np.where(data_l3["amplitude"] == hdu.header["ANA_MISS"], np.nan, data_l3["lambda"])
+            for key in ["amplitude", "width", "background", "lambda"]:
+                data_l3[key] = np.where(data_l3["chi2"] == 0, np.nan, data_l3[key])
+                data_l3[key] = np.where(data_l3["amplitude"] == hdu.header["ANA_MISS"], np.nan,
+                                        data_l3[key])
+
             data_l3["radiance"] = data_l3["amplitude"] * data_l3["width"] * np.sqrt(2 * np.pi) * 0.424660900
 
             return data_l3
