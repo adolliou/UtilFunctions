@@ -67,10 +67,12 @@ class SpiceUtil:
 
         w2.wcs.pc[3, 0] = 0
 
-        w_xyt = w2.dropaxis(0)
         if return_type == 'xy':
+            breakpoint()
             w2.wcs.pc[3, 1] = 0
-            w_xy = w_xyt.dropaxis(2)
+            w_xyt = w2.dropaxis(0)
+            w_xy = w_xyt.dropaxis(0)
+
             idx_lon = np.where(np.array(w_xy.wcs.ctype, dtype="str") == "HPLN-TAN")[0][0]
             idx_lat = np.where(np.array(w_xy.wcs.ctype, dtype="str") == "HPLT-TAN")[0][0]
             x_small, y_small = np.meshgrid(np.arange(w_xy.pixel_shape[idx_lon]),
@@ -78,6 +80,8 @@ class SpiceUtil:
             longitude_small, latitude_small = w_xy.pixel_to_world(x_small, y_small)
             return longitude_small, latitude_small
         elif return_type == 'xyt':
+            w_xyt = w2.dropaxis(0)
+
             idx_lon = np.where(np.array(w_xyt.wcs.ctype, dtype="str") == "HPLN-TAN")[0][0]
             idx_lat = np.where(np.array(w_xyt.wcs.ctype, dtype="str") == "HPLT-TAN")[0][0]
             idx_utc = np.where(np.array(w_xyt.wcs.ctype, dtype="str") == "UTC")[0][0]
