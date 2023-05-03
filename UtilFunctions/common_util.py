@@ -5,16 +5,27 @@ import astropy.constants
 import numpy as np
 from tqdm import tqdm
 from scipy.ndimage import map_coordinates
+import astropy.constants
 
 class CommonUtil:
 
     @staticmethod
-    def find_closest_dict_index(utc_to_find, dict_file_reference, threshold_time):
-
-        delta_time = np.array([np.abs((utc_to_find - n).to(u.s).value) for n in dict_file_reference["date-avg"]])
+    def find_closest_dict_index(utc_to_find, dict_file_reference, threshold_time, time_delay=False,
+                                dsun_obs_ref=None):
+        if time_delay:
+            if dsun_obs_ref is None:
+                raise ValueError("please enter dsun_obs_ref if time delay is not negligeable.")
+            time = np.array([n - ((d - dsun_obs_ref)/astropy.constants.c)
+                                  for n, d in zip(dict_file_reference["date-avg"], dict_file_reference["dsun-obs"])],
+                            dtype="object")
+        else:
+            time = dict_file_reference["date-avg"]
+        delta_time = np.array([np.abs((utc_to_find - n).to(u.s).value) for n in time])
 
         closest_index = delta_time.argmin()
         delta_time_min = delta_time[closest_index]
+
+
         if delta_time_min > threshold_time:
             raise ValueError("Delta time between EUI and SPICE file "
                              "equal to %2f s > %.2f" % (delta_time_min, threshold_time))
