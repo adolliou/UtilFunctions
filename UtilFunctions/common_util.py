@@ -18,7 +18,6 @@ class CommonUtil:
             time = np.array([n + TimeDelta(((d*u.m - dsun_obs_to_find)/astropy.constants.c).to("s"))
                                   for n, d in zip(dict_file_reference["date-avg"], dict_file_reference["dsun-obs"])],
                             dtype="object")
-            breakpoint()
         else:
             time = dict_file_reference["date-avg"]
         delta_time = np.array([np.abs((utc_to_find - n).to(u.s).value) for n in time])
