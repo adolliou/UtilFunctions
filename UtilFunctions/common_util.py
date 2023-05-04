@@ -1,6 +1,6 @@
 import astropy.io.fits as fits
 import astropy.units as u
-from astropy.time import Time
+from astropy.time import Time, TimeDelta
 import astropy.constants
 import numpy as np
 from tqdm import tqdm
@@ -15,7 +15,8 @@ class CommonUtil:
         if time_delay:
             if dsun_obs_ref is None:
                 raise ValueError("please enter dsun_obs_ref if time delay is not negligeable.")
-            time = np.array([n - ((d - dsun_obs_ref)/astropy.constants.c)
+            breakpoint()
+            time = np.array([n - TimeDelta(((d - dsun_obs_ref)/astropy.constants.c).to("s"))
                                   for n, d in zip(dict_file_reference["date-avg"], dict_file_reference["dsun-obs"])],
                             dtype="object")
         else:
