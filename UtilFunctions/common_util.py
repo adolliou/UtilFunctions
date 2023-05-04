@@ -15,8 +15,7 @@ class CommonUtil:
         if time_delay:
             if dsun_obs_ref is None:
                 raise ValueError("please enter dsun_obs_ref if time delay is not negligeable.")
-            breakpoint()
-            time = np.array([n - TimeDelta(((d - dsun_obs_ref)/astropy.constants.c).to("s"))
+            time = np.array([n - TimeDelta(((d*u.m - dsun_obs_ref)/astropy.constants.c).to("s"))
                                   for n, d in zip(dict_file_reference["date-avg"], dict_file_reference["dsun-obs"])],
                             dtype="object")
         else:
