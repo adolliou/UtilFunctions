@@ -11,11 +11,11 @@ class CommonUtil:
 
     @staticmethod
     def find_closest_dict_index(utc_to_find, dict_file_reference, threshold_time, time_delay=False,
-                                dsun_obs_ref=None):
+                                dsun_obs_to_find=None):
         if time_delay:
-            if dsun_obs_ref is None:
+            if dsun_obs_to_find is None:
                 raise ValueError("please enter dsun_obs_ref if time delay is not negligeable.")
-            time = np.array([n - TimeDelta(((d*u.m - dsun_obs_ref)/astropy.constants.c).to("s"))
+            time = np.array([n + TimeDelta(((d*u.m - dsun_obs_to_find)/astropy.constants.c).to("s"))
                                   for n, d in zip(dict_file_reference["date-avg"], dict_file_reference["dsun-obs"])],
                             dtype="object")
         else:
