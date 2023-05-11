@@ -7,6 +7,7 @@ from tqdm import tqdm
 from scipy.ndimage import map_coordinates
 import astropy.constants
 
+
 class CommonUtil:
 
     @staticmethod
@@ -15,8 +16,8 @@ class CommonUtil:
         if time_delay:
             if dsun_obs_to_find is None:
                 raise ValueError("please enter dsun_obs_ref if time delay is not negligeable.")
-            time = np.array([n + TimeDelta(((d*u.m - dsun_obs_to_find)/astropy.constants.c).to("s"))
-                                  for n, d in zip(dict_file_reference["date-avg"], dict_file_reference["dsun-obs"])],
+            time = np.array([n + TimeDelta(((d * u.m - dsun_obs_to_find) / astropy.constants.c).to("s"))
+                             for n, d in zip(dict_file_reference["date-avg"], dict_file_reference["dsun-obs"])],
                             dtype="object")
         else:
             time = dict_file_reference["date-avg"]
@@ -25,11 +26,11 @@ class CommonUtil:
         closest_index = delta_time.argmin()
         delta_time_min = delta_time[closest_index]
 
-
         if delta_time_min > threshold_time:
             raise ValueError("Delta time between EUI and SPICE file "
                              "equal to %2f s > %.2f" % (delta_time_min, threshold_time))
         return closest_index, delta_time_min
+
     @staticmethod
     def find_closest_time(list_to_find: list, list_ref: list, window_to_find=-1, window_ref=-1, time_delay=True,
                           maximal_threshold=15 * u.s):
