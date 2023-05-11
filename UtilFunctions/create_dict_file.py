@@ -19,7 +19,7 @@ def create_dict_file(path_instrument: str, suffix: str, window=None, sort_dict=T
     data_dict['date-avg'] = []
     data_dict['date-beg'] = []
     data_dict['dsun-obs'] = []
-    data_dict['telescop'] = []
+    # data_dict['telescop'] = []
 
     for kk, path in enumerate(tqdm(data_dict['path'], desc="Adding files to dict")):
         f = fits.open(path)
@@ -38,7 +38,7 @@ def create_dict_file(path_instrument: str, suffix: str, window=None, sort_dict=T
             data_dict['date-beg'].append(astropy.time.Time(f[idx].header['DATE-OBS']))
 
         data_dict['dsun-obs'].append(f[idx].header['DSUN_OBS'])
-        data_dict['telescop'].append(f[idx].header['TELESCOP'])
+        # data_dict['telescop'].append(f[idx].header['TELESCOP'])
         if "DATE-AVG" not in f[idx].header:
             warnings.warn("DATE-AVG not found in header, manually compute it.")
             data_dict['date-avg'].append(astropy.time.Time(f[idx].header['DATE-OBS']) +
@@ -47,7 +47,7 @@ def create_dict_file(path_instrument: str, suffix: str, window=None, sort_dict=T
     data_dict['date-avg'] = np.array(data_dict['date-avg'])
     data_dict['date-beg'] = np.array(data_dict['date-beg'])
     data_dict['dsun-obs'] = np.array(data_dict['dsun-obs'])
-    data_dict['telescop'] = np.array(data_dict['telescop'])
+    # data_dict['telescop'] = np.array(data_dict['telescop'])
 
     print("%i FITS files added in the dict_file." % len(data_dict["path"]))
 
@@ -67,7 +67,7 @@ def _sort_dict_file(dict_file: dict):
     d["date-avg"] = dict_file["date-avg"][sort]
     d["date-beg"] = dict_file["date-beg"][sort]
     d["dsun-obs"] = dict_file["dsun-obs"][sort]
-    d["telescop"] = dict_file["telescop"][sort]
+    # d["telescop"] = dict_file["telescop"][sort]
     return d
 
 
@@ -86,7 +86,7 @@ def select_time_interval(dict_file: dict, date_start=None, date_stop=None, ):
     d["date-avg"] = dict_file["date-avg"][selection]
     d["date-beg"] = dict_file["date-beg"][selection]
     d["dsun-obs"] = dict_file["dsun-obs"][selection]
-    d["telescop"] = dict_file["telescop"][selection]
+    # d["telescop"] = dict_file["telescop"][selection]
 
     return d
 
@@ -103,7 +103,7 @@ def remove_paths_with_str(dict_file: dict, str_to_remove: str):
     d["date-avg"] = dict_file["date-avg"][selection_to_keep]
     d["date-beg"] = dict_file["date-beg"][selection_to_keep]
     d["dsun-obs"] = dict_file["dsun-obs"][selection_to_keep]
-    d["telescop"] = dict_file["telescop"][selection_to_keep]
+    # d["telescop"] = dict_file["telescop"][selection_to_keep]
     print(f"removed {selection_to_rm.sum()} files in dict")
 
     return d
