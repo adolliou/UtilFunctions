@@ -30,9 +30,10 @@ def create_dict_file(path_instrument: str, suffix: str, window=None, sort_dict=T
                 idx = 0
         else:
             idx = window
-        data_dict['date-avg'].append(astropy.time.Time(f[idx].header['DATE-AVG']))
-        data_dict['date-beg'].append(astropy.time.Time(f[idx].header['DATE-BEG']))
-
+        if "DATE-AVG" in f[idx].header:
+            data_dict['date-avg'].append(astropy.time.Time(f[idx].header['DATE-AVG']))
+        if "DATE-BEG" in f[idx].header:
+            data_dict['date-beg'].append(astropy.time.Time(f[idx].header['DATE-BEG']))
         data_dict['dsun-obs'].append(f[idx].header['DSUN_OBS'])
         data_dict['telescop'].append(f[idx].header['TELESCOP'])
     data_dict['path'] = np.array(data_dict['path'])
