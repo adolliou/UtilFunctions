@@ -6,7 +6,7 @@ import os
 import astropy.units as u
 from tqdm import tqdm
 import copy
-
+import warnings
 
 
 def create_dict_file(path_instrument: str, suffix: str, window=None, sort_dict=True):
@@ -36,6 +36,10 @@ def create_dict_file(path_instrument: str, suffix: str, window=None, sort_dict=T
             data_dict['date-beg'].append(astropy.time.Time(f[idx].header['DATE-BEG']))
         data_dict['dsun-obs'].append(f[idx].header['DSUN_OBS'])
         data_dict['telescop'].append(f[idx].header['TELESCOP'])
+        if "DATE-AVG" not in f[idx].header:
+            warnings.warn("DATE-AVG not found in header, manually compute it.")
+            data_dict['date-avg'].append(astropy.time.Time(f[idx].header['DATE-AVG']) +
+                                         0.5*u.Quantity(f[idx].header["XPOSURE"], "s"))
     data_dict['path'] = np.array(data_dict['path'])
     data_dict['date-avg'] = np.array(data_dict['date-avg'])
     data_dict['date-beg'] = np.array(data_dict['date-beg'])
