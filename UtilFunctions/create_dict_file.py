@@ -41,8 +41,12 @@ def create_dict_file(path_instrument: str, suffix: str, window=None, sort_dict=T
         # data_dict['telescop'].append(f[idx].header['TELESCOP'])
         if "DATE-AVG" not in f[idx].header:
             warnings.warn("DATE-AVG not found in header, manually compute it.")
-            data_dict['date-avg'].append(astropy.time.Time(f[idx].header['DATE-OBS']) +
+            if "EXPTIME" in f[idx].header:
+                data_dict['date-avg'].append(astropy.time.Time(f[idx].header['DATE-OBS']) +
                                          0.5*u.Quantity(f[idx].header["EXPTIME"], "s"))
+            elif "CADENCE" in f[idx].header:
+                data_dict['date-avg'].append(astropy.time.Time(f[idx].header['DATE-OBS']) +
+                                             0.5 * u.Quantity(f[idx].header["CADENCE"], "s"))
     data_dict['path'] = np.array(data_dict['path'])
     data_dict['date-avg'] = np.array(data_dict['date-avg'])
     data_dict['date-beg'] = np.array(data_dict['date-beg'])
