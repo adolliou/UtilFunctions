@@ -23,6 +23,7 @@ def create_dict_file(path_instrument: str, suffix: str, window=None, sort_dict=T
 
     for kk, path in enumerate(tqdm(data_dict['path'], desc="Adding files to dict")):
         f = fits.open(path)
+
         if window is None:
             if len(f) > 1:
                 idx = 1
