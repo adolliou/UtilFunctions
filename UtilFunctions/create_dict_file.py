@@ -45,8 +45,10 @@ def create_dict_file(path_instrument: str, suffix: str, window=None, sort_dict=T
                 data_dict['date-avg'].append(astropy.time.Time(f[idx].header['DATE-OBS']) +
                                          0.5*u.Quantity(f[idx].header["EXPTIME"], "s"))
             elif "CADENCE" in f[idx].header:
+                print("create HMI date-avg")
                 data_dict['date-avg'].append(astropy.time.Time(f[idx].header['DATE-OBS']) +
                                              0.5 * u.Quantity(f[idx].header["CADENCE"], "s"))
+    print(f"{data_dict=}")
     data_dict['path'] = np.array(data_dict['path'])
     data_dict['date-avg'] = np.array(data_dict['date-avg'])
     data_dict['date-beg'] = np.array(data_dict['date-beg'])
