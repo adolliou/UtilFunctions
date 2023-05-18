@@ -17,7 +17,7 @@ def create_dict_file(path_instrument: str, suffix: str, window=None, sort_dict=T
     data_dict['path_instrument'] = path_instrument
     data_dict['path'] = paths
     data_dict['date-avg'] = []
-    data_dict['date-beg'] = []
+    # data_dict['date-beg'] = []
     data_dict['dsun-obs'] = []
     # data_dict['telescop'] = []
 
@@ -33,10 +33,11 @@ def create_dict_file(path_instrument: str, suffix: str, window=None, sort_dict=T
             idx = window
         if "DATE-AVG" in f[idx].header:
             data_dict['date-avg'].append(astropy.time.Time(f[idx].header['DATE-AVG']))
-        if "DATE-BEG" in f[idx].header:
-            data_dict['date-beg'].append(astropy.time.Time(f[idx].header['DATE-BEG']))
-        else:
-            data_dict['date-beg'].append(astropy.time.Time(f[idx].header['DATE-OBS']))
+        # if "DATE-BEG" in f[idx].header:
+        #     data_dict['date-beg'].append(astropy.time.Time(f[idx].header['DATE-BEG']))
+        # elif:
+        #     data_dict['date-beg'].append(astropy.time.Time(f[idx].header['DATE-OBS']))
+
 
         data_dict['dsun-obs'].append(f[idx].header['DSUN_OBS'])
         # data_dict['telescop'].append(f[idx].header['TELESCOP'])
@@ -54,7 +55,7 @@ def create_dict_file(path_instrument: str, suffix: str, window=None, sort_dict=T
     # print(data_dict["date-avg"])
     data_dict['path'] = np.array(data_dict['path'])
     data_dict['date-avg'] = np.array(data_dict['date-avg'])
-    data_dict['date-beg'] = np.array(data_dict['date-beg'])
+    # data_dict['date-beg'] = np.array(data_dict['date-beg'])
     data_dict['dsun-obs'] = np.array(data_dict['dsun-obs'])
     # data_dict['telescop'] = np.array(data_dict['telescop'])
 
@@ -74,7 +75,7 @@ def _sort_dict_file(dict_file: dict):
 
     d["path"] = dict_file["path"][sort]
     d["date-avg"] = dict_file["date-avg"][sort]
-    d["date-beg"] = dict_file["date-beg"][sort]
+    # d["date-beg"] = dict_file["date-beg"][sort]
     d["dsun-obs"] = dict_file["dsun-obs"][sort]
     # d["telescop"] = dict_file["telescop"][sort]
     return d
@@ -93,7 +94,7 @@ def select_time_interval(dict_file: dict, date_start=None, date_stop=None, ):
 
     d["path"] = dict_file["path"][selection]
     d["date-avg"] = dict_file["date-avg"][selection]
-    d["date-beg"] = dict_file["date-beg"][selection]
+    # d["date-beg"] = dict_file["date-beg"][selection]
     d["dsun-obs"] = dict_file["dsun-obs"][selection]
     # d["telescop"] = dict_file["telescop"][selection]
 
@@ -110,7 +111,7 @@ def remove_paths_with_str(dict_file: dict, str_to_remove: str):
 
     d["path"] = dict_file["path"][selection_to_keep]
     d["date-avg"] = dict_file["date-avg"][selection_to_keep]
-    d["date-beg"] = dict_file["date-beg"][selection_to_keep]
+    # d["date-beg"] = dict_file["date-beg"][selection_to_keep]
     d["dsun-obs"] = dict_file["dsun-obs"][selection_to_keep]
     # d["telescop"] = dict_file["telescop"][selection_to_keep]
     print(f"removed {selection_to_rm.sum()} files in dict")
