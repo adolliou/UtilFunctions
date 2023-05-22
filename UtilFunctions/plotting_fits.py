@@ -5,11 +5,11 @@ from UtilFunctions.common_util import CommonUtil
 from astropy.wcs import WCS
 import astropy.units as u
 from matplotlib.gridspec import GridSpec
-from astropy.visualization import ImageNormalize, LogStretch
 import matplotlib.patches as patches
 import matplotlib.colors as colors
 import os
 import pathlib
+from astropy.visualization import ImageNormalize, AsymmetricPercentileInterval, SqrtStretch, LinearStretch, LogStretch
 
 
 class CmapUtil:
@@ -82,7 +82,25 @@ class CmapUtil:
 
 
 class PlotFits:
+    @staticmethod
+    def get_range(data, stre=None, imax=99.5, imin=2):
+        """
+        :param data:
+        :param stretch: 'sqrt' or 'linear' (default)
+        :return: norm
+        """
+        vmin, vmax = AsymmetricPercentileInterval(imin, imax).get_limits(data)
 
+        #    print('Vmin:', vmin, 'Vmax', vmax)
+        if stre is None:
+            norm = ImageNormalize(vmin=vmin, vmax=vmax, stretch=LinearStretch())
+        elif stre == 'sqrt':
+            norm = ImageNormalize(vmin=vmin, vmax=vmax, stretch=SqrtStretch())
+        elif stre == 'log':
+            norm = ImageNormalize(vmin=vmin, vmax=vmax, stretch=LogStretch())
+        else:
+            raise ValueError('Bad stre value: either None or sqrt')
+        return norm
     @staticmethod
     def plot_fov_rectangle(data, slc=None, path_save=None, show=True, plot_colorbar=True, norm=None, angle=0):
         fig = plt.figure()
