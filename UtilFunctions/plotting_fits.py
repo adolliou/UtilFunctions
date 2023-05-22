@@ -89,6 +89,8 @@ class PlotFits:
         :param stretch: 'sqrt' or 'linear' (default)
         :return: norm
         """
+        isnan = np.isnan(data)
+        data = data[~isnan]
         vmin, vmax = AsymmetricPercentileInterval(imin, imax).get_limits(data)
 
         #    print('Vmin:', vmin, 'Vmax', vmax)
