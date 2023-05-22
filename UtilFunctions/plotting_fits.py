@@ -83,7 +83,7 @@ class CmapUtil:
 
 class PlotFits:
     @staticmethod
-    def get_range(data, stre=None, imax=99.5, imin=2):
+    def get_range(data, stre='log', imax=99.5, imin=2):
         """
         :param data:
         :param stretch: 'sqrt' or 'linear' (default)
