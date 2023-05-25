@@ -93,12 +93,11 @@ class PlotFits:
         data = data[~isnan]
         do = False
         if imax > 100:
-            dimax = imax - 100
-            imax = 100
-            do = True
-        vmin, vmax = AsymmetricPercentileInterval(imin, imax).get_limits(data)
-        if do:
-            vmax = vmax + dimax*vmax
+            vmin, vmax = AsymmetricPercentileInterval(imin, 100).get_limits(data)
+            vmax = imax
+        else:
+            vmin, vmax = AsymmetricPercentileInterval(imin, imax).get_limits(data)
+
         #    print('Vmin:', vmin, 'Vmax', vmax)
         if stre is None:
             norm = ImageNormalize(vmin=vmin, vmax=vmax, stretch=LinearStretch())
