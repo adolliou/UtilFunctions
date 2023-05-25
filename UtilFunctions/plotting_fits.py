@@ -94,7 +94,7 @@ class PlotFits:
         do = False
         if imax > 100:
             vmin, vmax = AsymmetricPercentileInterval(imin, 100).get_limits(data)
-            vmax = imax
+            vmax = vmax * imax/100
         else:
             vmin, vmax = AsymmetricPercentileInterval(imin, imax).get_limits(data)
 
