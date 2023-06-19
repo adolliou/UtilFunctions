@@ -73,10 +73,13 @@ class ResultFolderManager(FolderManager):
 
         results_folder = os.path.join(results_folder, dict_input['name_function'])
         Path(results_folder).mkdir(parents=False, exist_ok=True)
-
-        now = datetime.now()
-        dt_string = now.strftime("D_%d_%m_%Y_T_%H_%M_%S")
-        path_save = os.path.join(results_folder, dt_string)
-        Path(path_save).mkdir(parents=False, exist_ok=True)
+        if "personalize_name" in dict_input:
+            path_save = os.path.join(results_folder, dict_input["personalize_name"])
+            Path(path_save).mkdir(parents=False, exist_ok=True)
+        else:
+            now = datetime.now()
+            dt_string = now.strftime("D_%d_%m_%Y_T_%H_%M_%S")
+            path_save = os.path.join(results_folder, dt_string)
+            Path(path_save).mkdir(parents=False, exist_ok=True)
 
         self["res"] = {"path": path_save}
