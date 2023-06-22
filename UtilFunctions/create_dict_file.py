@@ -44,7 +44,7 @@ def create_dict_file(path_instrument: str, suffix: str, window=None, sort_dict=T
 
         data_dict['dsun-obs'].append(f[idx].header['DSUN_OBS'])
         # data_dict['telescop'].append(f[idx].header['TELESCOP'])
-        if ("DATE-AVG" not in f[idx].header):
+        if ("DATE-AVG" not in f[idx].header) & ("DATE_AVG" not in f[idx].header):
             warnings.warn("DATE-AVG not found in header, manually compute it.")
             if "EXPTIME" in f[idx].header:
                 data_dict['date-avg'].append(astropy.time.Time(f[idx].header['DATE-OBS']) +
