@@ -43,7 +43,7 @@ def create_dict_file(path_instrument: str, suffix: str, window=None, sort_dict=T
 
         if "DSUN_OBS" in f[idx].header:
             data_dict['dsun-obs'].append(f[idx].header['DSUN_OBS'])
-        else:
+        elif "DSUN-OBS" in f[idx].header:
             data_dict['dsun-obs'].append(f[idx].header['DSUN-OBS'])
 
         # data_dict['telescop'].append(f[idx].header['TELESCOP'])
