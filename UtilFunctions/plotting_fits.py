@@ -86,7 +86,7 @@ class PlotFits:
     def get_range(data, stre='log', imax=99.5, imin=2):
         """
         :param data:
-        :param stretch: 'sqrt' or 'linear' (default)
+        :param stretch: 'sqrt', 'log', or 'linear' (default)
         :return: norm
         """
         isnan = np.isnan(data)
