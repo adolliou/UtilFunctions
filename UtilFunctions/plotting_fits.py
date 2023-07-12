@@ -7,8 +7,7 @@ import astropy.units as u
 from matplotlib.gridspec import GridSpec
 import matplotlib.patches as patches
 import matplotlib.colors as colors
-import os
-import pathlib
+
 from astropy.visualization import ImageNormalize, AsymmetricPercentileInterval, SqrtStretch, LinearStretch, LogStretch
 
 

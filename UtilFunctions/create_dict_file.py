@@ -17,9 +17,7 @@ def create_dict_file(path_instrument: str, suffix: str, window=None, sort_dict=T
     data_dict['path_instrument'] = path_instrument
     data_dict['path'] = paths
     data_dict['date-avg'] = []
-    # data_dict['date-beg'] = []
     data_dict['dsun-obs'] = []
-    # data_dict['telescop'] = []
 
     for kk, path in enumerate(tqdm(data_dict['path'], desc="Adding files to dict")):
         f = fits.open(path)
