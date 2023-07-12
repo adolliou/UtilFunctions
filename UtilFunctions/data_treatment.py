@@ -22,6 +22,6 @@ class BackgroundEstimation:
         bound *= maxi
         bound **= 2
         bound += mini
-        inpainted = bound  # remise aux bonnes valeurs de bound
+        inpainted = np.copy(bound)  # remise aux bonnes valeurs de bound
         inpainted[inpainted < 0] = 0
         return inpainted
