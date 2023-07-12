@@ -15,6 +15,7 @@ class BackgroundEstimation:
         bound /= maxi
         bound *= 255
         bound = np.asarray(bound, dtype="uint8")
+        mask = np.asarray(mask, dtype="uint8")
         cv2.inpaint(bound, mask, 3, cv2.INPAINT_NS, bound)  # input and ouput image : bound
         bound = bound.astype(data.dtype)
         bound /= 255
