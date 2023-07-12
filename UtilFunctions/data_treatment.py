@@ -2,12 +2,11 @@ import copy
 import cv2
 import numpy as np
 
-class BackgroundEstimation:
 
+class BackgroundEstimation:
     @staticmethod
     def inpaint(data: np.array, mask: np.array):
         bound = copy.deepcopy(data)
-        bound = np.asarray(bound, dtype="uint8")
 
         mini = bound.min()
         bound -= mini
@@ -15,6 +14,7 @@ class BackgroundEstimation:
         maxi = bound.max()
         bound /= maxi
         bound *= 255
+        bound = np.asarray(bound, dtype="uint8")
         cv2.inpaint(bound, mask, 3, cv2.INPAINT_NS, bound)  # input and ouput image : bound
         bound = bound.astype(data.dtype)
         bound /= 255
