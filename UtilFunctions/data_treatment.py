@@ -6,8 +6,9 @@ class BackgroundEstimation:
 
     @staticmethod
     def inpaint(data: np.array, mask: np.array):
-
         bound = copy.deepcopy(data)
+        bound = np.asarray(bound, dtype="uint8")
+
         mini = bound.min()
         bound -= mini
         bound **= 0.5
