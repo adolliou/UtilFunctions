@@ -123,7 +123,7 @@ def remove_paths_with_str(dict_file: dict, str_to_remove: str):
     return d
 
 
-def select_path_with_str(dict_file: dict, str_to_keep: str):
+def select_path_with_str(dict_file: dict, str_to_keep: str, additional_key = None):
     d = copy.deepcopy(dict_file)
 
     selection_to_keep = np.zeros(len(dict_file["path"]), dtype="bool")
@@ -135,6 +135,9 @@ def select_path_with_str(dict_file: dict, str_to_keep: str):
     # d["date-beg"] = dict_file["date-beg"][selection_to_keep]
     d["dsun-obs"] = dict_file["dsun-obs"][selection_to_keep]
     # d["telescop"] = dict_file["telescop"][selection_to_keep]
+    if additional_key is not None:
+        for key in additional_key:
+            d[key] = d[key][selection_to_keep]
     print(f"kept {selection_to_keep.sum()} files in dict")
 
     return d
