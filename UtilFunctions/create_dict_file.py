@@ -121,3 +121,20 @@ def remove_paths_with_str(dict_file: dict, str_to_remove: str):
     print(f"removed {selection_to_rm.sum()} files in dict")
 
     return d
+
+
+def select_path_with_str(dict_file: dict, str_to_keep: str):
+    d = copy.deepcopy(dict_file)
+
+    selection_to_keep = np.zeros(len(dict_file["path"]), dtype="bool")
+    for ii, path in enumerate(dict_file["path"]):
+        selection_to_keep[ii] = str_to_keep in os.path.basename(path)
+
+    d["path"] = dict_file["path"][selection_to_keep]
+    d["date-avg"] = dict_file["date-avg"][selection_to_keep]
+    # d["date-beg"] = dict_file["date-beg"][selection_to_keep]
+    d["dsun-obs"] = dict_file["dsun-obs"][selection_to_keep]
+    # d["telescop"] = dict_file["telescop"][selection_to_keep]
+    print(f"kept {selection_to_keep.sum()} files in dict")
+
+    return d
