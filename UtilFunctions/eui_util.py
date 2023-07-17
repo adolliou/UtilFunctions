@@ -88,10 +88,13 @@ class EUIUtil:
         y_mid = (naxis2 - 1) / 2
         if sunpy:
             coords = w.pixel_to_world(np.array([x_mid]), np.array([y_mid]))
-            breakpoint()
-        lon_mid, lat_mid = w.pixel_to_world(np.array([x_mid]), np.array([y_mid]))
-        lon_mid = lon_mid[0].to(hdr["CUNIT1"]).value
-        lat_mid = lat_mid[0].to(hdr["CUNIT2"]).value
+            lon_mid = coords.Tx.to(hdr["CUNIT1"]).value
+            lat_mid = coords.Ty.to(hdr["CUNIT1"]).value
+
+        else:
+            lon_mid, lat_mid = w.pixel_to_world(np.array([x_mid]), np.array([y_mid]))
+            lon_mid = lon_mid[0].to(hdr["CUNIT1"]).value
+            lat_mid = lat_mid[0].to(hdr["CUNIT2"]).value
         hdr["CRVAL1"] = lon_mid
         hdr["CRVAL2"] = lat_mid
         hdr["CRPIX1"] = (naxis1 + 1) / 2
