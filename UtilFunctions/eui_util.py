@@ -74,7 +74,7 @@ class EUIUtil:
         hdr["CRPIX2"] = (naxis2 + 1) / 2
 
     @staticmethod
-    def extend_fov_in_header(hdr, extension_naxis1_pixels: int, extension_naxis2_pixels: int ):
+    def extend_fov_in_header(hdr, extension_naxis1_pixels: int, extension_naxis2_pixels: int, sunpy=False):
 
         # first, recenter crpix.
         w = WCS(hdr)
@@ -86,6 +86,9 @@ class EUIUtil:
             naxis2 = hdr["NAXIS2"]
         x_mid = (naxis1 - 1) / 2
         y_mid = (naxis2 - 1) / 2
+        if sunpy:
+            coords = w.pixel_to_world(np.array([x_mid]), np.array([y_mid]))
+            breakpoint()
         lon_mid, lat_mid = w.pixel_to_world(np.array([x_mid]), np.array([y_mid]))
         lon_mid = lon_mid[0].to(hdr["CUNIT1"]).value
         lat_mid = lat_mid[0].to(hdr["CUNIT2"]).value
