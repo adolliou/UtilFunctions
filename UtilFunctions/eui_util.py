@@ -88,8 +88,8 @@ class EUIUtil:
         y_mid = (naxis2 - 1) / 2
         if sunpy:
             coords = w.pixel_to_world(np.array([x_mid]), np.array([y_mid]))
-            lon_mid = coords.Tx.to(hdr["CUNIT1"]).value
-            lat_mid = coords.Ty.to(hdr["CUNIT1"]).value
+            lon_mid = coords.Tx.to(hdr["CUNIT1"]).value[0]
+            lat_mid = coords.Ty.to(hdr["CUNIT1"]).value[0]
 
         else:
             lon_mid, lat_mid = w.pixel_to_world(np.array([x_mid]), np.array([y_mid]))
