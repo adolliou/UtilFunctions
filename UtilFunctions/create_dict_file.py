@@ -137,7 +137,7 @@ def select_path_with_str(dict_file: dict, str_to_keep: str, additional_key = Non
     # d["telescop"] = dict_file["telescop"][selection_to_keep]
     if additional_key is not None:
         for key in additional_key:
-            d[key] = d[key][selection_to_keep]
+            d[key] = dict_file[key][selection_to_keep]
     print(f"kept {selection_to_keep.sum()} files in dict")
 
     return d
