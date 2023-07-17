@@ -1,6 +1,7 @@
 from . import common_util
 import numpy as np
 from astropy.wcs import WCS
+import astropy.units as u
 
 
 class EUIUtil:
@@ -71,3 +72,37 @@ class EUIUtil:
         hdr["CRVAL2"] = lat_mid
         hdr["CRPIX1"] = (naxis1 + 1) / 2
         hdr["CRPIX2"] = (naxis2 + 1) / 2
+
+    @staticmethod
+    def extend_fov_in_header(hdr, extension_naxis1_pixels: int, extension_naxis2_pixels: int ):
+
+        # first, recenter crpix.
+        w = WCS(hdr)
+        if "ZNAXIS1" in hdr:
+            naxis1 = hdr["ZNAXIS1"]
+            naxis2 = hdr["ZNAXIS2"]
+        else:
+            naxis1 = hdr["NAXIS1"]
+            naxis2 = hdr["NAXIS2"]
+        x_mid = (naxis1 - 1) / 2
+        y_mid = (naxis2 - 1) / 2
+        lon_mid, lat_mid = w.pixel_to_world(np.array([x_mid]), np.array([y_mid]))
+        lon_mid = lon_mid[0].to(hdr["CUNIT1"]).value
+        lat_mid = lat_mid[0].to(hdr["CUNIT2"]).value
+        hdr["CRVAL1"] = lon_mid
+        hdr["CRVAL2"] = lat_mid
+        hdr["CRPIX1"] = (naxis1 + 1) / 2
+        hdr["CRPIX2"] = (naxis2 + 1) / 2
+        #second extend naxis
+
+        hdr["NAXIS1"] += extension_naxis1_pixels
+        hdr["NAXIS2"] += extension_naxis2_pixels
+
+        hdr["CRPIX1"] += extension_naxis1_pixels/2
+        hdr["CRPIX2"] += extension_naxis2_pixels/2
+
+
+
+
+
+
