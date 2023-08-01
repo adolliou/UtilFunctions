@@ -21,8 +21,8 @@ class CommonUtil:
                             dtype="object")
         else:
             time = dict_file_reference["date-avg"]
-        print(f'{utc_to_find=}')
-        print(f'{time=}')
+        # print(f'{utc_to_find=}')
+        # print(f'{time=}')
 
         delta_time = np.array([np.abs((utc_to_find - n).to(u.s).value) for n in time])
         closest_index = delta_time.argmin()
