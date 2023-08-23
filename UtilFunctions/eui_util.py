@@ -2,7 +2,7 @@ from . import common_util
 import numpy as np
 from astropy.wcs import WCS
 import astropy.units as u
-
+from astropy.coordinates import SkyCoord
 
 class EUIUtil:
     @staticmethod
@@ -65,7 +65,12 @@ class EUIUtil:
             naxis2 = hdr["NAXIS2"]
         x_mid = (naxis1 - 1) / 2
         y_mid = (naxis2 - 1) / 2
-        lon_mid, lat_mid = w.pixel_to_world(np.array([x_mid]), np.array([y_mid]))
+        try:
+            lon_mid, lat_mid = w.pixel_to_world(np.array([x_mid]), np.array([y_mid]))
+        except:
+            coords = w.pixel_to_world(np.array([x_mid]), np.array([y_mid]))
+            lon_mid = coords.Tx
+            lat_mid = coords.Ty
         lon_mid = lon_mid[0].to(hdr["CUNIT1"]).value
         lat_mid = lat_mid[0].to(hdr["CUNIT2"]).value
         hdr["CRVAL1"] = lon_mid
