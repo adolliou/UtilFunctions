@@ -52,8 +52,8 @@ class PlotSpectrum:
         edges_lam = PlotSpectrum._get_edges(lam)
         ax.stairs(spectrum, edges=edges_lam, label=label, color=color, linewidth=linewidth_stair, )
         if error_spectrum is not None:
-            ax.errorbar(x=lam, y=spectrum, yerr=error_spectrum, linestyle="", marker="", capsize=1,
-                        elinewidth=linewidth_stair, color=color)
+            ax.errorbar(x=lam, y=spectrum, yerr=0.5*error_spectrum, linestyle="", marker="", capsize=0,
+                        elinewidth=linewidth_stair*0.5, color=color)
         fits_sigma = None
         fit = None
         if fitting_function is not None:
