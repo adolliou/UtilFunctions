@@ -88,6 +88,9 @@ class PlotFits:
         :param stretch: 'sqrt', 'log', or 'linear' (default)
         :return: norm
         """
+        if np.isnan(data).sum() == data.size:
+            return None
+
         isnan = np.isnan(data)
         data = data[~isnan]
         do = False
