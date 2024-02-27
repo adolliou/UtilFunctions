@@ -87,3 +87,8 @@ class CommonUtil:
         map_coordinates(image, coords, order=order, mode='constant', cval=fill, output=dst.ravel(), prefilter=False)
 
         return dst
+
+    @staticmethod
+    def spatial_resolution(d_au: float, alpha=1 * u.arcsec):
+        Rsun = 6.95700E+08
+        return (d_au - 1.004 * Rsun) * alpha.to("rad").value
