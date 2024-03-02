@@ -290,7 +290,7 @@ class PlotFits:
         longitude_grid = longitude_grid * u.deg
         latitude_grid = latitude_grid * u.deg
 
-        return longitude_grid, latitude_grid
+        return longitude_grid, latitude_grid, dlon, dlat
 
     @staticmethod
     def extend_regular_grid(longitude_grid, latitude_grid, delta_longitude, delta_latitude):
