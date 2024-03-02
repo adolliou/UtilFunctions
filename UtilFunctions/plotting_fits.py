@@ -274,8 +274,14 @@ class PlotFits:
 
     @staticmethod
     def build_regular_grid(longitude, latitude, lonlims=None, latlims=None):
-        dlon = np.abs((longitude[0, 1] - longitude[0, 0]).to("deg").value)
-        dlat = np.abs((latitude[1, 0] - latitude[0, 0]).to("deg").value)
+        x = np.abs((longitude[0, 1] - longitude[0, 0]).to("deg").value)
+        y = np.abs((latitude[0, 1] - latitude[0, 0]).to("deg").value)
+        dlon = np.sqrt(x**2 + y**2)
+
+        x = np.abs((longitude[1, 0] - longitude[0, 0]).to("deg").value)
+        y = np.abs((latitude[1, 0] - latitude[0, 0]).to("deg").value)
+        dlat = np.sqrt(x**2 + y**2)
+
         longitude1D = np.arange(np.min(CommonUtil.ang2pipi(longitude).to(u.deg).value),
                                 np.max(CommonUtil.ang2pipi(longitude).to(u.deg).value), dlon)
         latitude1D = np.arange(np.min(CommonUtil.ang2pipi(latitude).to(u.deg).value),
@@ -295,8 +301,14 @@ class PlotFits:
 
     @staticmethod
     def extend_regular_grid(longitude_grid, latitude_grid, delta_longitude, delta_latitude):
-        dlon = np.abs((longitude_grid[1, 1] - longitude_grid[0, 0]).to("deg").value)
-        dlat = np.abs((latitude_grid[1, 1] - latitude_grid[0, 0]).to("deg").value)
+        x = np.abs((longitude_grid[0, 1] - longitude_grid[0, 0]).to("deg").value)
+        y = np.abs((latitude_grid[0, 1] - latitude_grid[0, 0]).to("deg").value)
+        dlon = np.sqrt(x**2 + y**2)
+
+        x = np.abs((longitude_grid[1, 0] - longitude_grid[0, 0]).to("deg").value)
+        y = np.abs((latitude_grid[1, 0] - latitude_grid[0, 0]).to("deg").value)
+        dlat = np.sqrt(x**2 + y**2)
+
         delta_longitude_deg = CommonUtil.ang2pipi(delta_longitude).to("deg").value
         delta_latitude_deg = CommonUtil.ang2pipi(delta_latitude).to("deg").value
 
