@@ -289,7 +289,8 @@ class PlotFits:
 
         longitude_grid = longitude_grid * u.deg
         latitude_grid = latitude_grid * u.deg
-
+        dlon = dlon * u.deg
+        dlat = dlat * u.deg
         return longitude_grid, latitude_grid, dlon, dlat
 
     @staticmethod
