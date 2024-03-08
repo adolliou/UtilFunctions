@@ -12,10 +12,27 @@ class FittingUtil:
         return I * np.exp(-((x - mu) ** 2) / (2 * sigma ** 2)) + back
 
     @staticmethod
+    def multiple_gaussian_cfit(x: np.array, *params):
+        y = np.zeros_like(x, dtype=np.float64)
+        y += params[-1]
+        if (len(params) - 1) % 3 != 0:
+            raise ValueError("multiple_gaussian: inconsistent number of arguments")
+        for ii in range(0, len(params)-1, 3):
+            I = params[ii]
+            mu = params[ii+1]
+            sigma = params[ii+2]
+            y += I * np.exp(-((x - mu) ** 2) / (2 * sigma ** 2))
+
+        return y
+
+
+    @staticmethod
     def multiple_gaussian(x: np.array, I: list, mu: list, sigma: list, back: np.float64):
         s = np.array([I_ * np.exp(-((x - mu_) ** 2) / (2 * sigma_ ** 2)) for I_, mu_, sigma_ in zip(I, mu, sigma)],
                      dtype=np.float64)
         return s.sum(axis=0) + back
+
+
 
 
 class PlotSpectrum:
