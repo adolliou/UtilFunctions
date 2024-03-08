@@ -11,6 +11,8 @@ class FittingUtil:
     def gaussian(x: np.array, I: np.float64, mu: np.float64, sigma: np.float64, back: np.float64):
         return I * np.exp(-((x - mu) ** 2) / (2 * sigma ** 2)) + back
 
+
+
     @staticmethod
     def multiple_gaussian_cfit(x: np.array, *params):
         y = np.zeros_like(x, dtype=np.float64)
@@ -24,6 +26,7 @@ class FittingUtil:
             y += I * np.exp(-((x - mu) ** 2) / (2 * sigma ** 2))
 
         return y
+
 
 
     @staticmethod
