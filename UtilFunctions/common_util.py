@@ -91,4 +91,4 @@ class CommonUtil:
     @staticmethod
     def spatial_resolution(d_au: u.Quantity, alpha=1 * u.arcsec):
         Rsun = 6.95700E+08 * u.m
-        return (d_au - 1.004 * Rsun) * alpha.to("rad").value
+        return ((d_au - 1.004 * Rsun) * alpha.to("rad").value/(1.004 * Rsun)) * u.m
