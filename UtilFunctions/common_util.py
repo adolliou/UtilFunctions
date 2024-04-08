@@ -92,4 +92,4 @@ class CommonUtil:
     def spatial_resolution(d_au: u.Quantity, alpha=1 * u.arcsec, factor_above_photosphere=1.004):
         fac = factor_above_photosphere
         Rsun = 6.95700E+08 * u.m
-        return ((d_au - fac * Rsun)/(fac * Rsun)) * alpha.to("rad").value * u.m
+        return (d_au - fac * Rsun) * alpha.to("rad").value * u.m
