@@ -58,8 +58,8 @@ class CmapUtil:
         return aia_wave_dict
 
     @staticmethod
-    def solohri_lya1216_color_table():
-        solohri_lya1216 = get_idl3()
+    def solohri_lya1216_color_table(path_idl3: str):
+        solohri_lya1216 = CmapUtil.get_idl3(path_idl3)
         solohri_lya1216[:, 2] = solohri_lya1216[:, 0] * np.linspace(0, 1, 256)
         return _cmap_from_rgb(*solohri_lya1216.T, 'SolO EUI HRI Lyman Alpha')
 
