@@ -35,7 +35,16 @@ class FittingUtil:
                      dtype=np.float64)
         return s.sum(axis=0) + back
 
+    @staticmethod
+    def polynomial(x, *coeff):
+        """
 
+        :param x:
+        :param coeff: coeff = [a, b, c ] = cx**2 + bx + a = y
+        :return: y
+        """
+        order = len(coeff)
+        return np.array([coeff[i] * x ** i for i in range(order)]).sum(axis=0)
 
 
 class PlotSpectrum:
