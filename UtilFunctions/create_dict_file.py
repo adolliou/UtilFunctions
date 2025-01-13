@@ -10,7 +10,7 @@ import warnings
 import yaml
 
 
-def create_dict_file_from_files(path_instrument=None, suffix=None, path_yaml=None, window=None, sort_dict=True):
+def create_dict_file(path_instrument=None, suffix=None, path_yaml=None, window=None, sort_dict=True):
     data_dict = {}
     if (path_instrument is not None) and (suffix is not None):
         paths = glob(os.path.join(path_instrument, suffix))
@@ -77,15 +77,6 @@ def create_dict_file_from_files(path_instrument=None, suffix=None, path_yaml=Non
     else:
         return data_dict
 
-def create_dict_file_from_yaml(path_yaml: str):
-    y = {}
-    with open(path_yaml, "r") as f:
-        y = yaml.safe_load(f)
-    data_dict = {
-        'path': y['path'],
-        'date-avg':  [],
-        'dsun-obs': [],
-    }
 
 def _sort_dict_file(dict_file: dict):
     ref_time = dict_file["date-avg"][0]

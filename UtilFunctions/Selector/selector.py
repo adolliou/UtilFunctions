@@ -28,7 +28,8 @@ class Selector:
         d = m.groupdict()
         if 'time' not in d.keys():
             raise ValueError(f"could not parse time in {fits_file_name=}")
-        return Time(d["time"])
+        return Time(d["time"][0:2] + '-' + d["time"][2:4] + '-' + d["time"][4:6] + 'T'
+                    + d["time"][7:9] + ':' + d["time"][9:11] + ':' + d["time"][11:13])
 
     def _find_url_from_file(self, fits_file_name):
         time = self._find_time_from_file(fits_file_name)
