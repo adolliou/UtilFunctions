@@ -6,12 +6,13 @@ from bs4 import BeautifulSoup
 import astropy.units as u
 import numpy as np
 from urllib.parse import urljoin
-
-
+import yaml
 
 class Selector:
     def __init__(self, release_url_basis):
         self.release_url_basis = release_url_basis
+        self.url_list_all = None
+        self.time_list_all = None
 
     @staticmethod
     def _find_time_from_file(fits_file_name):
@@ -74,7 +75,20 @@ class Selector:
         url_list_all = np.array(url_list_all, dtype="str")
 
         select = np.logical_and(time_list_all >= time1, time_list_all <= time2)
+        self.url_list_all = url_list_all[select]
+        self.time_list_all = time_list_all[select]
+        return self.url_list_all, self.time_list_all
 
-        return url_list_all[select], time_list_all[select]
+    def write_yaml(self, path_save_yaml: str):
+        if (self.url_list_all is None) or (self.time_list_all is None):
+            raise ValueError("No url_list and time_list available")
 
+        yaml_dict = {
+            "url_list": self.url_list_all,
+            "time_list": [l.fits for l in self.time_list_all]
+        }
+
+        dict_yaml_safe = yaml.safe_load(yaml_dict)
+        with open(path_save_yaml, 'w') as f:
+            yaml.dump(dict_yaml_safe, f)
         # time_list.append(copy.deepcopy(tref))
