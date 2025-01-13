@@ -7,12 +7,19 @@ import astropy.units as u
 from tqdm import tqdm
 import copy
 import warnings
+import yaml
 
 
-def create_dict_file(path_instrument: str, suffix: str, window=None, sort_dict=True):
+def create_dict_file_from_files(path_instrument=None, suffix=None, path_yaml=None, window=None, sort_dict=True):
     data_dict = {}
+    if (path_instrument is not None) and (suffix is not None):
+        paths = glob(os.path.join(path_instrument, suffix))
+    elif suffix is not None:
+        y = {}
+        with open(path_yaml, "r") as f:
+            y = yaml.safe_load(f)
 
-    paths = glob(os.path.join(path_instrument, suffix))
+    paths = y["path"]
     print("create dictionary file with files in the folder %s " % path_instrument)
     data_dict['path_instrument'] = path_instrument
     data_dict['path'] = paths
@@ -70,6 +77,15 @@ def create_dict_file(path_instrument: str, suffix: str, window=None, sort_dict=T
     else:
         return data_dict
 
+def create_dict_file_from_yaml(path_yaml: str):
+    y = {}
+    with open(path_yaml, "r") as f:
+        y = yaml.safe_load(f)
+    data_dict = {
+        'path': y['path'],
+        'date-avg':  [],
+        'dsun-obs': [],
+    }
 
 def _sort_dict_file(dict_file: dict):
     ref_time = dict_file["date-avg"][0]
@@ -141,3 +157,11 @@ def select_path_with_str(dict_file: dict, str_to_keep: str, additional_key = Non
     # print(f"kept {selection_to_keep.sum()} files in dict")
 
     return d
+
+def write_txt(dict_file: dict, path_to_txt: str):
+    with open(path_to_txt, "w") as f:
+        for ii, path in enumerate(dict_file["path"]):
+            if ii != (len(dict_file["path"]) - 1):
+                f.write(path + "\n")
+            else:
+                f.write(path)

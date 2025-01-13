@@ -7,21 +7,33 @@ import astropy.units as u
 import numpy as np
 from urllib.parse import urljoin
 import yaml
+from pathlib import Path
 
 class Selector:
     def __init__(self, release_url_basis):
         self.release_url_basis = release_url_basis
         self.url_list_all = None
         self.time_list_all = None
+        self.re_filename = None
+        self.get_regex()
 
-    @staticmethod
-    def _find_time_from_file(fits_file_name):
-        a = fits_file_name[fits_file_name.find('image') + 6:21 + fits_file_name.find('image')]
-        return Time(a[:4] + "-" + a[4:6] + "-" + a[6:8] + "T" + a[9:11] + ":" + a[11:13] + ":" + a[13:15])
+    def get_regex(self):
+        pass
+
+    def _find_time_from_file(self, fits_file_name):
+
+        m = self.re_filename.match(fits_file_name)
+        if m is None:
+            raise ValueError(f"could not parse {fits_file_name=}")
+        d = m.groupdict()
+        if 'time' not in d.keys():
+            raise ValueError(f"could not parse time in {fits_file_name=}")
+        return Time(d["time"])
 
     def _find_url_from_file(self, fits_file_name):
-        a = fits_file_name[fits_file_name.find('image') + 6:21 + fits_file_name.find('image')]
-        return self.release_url_basis + '/' + a[:4] + '/' + a[4:6] + '/' + a[6:8]
+        time = self._find_time_from_file(fits_file_name)
+        return (self.release_url_basis + '/' + f'{time.ymdhms[0]:04d}' + '/' + f"{time.ymdhms[1]:02d}" + '/' +
+                f"{time.ymdhms[2]:02d}")
 
     def _find_url_from_time(self, time: Time):
         url = self.release_url_basis + '/' + f"{time.ymdhms[0]:04d}" + '/' + f"{time.ymdhms[1]:02d}" \
@@ -79,16 +91,12 @@ class Selector:
         self.time_list_all = time_list_all[select]
         return self.url_list_all, self.time_list_all
 
-    def write_yaml(self, path_save_yaml: str):
+    def write_txt(self, path_save_txt: str):
         if (self.url_list_all is None) or (self.time_list_all is None):
             raise ValueError("No url_list and time_list available")
-
-        yaml_dict = {
-            "url_list": self.url_list_all,
-            "time_list": [l.fits for l in self.time_list_all]
-        }
-
-        dict_yaml_safe = yaml.safe_load(yaml_dict)
-        with open(path_save_yaml, 'w') as f:
-            yaml.dump(dict_yaml_safe, f)
-        # time_list.append(copy.deepcopy(tref))
+        with open(path_save_txt, 'w') as f:
+            for ii, file in enumerate(self.url_list_all):
+                if ii != (len(self.url_list_all) - 1):
+                    f.write(file + "\n")
+                else:
+                    f.write(file)
