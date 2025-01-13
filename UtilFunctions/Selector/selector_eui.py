@@ -43,7 +43,8 @@ class SelectorEui(Selector):
         super().__init__(release_url_basis=url)
 
     def get_regex(self):
-        self.re_filename = re.compile(r'''
+        self.re_filename = re.compile(
+            r'''
         solo
         _(?P<level>L[123])
         _eui
@@ -51,6 +52,7 @@ class SelectorEui(Selector):
         (?P<filter>(174|304|1216|opn))?
         -image
         _(?P<time>\d{8}T\d{6})
-        _(?P<version>V\d{2})
-        (?P<ext>\..*)
-        ''')
+       _(?P<version>V\d{2}).fits
+        ''',
+        re.VERBOSE
+        )
