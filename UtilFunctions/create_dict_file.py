@@ -63,12 +63,9 @@ def create_dict_file(path_instrument=None, suffix=None, path_yaml=None, window=N
                                              0.5 * u.Quantity(f[idx].header["CADENCE"], "s"))
             else:
                 data_dict['date-avg'].append(astropy.time.Time(f[idx].header['DATE-OBS']))
-    # print(data_dict["date-avg"])
     data_dict['path'] = np.array(data_dict['path'])
     data_dict['date-avg'] = np.array(data_dict['date-avg'])
-    # data_dict['date-beg'] = np.array(data_dict['date-beg'])
     data_dict['dsun-obs'] = np.array(data_dict['dsun-obs'])
-    # data_dict['telescop'] = np.array(data_dict['telescop'])
 
     print("%i FITS files added in the dict_file." % len(data_dict["path"]))
 
@@ -139,13 +136,10 @@ def select_path_with_str(dict_file: dict, str_to_keep: str, additional_key = Non
 
     d["path"] = dict_file["path"][selection_to_keep]
     d["date-avg"] = dict_file["date-avg"][selection_to_keep]
-    # d["date-beg"] = dict_file["date-beg"][selection_to_keep]
     d["dsun-obs"] = dict_file["dsun-obs"][selection_to_keep]
-    # d["telescop"] = dict_file["telescop"][selection_to_keep]
     if additional_key is not None:
         for key in additional_key:
             d[key] = dict_file[key][selection_to_keep]
-    # print(f"kept {selection_to_keep.sum()} files in dict")
 
     return d
 
