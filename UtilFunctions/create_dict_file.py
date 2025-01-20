@@ -18,8 +18,7 @@ def create_dict_file(path_instrument=None, suffix=None, path_yaml=None, window=N
         y = {}
         with open(path_yaml, "r") as f:
             y = yaml.safe_load(f)
-
-    paths = y["path"]
+        paths = y["path"]
     print("create dictionary file with files in the folder %s " % path_instrument)
     data_dict['path_instrument'] = path_instrument
     data_dict['path'] = paths
