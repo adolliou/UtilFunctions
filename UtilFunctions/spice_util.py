@@ -1,7 +1,7 @@
 import numpy as np
 from astropy.io import fits
 from astropy.wcs import WCS
-
+from astropy.coordinates import SkyCoord
 
 class SpiceUtil:
 
@@ -131,8 +131,10 @@ class SpiceUtil:
         x_mid = (naxis1 - 1) / 2
         y_mid = (naxis2 - 1) / 2
         t_mid = (naxis3 - 1) / 2
+        coords = w_xyt.pixel_to_world(np.array([x_mid]), np.array([y_mid]), np.array([t_mid]))
+        lon_mid = coords[0].Tx
+        lat_mid = coords[0].Ty
 
-        lon_mid, lat_mid, utc_mid = w_xyt.pixel_to_world(np.array([x_mid]), np.array([y_mid]), np.array(t_mid))
         lon_mid = lon_mid[0].to(hdr["CUNIT1"]).value
         lat_mid = lat_mid[0].to(hdr["CUNIT2"]).value
 
