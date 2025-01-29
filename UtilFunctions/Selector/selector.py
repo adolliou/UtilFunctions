@@ -8,6 +8,7 @@ import numpy as np
 from urllib.parse import urljoin
 import yaml
 from pathlib import Path
+from glob import glob
 
 class Selector:
     def __init__(self, release_url_basis):
@@ -16,6 +17,12 @@ class Selector:
         self.time_list_all = None
         self.re_filename = None
         self.get_regex()
+        self._get_list_from_time = None
+        if "https" not in release_url_basis:
+             # We are dealing with paths instead of URL. Use a different function to find files
+            self._get_list_from_time = self._get_paths_list_from_time
+        else: 
+            self._get_list_from_time = self._get_url_list_from_time
 
     def get_regex(self):
         pass
@@ -48,6 +55,26 @@ class Selector:
     @release_url_basis.setter
     def release_url_basis(self, value):
         self._release_url_basis = value
+
+    def _get_paths_list_from_time(self, time: Time, return_time_list=False, file_name_str=None):
+
+        if file_name_str is None:
+            file_name_str = ""
+        path_basis = self._find_url_from_time(time)
+        # req = requests.get(url=url)
+        # soup = BeautifulSoup(req.text, 'html.parser')
+        paths_list = None
+        if file_name_str is None:
+            paths_list = glob(os.path.join(path_basis, "*.fits"))
+        else:
+            paths_list =  glob(os.path.join(path_basis, file_name_str))
+        if return_time_list:
+            time_list = [self._find_time_from_file(os.path.basename(l)) for l in paths_list
+                         if ((".fits" in os.path.basename(l)) and (file_name_str in os.path.basename(l)))]
+            return paths_list, time_list
+        else:
+            return paths_list
+
 
     def _get_url_list_from_time(self, time: Time, return_time_list=False, file_name_str=None):
 
