@@ -57,6 +57,7 @@ class SelectorEui(Selector):
         (?P<filter>(174|304|1216|opn))?
         -image
         _(?P<time>\d{8}T\d{6})
+        (?P<miliseconds>\d{3})?
        _(?P<version>V\d{2}).fits
         ''',
         re.VERBOSE
