@@ -70,7 +70,7 @@ class Selector:
         if file_name_str is None:
             paths_list = glob(os.path.join(path_basis, "*.fits"))
         else:
-            breakpoint()
+            # breakpoint()
             paths_list =  glob(os.path.join(path_basis, file_name_str))
         if return_time_list:
             time_list = [self._find_time_from_file(os.path.basename(l)) for l in paths_list
@@ -114,7 +114,7 @@ class Selector:
                                                                      file_name_str=file_name_str)
                 url_list_all += url_list_
                 time_list_all += time_list_
-        breakpoint()
+        # breakpoint()
         time_list_all = np.array(time_list_all, dtype="object")
         url_list_all = np.array(url_list_all, dtype="str")
 
