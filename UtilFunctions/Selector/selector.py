@@ -67,6 +67,7 @@ class Selector:
         if file_name_str is None:
             paths_list = glob(os.path.join(path_basis, "*.fits"))
         else:
+            breakpoint()
             paths_list =  glob(os.path.join(path_basis, file_name_str))
         if return_time_list:
             time_list = [self._find_time_from_file(os.path.basename(l)) for l in paths_list
