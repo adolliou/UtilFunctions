@@ -35,7 +35,7 @@ class Selector:
         if m is None:
             raise ValueError(f"could not parse {fits_file_name=}")
         ddd = m.groupdict()
-        if 'time' not in d.keys():
+        if 'time' not in ddd.keys():
             raise ValueError(f"could not parse time in {fits_file_name=}")
         return Time(ddd["time"][0:4] + '-' + ddd["time"][4:6] + '-' + ddd["time"][6:8] + 'T'+ ddd["time"][9:11] + ':' + ddd["time"][11:13] + ':' + ddd["time"][13:15])
 
