@@ -100,13 +100,13 @@ class Selector:
             raise ValueError(f"{time2=} must be greater than {time1=}")
 
         tref = Time(time1.fits[:10] + 'T00:00:00.000')
-        url_list_all, time_list_all = self._get_url_list_from_time(time1, return_time_list=True,
+        url_list_all, time_list_all = self._get_list_from_time(time1, return_time_list=True,
                                                                    file_name_str=file_name_str)
 
         while tref < time2:
             tref += 1 * u.day
             if tref < time2:
-                url_list_, time_list_ = self._get_url_list_from_time(tref, return_time_list=True,
+                url_list_, time_list_ = self._get_list_from_time(tref, return_time_list=True,
                                                                      file_name_str=file_name_str)
                 url_list_all += url_list_
                 time_list_all += time_list_
