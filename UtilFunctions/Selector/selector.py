@@ -11,13 +11,16 @@ from pathlib import Path
 from glob import glob
 
 class Selector:
-    def __init__(self, release_url_basis):
+    def __init__(self, release_url_basis, year_suffix = "", month_suffix="", day_suffix=""):
         self.release_url_basis = release_url_basis
         self.url_list_all = None
         self.time_list_all = None
         self.re_filename = None
         self.get_regex()
         self._get_list_from_time = None
+        self.year_suffix = year_suffix
+        self.month_suffix = month_suffix
+        self.day_suffix = day_suffix
         if "https" not in release_url_basis:
              # We are dealing with paths instead of URL. Use a different function to find files
             self._get_list_from_time = self._get_paths_list_from_time
@@ -40,12 +43,12 @@ class Selector:
 
     def _find_url_from_file(self, fits_file_name):
         time = self._find_time_from_file(fits_file_name)
-        return (self.release_url_basis + '/' + f'{time.ymdhms[0]:04d}' + '/' + f"{time.ymdhms[1]:02d}" + '/' +
-                f"{time.ymdhms[2]:02d}")
+        return (self.release_url_basis + '/' + f'{time.ymdhms[0]:04d}' + self.year_suffix + '/' + f"{time.ymdhms[1]:02d}" + self.month_suffix + '/' +
+                f"{time.ymdhms[2]:02d}") + self.day_suffix
 
     def _find_url_from_time(self, time: Time):
-        url = self.release_url_basis + '/' + f"{time.ymdhms[0]:04d}" + '/' + f"{time.ymdhms[1]:02d}" \
-            + '/' + f"{time.ymdhms[2]:02d}"
+        url = self.release_url_basis + '/' + f"{time.ymdhms[0]:04d}" + self.year_suffix + '/' + f"{time.ymdhms[1]:02d}" + self.month_suffix \
+            + '/' + f"{time.ymdhms[2]:02d}" + self.day_suffix
         return url
 
     @property
