@@ -34,11 +34,10 @@ class Selector:
         m = self.re_filename.match(fits_file_name)
         if m is None:
             raise ValueError(f"could not parse {fits_file_name=}")
-        d = m.groupdict()
+        ddd = m.groupdict()
         if 'time' not in d.keys():
             raise ValueError(f"could not parse time in {fits_file_name=}")
-        return Time(d["time"][0:2] + '-' + d["time"][2:4] + '-' + d["time"][4:6] + 'T'
-                    + d["time"][7:9] + ':' + d["time"][9:11] + ':' + d["time"][11:13])
+        return Time(ddd["time"][0:4] + '-' + ddd["time"][4:6] + '-' + ddd["time"][6:8] + 'T'+ ddd["time"][9:11] + ':' + ddd["time"][11:13] + ':' + ddd["time"][13:15])
 
     def _find_url_from_file(self, fits_file_name):
         time = self._find_time_from_file(fits_file_name)
@@ -71,7 +70,6 @@ class Selector:
         else:
             paths_list =  glob(os.path.join(path_basis, file_name_str))
         if return_time_list:
-            breakpoint()
             time_list = [self._find_time_from_file(os.path.basename(l)) for l in paths_list
                          if ((".fits" in os.path.basename(l)) and (file_name_str in os.path.basename(l)))]
             return paths_list, time_list
