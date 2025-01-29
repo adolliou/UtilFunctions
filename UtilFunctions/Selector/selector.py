@@ -31,7 +31,6 @@ class Selector:
         pass
 
     def _find_time_from_file(self, fits_file_name):
-        breakpoint()
         m = self.re_filename.match(fits_file_name)
         if m is None:
             raise ValueError(f"could not parse {fits_file_name=}")
@@ -72,6 +71,7 @@ class Selector:
         else:
             paths_list =  glob(os.path.join(path_basis, file_name_str))
         if return_time_list:
+            breakpoint()
             time_list = [self._find_time_from_file(os.path.basename(l)) for l in paths_list
                          if ((".fits" in os.path.basename(l)) and (file_name_str in os.path.basename(l)))]
             return paths_list, time_list
@@ -116,7 +116,7 @@ class Selector:
         # breakpoint()
         time_list_all = np.array(time_list_all, dtype="object")
         url_list_all = np.array(url_list_all, dtype="str")
-
+        breakpoint()
         select = np.logical_and(time_list_all >= time1, time_list_all <= time2)
         self.url_list_all = url_list_all[select]
         self.time_list_all = time_list_all[select]
