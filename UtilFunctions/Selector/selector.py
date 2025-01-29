@@ -110,7 +110,7 @@ class Selector:
                                                                      file_name_str=file_name_str)
                 url_list_all += url_list_
                 time_list_all += time_list_
-
+        breakpoint()
         time_list_all = np.array(time_list_all, dtype="object")
         url_list_all = np.array(url_list_all, dtype="str")
 
