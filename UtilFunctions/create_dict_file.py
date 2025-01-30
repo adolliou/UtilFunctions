@@ -10,15 +10,31 @@ import warnings
 import yaml
 
 
-def create_dict_file(path_instrument=None, suffix=None, path_yaml=None, window=None, sort_dict=True):
+def create_dict_file(path_instrument=None, suffix=None, path_list_txt: str = None, window=None, sort_dict=True,):
+    """_summary_
+
+    Args:
+        path_instrument (_type_, optional): _description_. Defaults to None.
+        suffix (_type_, optional): _description_. Defaults to None.
+        path_list_txt (str, optional): _description_. Defaults to None.
+        window (_type_, optional): _description_. Defaults to None.
+        sort_dict (bool, optional): _description_. Defaults to True.
+
+    Returns:
+        _type_: _description_
+    """
     data_dict = {}
     if (path_instrument is not None) and (suffix is not None):
         paths = glob(os.path.join(path_instrument, suffix))
     elif suffix is not None:
-        y = {}
-        with open(path_yaml, "r") as f:
-            y = yaml.safe_load(f)
-        paths = y["path"]
+        paths = []
+        with open(path_list_txt, "r") as f:
+            while True:
+                content = f.readline()
+                if not content:
+                    break
+                if suffix in content:
+                    paths.append(content)
     print("create dictionary file with files in the folder %s " % path_instrument)
     data_dict['path_instrument'] = path_instrument
     data_dict['path'] = paths
