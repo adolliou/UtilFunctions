@@ -35,15 +35,15 @@ def create_dict_file(suffix: str, path_list_txt: str = None, path_instrument: st
     """
     data_dict = {}
 
-    if (path_list_txt is not None):
+    if (path_list_txt is not None) and (path_instrument is not None):
         paths = []
-        with open(path_list_txt, "r") as f:
+        with open(os.path.join(path_list_txt, path_instrument), "r") as f:
             paths = f.read().splitlines()
 
     elif path_instrument is not None:
         paths = glob(os.path.join(path_instrument, suffix))
     else: 
-        raise NotImplementedError("either path_instrument or path_list_txt parameter is necessary")
+        raise NotImplementedError("either path_instrument and path_list_txt, or path_instrument alone parameter is necessary")
     if verbose>0:
         print("create dictionary file with files in the folder %s " % path_instrument)
     data_dict['path_instrument'] = path_instrument
