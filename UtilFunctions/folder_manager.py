@@ -34,10 +34,10 @@ class InputFolderManager(FolderManager):
             self["in"]["suffix"] = dict_input["in_suffix"]
         if "in_window" in dict_input:
             self["in"]["window"] = dict_input["in_window"]
-        if "in_read_list_name" in dict_input:
-            self["in"]["read_list_name"] = dict_input["in_read_list_name"]
+        if "in_name_list_txt" in dict_input:
+            self["in"]["name_list_txt"] = dict_input["in_name_list_txt"]
         else:
-            self["in"]["read_list_name"] = None
+            self["in"]["name_list_txt"] = None
 
 
 class OutputFolderManager(FolderManager):
