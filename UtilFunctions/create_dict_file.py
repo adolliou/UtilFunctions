@@ -10,23 +10,32 @@ import warnings
 import yaml
 
 
-def create_dict_file(path_instrument=None, suffix=None, path_list_txt: str = None, window=None, sort_dict=True,):
+def create_dict_file(suffix: str, path_list_txt: str = None, path_instrument: str=None,  window: int=None, sort_dict: bool=True,
+                     verbose: int=1):
     """_summary_
+    Create a dict_file dictionnary allowing to deal with the paths of the files, and easily access some of their properties :
+    - "paths": list of paths to the FITS files. (list)
+    - "date-avg", parameter DATE-AVG, time of the middle of the exposure. (list)
+    - "dsun-obs", Distance in meter of the spacecraft to the sun center. (list)
 
     Args:
-        path_instrument (_type_, optional): _description_. Defaults to None.
-        suffix (_type_, optional): _description_. Defaults to None.
-        path_list_txt (str, optional): _description_. Defaults to None.
-        window (_type_, optional): _description_. Defaults to None.
-        sort_dict (bool, optional): _description_. Defaults to True.
+        suffix (str): _description_Suffix to of files to look for. typical suffix is suffix="*fsi174*.fits"
+        path_list_txt (str, optional): _description_. Defaults to None. Path to a text files where the absolute paths to the FITS files are written.
+        The latter is obtained through Selektor prior.  
+        path_instrument (str, optional): _description_. Defaults to None. Path to the folder where the instrument files are.
+          ignored if path_list_str is not None
+        window (int, optional): _description_. Defaults to None. Window of the hdu list where the header is extracted 
+        sort_dict (bool, optional): _description_. Defaults to True. If True, then the paths are sorted with time in the output list.
+        verbose (int, optional): level of printing you want
+    Raises:
+        NotImplementedError: _description_
 
     Returns:
         _type_: _description_
     """
     data_dict = {}
-    if (path_instrument is not None) and (suffix is not None):
-        paths = glob(os.path.join(path_instrument, suffix))
-    elif suffix is not None:
+
+    if (path_list_txt is not None):
         paths = []
         with open(path_list_txt, "r") as f:
             while True:
@@ -35,7 +44,12 @@ def create_dict_file(path_instrument=None, suffix=None, path_list_txt: str = Non
                     break
                 if suffix in content:
                     paths.append(content)
-    print("create dictionary file with files in the folder %s " % path_instrument)
+    elif path_instrument is not None:
+        paths = glob(os.path.join(path_instrument, suffix))
+    else: 
+        raise NotImplementedError("either path_instrument or path_list_txt parameter is necessary")
+    if verbose>0:
+        print("create dictionary file with files in the folder %s " % path_instrument)
     data_dict['path_instrument'] = path_instrument
     data_dict['path'] = paths
     data_dict['date-avg'] = []
@@ -69,6 +83,7 @@ def create_dict_file(path_instrument=None, suffix=None, path_list_txt: str = Non
         # data_dict['telescop'].append(f[idx].header['TELESCOP'])
         if ("DATE-AVG" not in f[idx].header) & ("DATE_AVG" not in f[idx].header):
             warnings.warn("DATE-AVG not found in header, manually compute it.")
+            raise NotImplementedError("The code below does not work for SPICE files. Better to raise an error.")
             if "EXPTIME" in f[idx].header:
                 data_dict['date-avg'].append(astropy.time.Time(f[idx].header['DATE-OBS']) +
                                          0.5*u.Quantity(f[idx].header["EXPTIME"], "s"))
@@ -82,7 +97,8 @@ def create_dict_file(path_instrument=None, suffix=None, path_list_txt: str = Non
     data_dict['date-avg'] = np.array(data_dict['date-avg'])
     data_dict['dsun-obs'] = np.array(data_dict['dsun-obs'])
 
-    print("%i FITS files added in the dict_file." % len(data_dict["path"]))
+    if verbose>0:
+        print("%i FITS files added in the dict_file." % len(data_dict["path"]))
 
     if sort_dict:
         return _sort_dict_file(data_dict)
@@ -124,7 +140,7 @@ def select_time_interval(dict_file: dict, date_start=None, date_stop=None, ):
     return d
 
 
-def remove_paths_with_str(dict_file: dict, str_to_remove: str):
+def remove_paths_with_str(dict_file: dict, str_to_remove: str, verbose=1):
     d = copy.deepcopy(dict_file)
 
     selection_to_rm = np.zeros(len(dict_file["path"]), dtype="bool")
@@ -137,7 +153,8 @@ def remove_paths_with_str(dict_file: dict, str_to_remove: str):
     # d["date-beg"] = dict_file["date-beg"][selection_to_keep]
     d["dsun-obs"] = dict_file["dsun-obs"][selection_to_keep]
     # d["telescop"] = dict_file["telescop"][selection_to_keep]
-    print(f"removed {selection_to_rm.sum()} files in dict")
+    if verbose:
+        print(f"removed {selection_to_rm.sum()} files in dict")
 
     return d
 
