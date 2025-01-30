@@ -7,10 +7,9 @@ import astropy.units as u
 from tqdm import tqdm
 import copy
 import warnings
-import yaml
 
 
-def create_dict_file(suffix: str, path_list_txt: str = None, path_instrument: str=None,  window: int=None, sort_dict: bool=True,
+def create_dict_file(suffix: str,  path_instrument: str=None, name_list_txt: str = None,  window: int=None, sort_dict: bool=True,
                      verbose: int=1):
     """_summary_
     Create a dict_file dictionnary allowing to deal with the paths of the files, and easily access some of their properties :
@@ -20,10 +19,10 @@ def create_dict_file(suffix: str, path_list_txt: str = None, path_instrument: st
 
     Args:
         suffix (str): _description_Suffix to of files to look for. typical suffix is suffix="*fsi174*.fits"
-        path_list_txt (str, optional): _description_. Defaults to None. Path to a text files where the absolute paths to the FITS files are written.
+        path_instrument (str, optional): _description_. Defaults to None. Path to the folder where the instruments FITS files are, or 
+        where is the name_list_txt.txt file is.
+        name_list_txt (str, optional): _description_. Defaults to None. Path to a text files where the absolute paths to the FITS files are written.
         The latter is obtained through Selektor prior.  
-        path_instrument (str, optional): _description_. Defaults to None. Path to the folder where the instrument files are.
-          ignored if path_list_str is not None
         window (int, optional): _description_. Defaults to None. Window of the hdu list where the header is extracted 
         sort_dict (bool, optional): _description_. Defaults to True. If True, then the paths are sorted with time in the output list.
         verbose (int, optional): level of printing you want
@@ -35,9 +34,9 @@ def create_dict_file(suffix: str, path_list_txt: str = None, path_instrument: st
     """
     data_dict = {}
 
-    if (path_list_txt is not None) and (path_instrument is not None):
+    if (name_list_txt is not None) and (path_instrument is not None):
         paths = []
-        with open(os.path.join(path_list_txt, path_instrument), "r") as f:
+        with open(os.path.join(path_instrument, name_list_txt), "r") as f:
             paths = f.read().splitlines()
 
     elif path_instrument is not None:
