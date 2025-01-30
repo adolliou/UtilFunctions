@@ -31,6 +31,7 @@ class Selector:
         pass
 
     def _find_time_from_file(self, fits_file_name):
+        breakpoint()
         m = self.re_filename.match(fits_file_name)
         if m is None:
             raise ValueError(f"could not parse {fits_file_name=}")

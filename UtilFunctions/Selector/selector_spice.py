@@ -46,7 +46,8 @@ class SelectorSpice(Selector):
                 (?P<int>-int)?
             _(?P<time>\d{8}T\d{6})
             _(?P<version>V\d{2})
-            _(?P<SPIOBSID>\d+)-(?P<RASTERNO>\d+)
+            _(?P<SPIOBSID>\d+)
+            -(?P<RASTERNO>\d+)
             (?P<ext>\..*)
             ''',
             re.VERBOSE
