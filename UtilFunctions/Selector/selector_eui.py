@@ -48,4 +48,16 @@ class SelectorEui(Selector):
         super().__init__(release_url_basis=url, year_suffix=year_suffix, month_suffix=month_suffix, day_suffix=day_suffix)
 
     def get_regex(self):
-        self.re_filename = re.compile(r'''solo_(?P<level>L[123])_eui-(?P<instrument>(fsi|hrieuv|hrilya))(?P<filter>(174|304|1216|opn))?-image_(?P<time>\d{8}T\d{6})(?P<miliseconds>\d+)?_(?P<version>V\d{2}).fits''',re.VERBOSE)
+        self.re_filename = re.compile(
+            r'''solo_(?P<level>L[123])
+        _eui
+        -(?P<instrument>(fsi|hrieuv|hrilya))
+        (?P<filter>(174|304|1216|opn))?
+        -image
+        (?P<exposure>-short)?
+        _(?P<time>\d{8}T\d{6})
+        (?P<miliseconds>\d+)?
+       _(?P<version>V\d{2}).fits
+        ''',
+        re.VERBOSE
+        )

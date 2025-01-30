@@ -33,7 +33,6 @@ class Selector:
     def _find_time_from_file(self, fits_file_name):
         m = self.re_filename.match(fits_file_name)
         if m is None:
-            breakpoint()
             raise ValueError(f"could not parse {fits_file_name=}")
         ddd = m.groupdict()
         if 'time' not in ddd.keys():
