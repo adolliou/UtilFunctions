@@ -38,12 +38,8 @@ def create_dict_file(suffix: str, path_list_txt: str = None, path_instrument: st
     if (path_list_txt is not None):
         paths = []
         with open(path_list_txt, "r") as f:
-            while True:
-                content = f.readline()
-                if not content:
-                    break
-                if suffix in content:
-                    paths.append(content)
+            paths = f.read().splitlines()
+
     elif path_instrument is not None:
         paths = glob(os.path.join(path_instrument, suffix))
     else: 
