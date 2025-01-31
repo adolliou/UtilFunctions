@@ -9,11 +9,11 @@ class SelectorPhiMPS(Selector):
 
     default_base_url = "/data/solo/phi/data/fmdb"
 
-    def __init__(self, release=6.0, level=2, base_url=None, release_dict=None, level_dict=None, 
+    def __init__(self, release="public", level=2, base_url=None, release_dict=None, level_dict=None, 
                  year_suffix="", month_suffix="", day_suffix=""):
         """
 
-        :param release: Release number (e.g. 6.0)
+        :param release: Release type (e.g. public)
         :param level: level of the data (e.g. 2)
         :param base_url: url or path where the release folders are located. If none, then set to the default_base_url
         :param release_dict: dict containing the names of each release folders. Change if needed
@@ -31,7 +31,7 @@ class SelectorPhiMPS(Selector):
             self.release_dict = release_dict
         if level_dict is None:
             self.level_dict = {
-                "2": "l2",
+                2: "l2",
             }
         else:
             self.level_dict = level_dict
