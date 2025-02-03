@@ -92,7 +92,8 @@ def create_dict_file(suffix: str,  path_instrument: str=None, name_list_txt: str
     data_dict['path'] = np.array(data_dict['path'])
     data_dict['date-avg'] = np.array(data_dict['date-avg'])
     data_dict['dsun-obs'] = np.array(data_dict['dsun-obs'])
-
+    if len(data_dict['path']) == 0:
+        raise ValueError(f"could construct dict data at {path_instrument=}")
     if verbose>0:
         print("%i FITS files added in the dict_file." % len(data_dict["path"]))
 
