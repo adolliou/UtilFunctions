@@ -70,11 +70,10 @@ class Selector:
             paths_list = glob(os.path.join(path_basis, "*.fits"))
         else:
             paths_list =  glob(os.path.join(path_basis, file_name_str))
+        if (len(paths_list) == 0) and self.verbose > 0:
+            warnings.warn("paths_list is empty") 
         if return_time_list:
             time_list = [self._find_time_from_file(os.path.basename(l)) for l in paths_list if (".fits" in os.path.basename(l))]
-        if len(paths_list) == 0:
-            if self.verbose > 0:
-                warnings.warn("paths_list is empty") 
             return paths_list, time_list
         else:
             return paths_list
