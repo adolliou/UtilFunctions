@@ -7,8 +7,21 @@ class SelectorSpice(Selector):
     default_base_url = "https://spice.osups.universite-paris-saclay.fr/spice-data"
 
     def __init__(self, release=5.0, level=2, base_url=None, release_dict=None, level_dict=None, 
-                 year_suffix="", month_suffix="", day_suffix=""):
+                 year_suffix="", month_suffix="", day_suffix="", verbose=1):
+        """_summary_
 
+        Args:
+            release (float, optional): _description_. Defaults to 5.0.
+            level (int, optional): _description_. Defaults to 2.
+            base_url (_type_, optional): _description_. Defaults to None.
+            release_dict (_type_, optional): _description_. Defaults to None.
+            level_dict (_type_, optional): _description_. Defaults to None.
+            year_suffix (str, optional): _description_. Defaults to "".
+            month_suffix (str, optional): _description_. Defaults to "".
+            day_suffix (str, optional): _description_. Defaults to "".
+            verbose (int, optional): _description_. Defaults to 1.  Level of printing on the terminal. 
+
+        """
         if release_dict is None:
             self.release_dict = {
                 "1.0": "release-1.0",
@@ -33,7 +46,8 @@ class SelectorSpice(Selector):
         url = base_url + '/' + self.release_dict[str(release)] + '/' + self.level_dict[str(level)]
 
         super().__init__(release_url_basis=url, 
-                         year_suffix=year_suffix, month_suffix=month_suffix, day_suffix=day_suffix)
+                         year_suffix=year_suffix, month_suffix=month_suffix, day_suffix=day_suffix, 
+                         verbose=verbose)
 
     def get_regex(self):
         self.re_filename = re.compile(

@@ -8,7 +8,7 @@ class SelectorEui(Selector):
     default_base_url = "https://www.sidc.be/EUI/data/releases"
 
     def __init__(self, release=6.0, level=2, base_url=None, release_dict=None, level_dict=None, 
-                 year_suffix="", month_suffix="", day_suffix=""):
+                 year_suffix="", month_suffix="", day_suffix="", verbose=1):
         """
 
         :param release: Release number (e.g. 6.0)
@@ -19,6 +19,7 @@ class SelectorEui(Selector):
         :param year_suffix: Suffix in the year index of the path
         :param month_suffix: Suffix in the month index of the path
         :param day_suffix: Suffix in the day index of the path
+        :param verbose: Level of printing on the terminal. 
 
         """
         if release_dict is None:
@@ -45,7 +46,7 @@ class SelectorEui(Selector):
         if base_url is None:
             base_url = SelectorEui.default_base_url
         url = base_url + '/' + self.release_dict[str(release)] + '/' + self.level_dict[str(level)]
-        super().__init__(release_url_basis=url, year_suffix=year_suffix, month_suffix=month_suffix, day_suffix=day_suffix)
+        super().__init__(release_url_basis=url, year_suffix=year_suffix, month_suffix=month_suffix, day_suffix=day_suffix, verbose=verbose)
 
     def get_regex(self):
         self.re_filename = re.compile(

@@ -9,9 +9,11 @@ from urllib.parse import urljoin
 import yaml
 from pathlib import Path
 from glob import glob
+import warnings
+
 
 class Selector:
-    def __init__(self, release_url_basis, year_suffix = "", month_suffix="", day_suffix=""):
+    def __init__(self, release_url_basis, year_suffix = "", month_suffix="", day_suffix="", verbose=1):
         self.release_url_basis = release_url_basis
         self.url_list_all = None
         self.time_list_all = None
@@ -26,6 +28,7 @@ class Selector:
             self._get_list_from_time = self._get_paths_list_from_time
         else: 
             self._get_list_from_time = self._get_url_list_from_time
+        self.verbose = verbose
 
     def get_regex(self):
         pass
@@ -69,7 +72,9 @@ class Selector:
             paths_list =  glob(os.path.join(path_basis, file_name_str))
         if return_time_list:
             time_list = [self._find_time_from_file(os.path.basename(l)) for l in paths_list if (".fits" in os.path.basename(l))]
-            
+        if len(paths_list) == 0:
+            if self.verbose > 0:
+                warnings.warn("paths_list is empty") 
             return paths_list, time_list
         else:
             return paths_list
