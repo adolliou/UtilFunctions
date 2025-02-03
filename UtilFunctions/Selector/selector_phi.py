@@ -55,7 +55,7 @@ class SelectorPhiMPS(Selector):
         _(?P<level>L[123])
         _phi
         -(?P<instrument>(hrt|fdt))
-        (?P<parameter>(vlos|stockes|icnt|FullModel|chi2|bmag|blos|binc|bazi|))?
+        -(?P<parameter>(vlos|stockes|icnt|FullModel|chi2|bmag|blos|binc|bazi|))?
         (?P<exposure>-short)?
         _(?P<time>\d{8}T\d{6})
         (?P<miliseconds>\d+)?
