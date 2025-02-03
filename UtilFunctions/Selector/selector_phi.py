@@ -38,7 +38,7 @@ class SelectorPhiMPS(Selector):
 
         if base_url is None:
             base_url = SelectorPhiMPS.default_base_url
-        url = base_url + '/' + self.release_dict[str(release)] + '/' + self.level_dict[str(level)]
+        url = base_url + '/' + self.release_dict[str(release)] + '/' + self.level_dict[level]
         super().__init__(release_url_basis=url, year_suffix=year_suffix, month_suffix=month_suffix, day_suffix=day_suffix)
 
     
