@@ -42,6 +42,12 @@ class SelectorPhiMPS(Selector):
         super().__init__(release_url_basis=url, year_suffix=year_suffix, month_suffix=month_suffix, day_suffix=day_suffix)
 
     
+    
+    def _find_url_from_file(self, fits_file_name):
+        time = self._find_time_from_file(fits_file_name)
+        return (self.release_url_basis + '/' + f'{time.ymdhms[0]:04d}' + self.year_suffix + '-' + f"{time.ymdhms[1]:02d}" + self.month_suffix + '-' +
+                f"{time.ymdhms[2]:02d}") + self.day_suffix
+
     def get_regex(self):
         self.re_filename = re.compile(
             r'''
