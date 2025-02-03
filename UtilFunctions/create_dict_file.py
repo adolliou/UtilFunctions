@@ -88,15 +88,7 @@ def create_dict_file(suffix: str,  path_instrument: str=None, name_list_txt: str
                     raise NotImplementedError
             else:
                 raise NotImplementedError("The code below does not work for SPICE files. Better to raise an error.")
-            if "EXPTIME" in f[idx].header:
-                data_dict['date-avg'].append(astropy.time.Time(f[idx].header['DATE-OBS']) +
-                                         0.5*u.Quantity(f[idx].header["EXPTIME"], "s"))
-            elif "CADENCE" in f[idx].header:
-                print("create HMI date-avg")
-                data_dict['date-avg'].append(astropy.time.Time(f[idx].header['DATE-OBS']) +
-                                             0.5 * u.Quantity(f[idx].header["CADENCE"], "s"))
-            else:
-                data_dict['date-avg'].append(astropy.time.Time(f[idx].header['DATE-OBS']))
+
     data_dict['path'] = np.array(data_dict['path'])
     data_dict['date-avg'] = np.array(data_dict['date-avg'])
     data_dict['dsun-obs'] = np.array(data_dict['dsun-obs'])
