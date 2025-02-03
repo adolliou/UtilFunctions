@@ -62,8 +62,6 @@ class Selector:
         if file_name_str is None:
             file_name_str = ""
         path_basis = self._find_url_from_time(time)
-        # req = requests.get(url=url)
-        # soup = BeautifulSoup(req.text, 'html.parser')
         paths_list = None
         if file_name_str is None:
             paths_list = glob(os.path.join(path_basis, "*.fits"))
@@ -71,7 +69,7 @@ class Selector:
             paths_list =  glob(os.path.join(path_basis, file_name_str))
         if return_time_list:
             time_list = [self._find_time_from_file(os.path.basename(l)) for l in paths_list if (".fits" in os.path.basename(l))]
-
+            
             return paths_list, time_list
         else:
             return paths_list
@@ -106,11 +104,15 @@ class Selector:
 
         while tref < time2:
             tref += 1 * u.day
-            if tref < time2:
-                url_list_, time_list_ = self._get_list_from_time(tref, return_time_list=True,
-                                                                     file_name_str=file_name_str)
-                url_list_all += url_list_
-                time_list_all += time_list_
+            url_list_, time_list_ = self._get_list_from_time(tref, return_time_list=True,
+                                                                    file_name_str=file_name_str)
+            url_list_all += url_list_
+            time_list_all += time_list_
+            if tref >  time2:
+                break
+
+        if len(time_list_all) == 0:
+            raise ValueError("could not find any FITS file")
         time_list_all = np.array(time_list_all, dtype="object")
         url_list_all = np.array(url_list_all, dtype="str")
         select = np.logical_and(time_list_all >= time1, time_list_all <= time2)
