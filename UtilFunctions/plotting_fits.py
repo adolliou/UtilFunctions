@@ -279,7 +279,7 @@ class PlotFits:
             fig.savefig(path_save)
 
     @staticmethod
-    def build_regular_grid(longitude, latitude, lonlims=None, latlims=None):
+    def build_regular_grid(longitude, latitude, lonlims=None, latlims=None, apply_ang2pipi=True):
         x = np.abs((longitude[0, 1] - longitude[0, 0]).to("deg").value)
         y = np.abs((latitude[0, 1] - latitude[0, 0]).to("deg").value)
         dlon = np.sqrt(x**2 + y**2)
@@ -287,16 +287,21 @@ class PlotFits:
         x = np.abs((longitude[1, 0] - longitude[0, 0]).to("deg").value)
         y = np.abs((latitude[1, 0] - latitude[0, 0]).to("deg").value)
         dlat = np.sqrt(x**2 + y**2)
+        if apply_ang2pipi:
+            ang2pipi = CommonUtil.ang2pipi
+        else:
+            def ang2pipi(a):
+                return a
 
-        longitude1D = np.arange(np.min(CommonUtil.ang2pipi(longitude).to(u.deg).value),
-                                np.max(CommonUtil.ang2pipi(longitude).to(u.deg).value), dlon)
-        latitude1D = np.arange(np.min(CommonUtil.ang2pipi(latitude).to(u.deg).value),
-                               np.max(CommonUtil.ang2pipi(latitude).to(u.deg).value), dlat)
+        longitude1D = np.arange(np.min(ang2pipi(longitude).to(u.deg).value),
+                                np.max(ang2pipi(longitude).to(u.deg).value), dlon)
+        latitude1D = np.arange(np.min(ang2pipi(latitude).to(u.deg).value),
+                               np.max(ang2pipi(latitude).to(u.deg).value), dlat)
         if (lonlims is not None) or (latlims is not None):
-            longitude1D = longitude1D[(longitude1D > CommonUtil.ang2pipi(lonlims[0]).to("deg").value) &
-                                      (longitude1D < CommonUtil.ang2pipi(lonlims[1]).to("deg").value)]
-            latitude1D = latitude1D[(latitude1D > CommonUtil.ang2pipi(latlims[0]).to("deg").value) &
-                                    (latitude1D < CommonUtil.ang2pipi(latlims[1]).to("deg").value)]
+            longitude1D = longitude1D[(longitude1D > ang2pipi(lonlims[0]).to("deg").value) &
+                                      (longitude1D < ang2pipi(lonlims[1]).to("deg").value)]
+            latitude1D = latitude1D[(latitude1D > ang2pipi(latlims[0]).to("deg").value) &
+                                    (latitude1D < ang2pipi(latlims[1]).to("deg").value)]
         longitude_grid, latitude_grid = np.meshgrid(longitude1D, latitude1D)
 
         longitude_grid = longitude_grid * u.deg
