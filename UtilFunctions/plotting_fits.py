@@ -88,7 +88,7 @@ class CmapUtil:
 
 class PlotFits:
     @staticmethod
-    def get_range(data, stre='log', imax=99.5, imin=2):
+    def get_range(data, stre='log', imax=99.5, imin=2, a=1000):
         """
         :param data:
         :param stretch: 'sqrt', 'log', or 'linear' (default)
@@ -112,7 +112,7 @@ class PlotFits:
         elif stre == 'sqrt':
             norm = ImageNormalize(vmin=vmin, vmax=vmax, stretch=SqrtStretch())
         elif stre == 'log':
-            norm = ImageNormalize(vmin=vmin, vmax=vmax, stretch=LogStretch())
+            norm = ImageNormalize(vmin=vmin, vmax=vmax, stretch=LogStretch(a))
         else:
             raise ValueError('Bad stre value: either None or sqrt')
         return norm
