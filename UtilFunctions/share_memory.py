@@ -6,7 +6,10 @@ def gen_shmm(create=False, name=None, ndarray=None, size=0, shape=None, dtype=No
     assert (type(ndarray) != type(None) or size != 0) or type(name) != type(None)
     assert type(ndarray) != type(None) or type(shape) != type(None)
     dtype = ndarray.dtype if dtype is None else dtype = dtype
-    size = size if type(ndarray) == type(None) else ndarray.nbytes
+    if type(ndarray) == type(None):
+        size = size
+    else:
+        size = ndarray.nbytes
     shmm = SharedMemory(create=create, size=size, name=name)
     shmm_data = np.ndarray(shape=shape if type(ndarray) == type(None) else ndarray.shape,
                            buffer=shmm.buf, dtype=dtype)
