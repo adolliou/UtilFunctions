@@ -12,7 +12,25 @@ class CommonUtil:
 
     @staticmethod
     def find_closest_dict_index(utc_to_find, dict_file_reference, threshold_time, time_delay=False,
-                                dsun_obs_to_find=None):
+                                dsun_obs_to_find=None, return_time_delay: bool = False):
+        """Returns the closest index in time of a dicrionnary with regards to a given time in utc. 
+        Can include computation of time delay due to light travelling time
+
+        Args:
+            utc_to_find (_type_): _description_
+            dict_file_reference (_type_): _description_
+            threshold_time (_type_): _description_
+            time_delay (bool, optional): _description_. Defaults to False.
+            dsun_obs_to_find (_type_, optional): _description_. Defaults to None.
+            return_time_delay (bool, optional): _description_. Defaults to False.
+
+        Raises:
+            ValueError: _description_
+            ValueError: _description_
+
+        Returns:
+            _type_: _description_
+        """        
         if time_delay:
             if dsun_obs_to_find is None:
                 raise ValueError("please enter dsun_obs_ref if time delay is not negligeable.")
@@ -31,6 +49,10 @@ class CommonUtil:
         if delta_time_min > threshold_time:
             raise ValueError("Delta time between EUI and SPICE file "
                              "equal to %2f s > %.2f" % (delta_time_min, threshold_time))
+        if return_time_delay & time_delay:
+            time_delay = ((dict_file_reference["dsun-obs"][closest_index] * u.m - dsun_obs_to_find) / astropy.constants.c).to("s")
+
+            return closest_index, delta_time_min, time_delay
         return closest_index, delta_time_min
 
     @staticmethod
