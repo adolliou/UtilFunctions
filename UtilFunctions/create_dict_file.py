@@ -213,7 +213,7 @@ def select_values_in_header_keywords(dict_file: str, window: int | str, keyword:
     d = copy.deepcopy(dict_file)
     selection_to_keep = np.zeros(len(dict_file["path"]), dtype="bool")
 
-    for ii, path in enumerate(dict_file["path"]):
+    for ii, path in enumerate(tqdm(dict_file["path"], desc="Selection of FITS files based on keyword in dict_file")):
         with fits.open(path) as hdul:
             hdu = hdul[window]
             header = hdu.header
