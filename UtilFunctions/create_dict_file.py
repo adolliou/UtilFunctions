@@ -11,7 +11,7 @@ import warnings
 
 def create_dict_file(suffix: str,  path_instrument: str=None, name_list_txt: str = None,  window: int=None, sort_dict: bool=True,
                      verbose: int=1):
-    """_summary_
+    """
     Create a dict_file dictionnary allowing to deal with the paths of the files, and easily access some of their properties :
     - "paths": list of paths to the FITS files. (list)
     - "date-avg", parameter DATE-AVG, time of the middle of the exposure. (list)
@@ -26,8 +26,6 @@ def create_dict_file(suffix: str,  path_instrument: str=None, name_list_txt: str
         window (int, optional): _description_. Defaults to None. Window of the hdu list where the header is extracted 
         sort_dict (bool, optional): _description_. Defaults to True. If True, then the paths are sorted with time in the output list.
         verbose (int, optional): level of printing you want
-    Raises:
-        NotImplementedError: _description_
 
     Returns:
         _type_: _description_
@@ -65,11 +63,6 @@ def create_dict_file(suffix: str,  path_instrument: str=None, name_list_txt: str
         elif ("DATE_AVG" in f[idx].header):
             data_dict['date-avg'].append(astropy.time.Time(f[idx].header['DATE_AVG']))
 
-        # if "DATE-BEG" in f[idx].header:
-        #     data_dict['date-beg'].append(astropy.time.Time(f[idx].header['DATE-BEG']))
-        # elif:
-        #     data_dict['date-beg'].append(astropy.time.Time(f[idx].header['DATE-OBS']))
-
         if "DSUN_OBS" in f[idx].header:
             data_dict['dsun-obs'].append(f[idx].header['DSUN_OBS'])
         elif "DSUN-OBS" in f[idx].header:
@@ -104,6 +97,14 @@ def create_dict_file(suffix: str,  path_instrument: str=None, name_list_txt: str
 
 
 def _sort_dict_file(dict_file: dict):
+    """Sort the dict file by FITS file date. 
+
+    Args:
+        dict_file (dict): input dict file
+
+    Returns:
+        dict : output sorted dict file
+    """    
     ref_time = dict_file["date-avg"][0]
     d = copy.deepcopy(dict_file)
     time = [(n - ref_time).to(u.s).value for n in dict_file["date-avg"]]
@@ -111,13 +112,15 @@ def _sort_dict_file(dict_file: dict):
 
     d["path"] = dict_file["path"][sort]
     d["date-avg"] = dict_file["date-avg"][sort]
-    # d["date-beg"] = dict_file["date-beg"][sort]
     d["dsun-obs"] = dict_file["dsun-obs"][sort]
-    # d["telescop"] = dict_file["telescop"][sort]
     return d
 
 
 def select_time_interval(dict_file: dict, date_start=None, date_stop=None, ):
+
+    """ In a dict file, select only the FITS files over a specific time interval.
+
+    """
     selection1 = np.ones(len(dict_file["date-avg"]), dtype="bool")
     selection2 = np.ones(len(dict_file["date-avg"]), dtype="bool")
     d = copy.deepcopy(dict_file)
@@ -130,14 +133,15 @@ def select_time_interval(dict_file: dict, date_start=None, date_stop=None, ):
 
     d["path"] = dict_file["path"][selection]
     d["date-avg"] = dict_file["date-avg"][selection]
-    # d["date-beg"] = dict_file["date-beg"][selection]
     d["dsun-obs"] = dict_file["dsun-obs"][selection]
-    # d["telescop"] = dict_file["telescop"][selection]
 
     return d
 
 
 def remove_paths_with_str(dict_file: dict, str_to_remove: str, verbose=1):
+    """ 
+    In a dict file, remove fits files with a specific str in their path string. 
+    """    
     d = copy.deepcopy(dict_file)
 
     selection_to_rm = np.zeros(len(dict_file["path"]), dtype="bool")
@@ -147,16 +151,24 @@ def remove_paths_with_str(dict_file: dict, str_to_remove: str, verbose=1):
 
     d["path"] = dict_file["path"][selection_to_keep]
     d["date-avg"] = dict_file["date-avg"][selection_to_keep]
-    # d["date-beg"] = dict_file["date-beg"][selection_to_keep]
     d["dsun-obs"] = dict_file["dsun-obs"][selection_to_keep]
-    # d["telescop"] = dict_file["telescop"][selection_to_keep]
     if verbose:
         print(f"removed {selection_to_rm.sum()} files in dict")
 
     return d
 
 
-def select_path_with_str(dict_file: dict, str_to_keep: str, additional_key = None):
+def select_path_with_str(dict_file: dict, str_to_keep: str, additional_key: list = None) -> dict:
+    """Select FITS files with a specific str in their filepath
+
+    Args:
+        dict_file (dict): input dict file
+        str_to_keep (str): str to keep in their file path
+        additional_key (list, optional): List of header keys to shortlist as well in dict. Defaults to None.
+
+    Returns:
+        _type_: a corrected dict
+    """    
     d = copy.deepcopy(dict_file)
 
     selection_to_keep = np.zeros(len(dict_file["path"]), dtype="bool")
@@ -173,9 +185,49 @@ def select_path_with_str(dict_file: dict, str_to_keep: str, additional_key = Non
     return d
 
 def write_txt(dict_file: dict, path_to_txt: str):
+    """Save the paths of all the FITS files in a dict into a text file
+
+    Args:
+        dict_file (dict): dict file to save 
+        path_to_txt (str): Name of the .text file to create
+    """    
     with open(path_to_txt, "w") as f:
         for ii, path in enumerate(dict_file["path"]):
             if ii != (len(dict_file["path"]) - 1):
                 f.write(path + "\n")
             else:
                 f.write(path)
+ 
+def select_values_in_header_keywords(dict_file: str, window: int | str, keyword: str, values: list) -> dict:
+    """Sort paths by selecting only those with keyword values in a given values list. For instance to select a list of SOOP names
+
+    Args:
+        dict_file (str): input dict file
+        window (int | str): HDULIST window to use to get the header 
+        keyword (str): keyword where to make the selection
+        values (list): list of values that are selected.
+
+    Returns:
+        dict: output sorted dict file.
+    """    
+    d = copy.deepcopy(dict_file)
+    selection_to_keep = np.zeros(len(dict_file["path"]), dtype="bool")
+
+    for ii, path in enumerate(dict_file["path"]):
+        with fits.open(path) as hdul:
+            hdu = hdul[window]
+            header = hdu.header
+            val_header = header[keyword]
+            val_header = val_header.replace(" ", "")
+            if val_header in values:
+                selection_to_keep[ii] = True
+
+    d["path"] = dict_file["path"][selection_to_keep]
+    d["date-avg"] = dict_file["date-avg"][selection_to_keep]
+    d["dsun-obs"] = dict_file["dsun-obs"][selection_to_keep]
+
+    return d
+
+            
+
+

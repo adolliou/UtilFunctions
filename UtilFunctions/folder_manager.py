@@ -30,6 +30,7 @@ class InputFolderManager(FolderManager):
                                             dict_input["in_folder"], dict_input["in_subfolder"])
         self["in"] = {"path": path_spice_old_level,
                       "level": dict_input["in_level"]}
+
         if "in_suffix" in dict_input:
             self["in"]["suffix"] = dict_input["in_suffix"]
         if "in_window" in dict_input:
@@ -38,6 +39,13 @@ class InputFolderManager(FolderManager):
             self["in"]["name_list_txt"] = dict_input["in_name_list_txt"]
         else:
             self["in"]["name_list_txt"] = None
+        if ("in_keyword_select" in dict_input) & ("in_values_select" in dict_input):
+            self["in"]["keyword_select"] = dict_input["in_keyword_select"]
+            self["in"]["values_select"] = dict_input["in_values_select"]
+        else:
+            self["in"]["keyword_select"] = None
+            self["in"]["values_select"] =  None
+
 
 
 class OutputFolderManager(FolderManager):

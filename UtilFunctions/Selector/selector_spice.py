@@ -8,18 +8,18 @@ class SelectorSpice(Selector):
 
     def __init__(self, release=5.0, level=2, base_url=None, release_dict=None, level_dict=None, 
                  year_suffix="", month_suffix="", day_suffix="", verbose=1):
-        """_summary_
+        """Class to select SPICE fits files using regex
 
         Args:
-            release (float, optional): _description_. Defaults to 5.0.
-            level (int, optional): _description_. Defaults to 2.
-            base_url (_type_, optional): _description_. Defaults to None.
-            release_dict (_type_, optional): _description_. Defaults to None.
-            level_dict (_type_, optional): _description_. Defaults to None.
-            year_suffix (str, optional): _description_. Defaults to "".
-            month_suffix (str, optional): _description_. Defaults to "".
-            day_suffix (str, optional): _description_. Defaults to "".
-            verbose (int, optional): _description_. Defaults to 1.  Level of printing on the terminal. 
+            release (float, optional): release number. Defaults to 5.0.
+            level (int, optional): level of the file. Defaults to 2.
+            base_url (_type_, optional): base path or url where the files are. Defaults to None.
+            release_dict (_type_, optional): dict to match a release number to a folder name in the path. Defaults to None.
+            level_dict (_type_, optional): dict to match a level number to a folder name in the path. Defaults to None.
+            year_suffix (str, optional): add a suffix to the year if necessary. Defaults to "".
+            month_suffix (str, optional): add a suffix to the month if necessary. Defaults to "".
+            day_suffix (str, optional): add a suffix to the day if necessary. Defaults to "".
+            verbose (int, optional): Defaults to 1.  Level of printing on the terminal. 
 
         """
         if release_dict is None:
