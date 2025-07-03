@@ -198,7 +198,7 @@ def write_txt(dict_file: dict, path_to_txt: str):
             else:
                 f.write(path)
  
-def select_values_in_header_keywords(dict_file: str, window: int | str, keyword: str, values: list) -> dict:
+def select_values_in_header_keywords(dict_file: str, window: int | str | list, keyword: str, values: list) -> dict:
     """Sort paths by selecting only those with keyword values in a given values list. For instance to select a list of SOOP names
 
     Args:
@@ -215,6 +215,7 @@ def select_values_in_header_keywords(dict_file: str, window: int | str, keyword:
 
     for ii, path in enumerate(tqdm(dict_file["path"], desc="Selection of FITS files based on keyword in dict_file")):
         with fits.open(path) as hdul:
+            
             hdu = hdul[window]
             header = hdu.header
             val_header = header[keyword]

@@ -33,6 +33,24 @@ class SpiceUtil:
         return iymin, iymax
 
     @staticmethod
+    def get_spectral_windows_name(hdul):
+        """return all windows extname for the spectral lines, 
+        and not the calibration ones.
+
+        """        
+        win_list = []
+        for hdu in hdul:
+            extn = hdu["EXTNAME"]
+            cal_extn = [
+                "VARIABLE_KEYWORDS", 
+                "WCSDVARR", 
+                "SATPIXLIST"
+            ]
+            if extn not in cal_extn:
+                win_list.append(extn)
+                
+
+    @staticmethod
     def create_intensity_map(path_to_l3, index_amplitude=0, index_width=2):
         hdul = fits.open(path_to_l3)
         hdu_results = hdul[0]
