@@ -40,7 +40,7 @@ class SpiceUtil:
         """        
         win_list = []
         for hdu in hdul:
-            extn = hdu["EXTNAME"]
+            extn = hdu.header["EXTNAME"]
             cal_extn = [
                 "VARIABLE_KEYWORDS", 
                 "WCSDVARR", 
@@ -48,7 +48,7 @@ class SpiceUtil:
             ]
             if extn not in cal_extn:
                 win_list.append(extn)
-                
+        return win_list
 
     @staticmethod
     def create_intensity_map(path_to_l3, index_amplitude=0, index_width=2):
