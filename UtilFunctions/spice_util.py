@@ -47,7 +47,7 @@ class SpiceUtil:
                 "SATPIXLIST"
             ]
             is_in_cal_extn = np.array([n in extn for n in cal_extn_list], dtype="bool")
-            if is_in_cal_extn.any():
+            if not is_in_cal_extn.any():
                 win_list.append(extn)
         return win_list
 
