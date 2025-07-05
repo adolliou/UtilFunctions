@@ -46,7 +46,7 @@ class SpiceUtil:
                 "WCSDVARR", 
                 "SATPIXLIST"
             ]
-            if extn not in cal_extn:
+            if cal_extn not in extn:
                 win_list.append(extn)
         return win_list
 
