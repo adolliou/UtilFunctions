@@ -1,5 +1,5 @@
 from sunpy.visualization.colormaps.color_tables import hmi_mag_color_table, _cmap_from_rgb
-
+import numpy as np
 
 
 class PHIUtil:
