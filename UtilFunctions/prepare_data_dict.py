@@ -2,17 +2,20 @@ from .create_dict_file import create_dict_file, select_time_interval, remove_pat
 from UtilFunctions.folder_manager import ResultFolderManager, InputFolderManager, OutputFolderManager
 
 
-def prepare_data_dict(files, data_folder,sequence_folder_name, results_folder=None):
+def prepare_data_dict(files, data_folder,sequence_folder_name, 
+                      results_folder=None, 
+                      results_subfolder=None):
 
     files["data_folder"] = data_folder
     files["sequence_folder_name"] = sequence_folder_name
-    params_results = {
-        "results_folder": results_folder,
-        "sequence_folder_name": sequence_folder_name,
-        "name_function": "write_tables"
-    }
+
     folderman = InputFolderManager(files)
     if results_folder is not None:
+        params_results = {
+            "results_folder": results_folder,
+            "sequence_folder_name": sequence_folder_name,
+            "name_function": results_subfolder
+        }        
         folderman["res"] = ResultFolderManager(params_results)["res"]
     if "out_folder" in files:
         folderman["out"] = OutputFolderManager(files)["out"]
