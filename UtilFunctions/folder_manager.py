@@ -56,10 +56,12 @@ class InputFolderManager(FolderManager):
         ]
 
         for kk in keywords_optionals:
+            kk_without_in = kk.replace("in_", "")
+
             if kk in dict_input:
-                self["in"][kk] = dict_input[kk]
+                self["in"][kk_without_in] = dict_input[kk]
             else:
-                self["in"][kk] = None     
+                self["in"][kk_without_in] = None     
 
         if ("in_keyword_select" in dict_input) & ("in_values_select" in dict_input):
             self["in"]["keyword_select"] = dict_input["in_keyword_select"]
