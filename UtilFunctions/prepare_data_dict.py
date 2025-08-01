@@ -22,3 +22,5 @@ def prepare_data_dict(files, data_folder,sequence_folder_name, results_folder=No
                                      window=folderman["in"]["window"], name_list_txt = folderman["in"]["name_list_txt"])
     dict_files = select_time_interval(dict_file=dict_files,
                                          date_start=files["date_start"], date_stop=files["date_stop"])
+    
+    return dict_files, folderman
