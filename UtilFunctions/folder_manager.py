@@ -19,7 +19,27 @@ class FolderManager(dict):
 
 
 class InputFolderManager(FolderManager):
-    def __init__(self, dict_input):
+    """
+    Subclass of Foldermanager that manages the input data of a procedure
+    """
+    def __init__(self, dict_input: dict):
+        """Initialize InputFolderManager by setting the non optional and optional keywords.
+        optional keywords that are not defined are set to None
+        mandatory keywords :
+        - data folder
+        - in_folder
+        - in_subfolder : the files are located in data_folder/in_folder/in_subfolder
+        - in_level : level of the input data (ie 2) 
+        optional kwywords:
+        - in_suffix : str suffix to look for the correct files. example : "*solo*.fits"
+        - date_start : start time of the sequence (readable by astropy.Time)
+        - date_stop : end time of the sequence
+        - name_list_txt : name of a text files in data_folder/in_folder/in_subfolder containing all paths to the 
+        files you want to add to the Foldermanager. The date_start, date_end time interval selection will still be applied.
+
+        Args:
+            dict_input (dict): _description_
+        """
         list_needed_keys = ["data_folder", "sequence_folder_name",
                             "in_folder", "in_subfolder", "in_level"]
         super().__init__(dict_input, list_needed_keys)
@@ -31,20 +51,23 @@ class InputFolderManager(FolderManager):
         self["in"] = {"path": path_spice_old_level,
                       "level": dict_input["in_level"]}
 
-        if "in_suffix" in dict_input:
-            self["in"]["suffix"] = dict_input["in_suffix"]
-        if "in_window" in dict_input:
-            self["in"]["window"] = dict_input["in_window"]
-        if "in_name_list_txt" in dict_input:
-            self["in"]["name_list_txt"] = dict_input["in_name_list_txt"]
-        else:
-            self["in"]["name_list_txt"] = None
+        keywords_optionals = [
+            "in_suffix", "in_window", "date_start", "date_stop", "name_list_txt",    
+        ]
+
+        for kk in keywords_optionals:
+            if kk in dict_input:
+                self["in"][kk] = dict_input[kk]
+            else:
+                self["in"][kk] = None     
+
         if ("in_keyword_select" in dict_input) & ("in_values_select" in dict_input):
             self["in"]["keyword_select"] = dict_input["in_keyword_select"]
             self["in"]["values_select"] = dict_input["in_values_select"]
         else:
             self["in"]["keyword_select"] = None
             self["in"]["values_select"] =  None
+
 
 
 
