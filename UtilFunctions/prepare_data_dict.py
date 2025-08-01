@@ -1,5 +1,5 @@
-from .create_dict_file import create_dict_file, select_time_interval
-from UtilFunctions.folder_manager import ResultFolderManager, InputFolderManager, OutputFolderManager
+from .create_dict_file import create_dict_file, select_time_interval, remove_paths_with_str
+from UtilFunctions.folder_manager import ResultFolderManager, InputFolderManager, OutputFolderManager, select_values_in_header_keywords
 
 
 def prepare_data_dict(files, data_folder,sequence_folder_name, results_folder=None):
@@ -17,6 +17,14 @@ def prepare_data_dict(files, data_folder,sequence_folder_name, results_folder=No
     if "out_folder" in files:
         folderman["out"] = OutputFolderManager(files)["out"]
 
+    if "remove_str" in files:
+        dict_im = remove_paths_with_str(dict_file=dict_im, str_to_remove=dict_im["remove_str"])
+
+    if folderman["in"]["keyword_select"] is not None:  
+        dict_spice = select_values_in_header_keywords(dict_file=dict_spice, 
+                                                        keyword=folderman["in"]["keyword_select"], 
+                                                        values= folderman["in"]["values_select"], 
+                                                        window= folderman["in"]["window"],)
 
     dict_files = create_dict_file(path_instrument=folderman["in"]["path"], suffix=folderman["in"]["suffix"],
                                      window=folderman["in"]["window"], name_list_txt = folderman["in"]["name_list_txt"])
