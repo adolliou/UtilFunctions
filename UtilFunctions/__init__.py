@@ -1,1 +1,1 @@
-from prepare_data_dict import prepare_data_dict
+from .prepare_data_dict import prepare_data_dict
