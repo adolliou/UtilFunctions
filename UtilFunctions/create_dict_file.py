@@ -9,8 +9,12 @@ import copy
 import warnings
 
 
-def create_dict_file(suffix: str,  path_instrument: str=None, name_list_txt: str = None,  window: int=None, sort_dict: bool=True,
-                     verbose: int=1):
+def create_dict_file(   suffix: str,
+                        path_instrument: str,
+                        window: int,
+                        name_list_txt: str = None,
+                        sort_dict: bool=True,
+                        verbose: int=1):
     """
     Create a dict_file dictionnary allowing to deal with the paths of the files, and easily access some of their properties :
     - "paths": list of paths to the FITS files. (list)
@@ -19,11 +23,11 @@ def create_dict_file(suffix: str,  path_instrument: str=None, name_list_txt: str
 
     Args:
         suffix (str): _description_Suffix to of files to look for. typical suffix is suffix="*fsi174*.fits"
-        path_instrument (str, optional): _description_. Defaults to None. Path to the folder where the instruments FITS files are, or 
+        path_instrument (str): _description_. Defaults to None. Path to the folder where the instruments FITS files are, or 
         where is the name_list_txt.txt file is.
+        window (int): _description_. Defaults to None. Window of the hdu list where the header is extracted 
         name_list_txt (str, optional): _description_. Defaults to None. Path to a text files where the absolute paths to the FITS files are written.
         The latter is obtained through Selektor prior.  
-        window (int, optional): _description_. Defaults to None. Window of the hdu list where the header is extracted 
         sort_dict (bool, optional): _description_. Defaults to True. If True, then the paths are sorted with time in the output list.
         verbose (int, optional): level of printing you want
 
@@ -49,38 +53,34 @@ def create_dict_file(suffix: str,  path_instrument: str=None, name_list_txt: str
     data_dict['dsun-obs'] = []
 
     for kk, path in enumerate(tqdm(data_dict['path'], desc="Adding files to dict")):
-        f = fits.open(path)
+        with fits.open(path) as hdul:
+            hdu = hdul[window]
+            header = hdu.header
 
-        if window is None:
-            if len(f) > 1:
-                idx = 1
-            else:
-                idx = 0
-        else:
-            idx = window
-        if "DATE-AVG" in f[idx].header:
-            data_dict['date-avg'].append(astropy.time.Time(f[idx].header['DATE-AVG']))
-        elif ("DATE_AVG" in f[idx].header):
-            data_dict['date-avg'].append(astropy.time.Time(f[idx].header['DATE_AVG']))
 
-        if "DSUN_OBS" in f[idx].header:
-            data_dict['dsun-obs'].append(f[idx].header['DSUN_OBS'])
-        elif "DSUN-OBS" in f[idx].header:
-            data_dict['dsun-obs'].append(f[idx].header['DSUN-OBS'])
+            if "DATE-AVG" in header:
+                data_dict['date-avg'].append(astropy.time.Time(header['DATE-AVG']))
+            elif ("DATE_AVG" in header):
+                data_dict['date-avg'].append(astropy.time.Time(header['DATE_AVG']))
 
-        # data_dict['telescop'].append(f[idx].header['TELESCOP'])
-        if ("DATE-AVG" not in f[idx].header) & ("DATE_AVG" not in f[idx].header):
-            warnings.warn("DATE-AVG not found in header, manually compute it.")
-            if f[idx].header["TELESCOP"] == "SDO/HMI":
-                warnings.warn("use date-obs for HMI")
-                cad = f[idx].header["TRECSTEP"]
-                unit = f[idx].header["TRECUNIT"] 
-                if unit == 'secs':
-                    data_dict['date-avg'].append(astropy.time.Time(f[idx].header['DATE-OBS']) + 0.5*cad*u.s)
+            if "DSUN_OBS" in header:
+                data_dict['dsun-obs'].append(header['DSUN_OBS'])
+            elif "DSUN-OBS" in header:
+                data_dict['dsun-obs'].append(header['DSUN-OBS'])
+
+            # data_dict['telescop'].append(f[idx].header['TELESCOP'])
+            if ("DATE-AVG" not in header) & ("DATE_AVG" not in header):
+                warnings.warn("DATE-AVG not found in header, manually compute it.")
+                if header["TELESCOP"] == "SDO/HMI":
+                    warnings.warn("use date-obs for HMI")
+                    cad = header["TRECSTEP"]
+                    unit = header["TRECUNIT"] 
+                    if unit == 'secs':
+                        data_dict['date-avg'].append(astropy.time.Time(header['DATE-OBS']) + 0.5*cad*u.s)
+                    else:
+                        raise NotImplementedError
                 else:
-                    raise NotImplementedError
-            else:
-                raise NotImplementedError("The code below does not work for SPICE files. Better to raise an error.")
+                    raise NotImplementedError("The code below does not work for SPICE files. Better to raise an error.")
 
     data_dict['path'] = np.array(data_dict['path'])
     data_dict['date-avg'] = np.array(data_dict['date-avg'])
