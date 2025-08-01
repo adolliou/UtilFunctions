@@ -1,5 +1,5 @@
-from .create_dict_file import create_dict_file, select_time_interval, remove_paths_with_str
-from UtilFunctions.folder_manager import ResultFolderManager, InputFolderManager, OutputFolderManager, select_values_in_header_keywords
+from .create_dict_file import create_dict_file, select_time_interval, remove_paths_with_str, select_values_in_header_keywords
+from UtilFunctions.folder_manager import ResultFolderManager, InputFolderManager, OutputFolderManager
 
 
 def prepare_data_dict(files, data_folder,sequence_folder_name, results_folder=None):
