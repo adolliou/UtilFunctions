@@ -52,35 +52,37 @@ def create_dict_file(   suffix: str,
     data_dict['date-avg'] = []
     data_dict['dsun-obs'] = []
 
+    # for kk, path in enumerate(tqdm(data_dict['path'], desc="Adding files to dict")):
+    #     with fits.open(path) as hdul:
+    #         hdu = hdul[window]
+    #         header = hdu.header
     for kk, path in enumerate(tqdm(data_dict['path'], desc="Adding files to dict")):
-        with fits.open(path) as hdul:
-            hdu = hdul[window]
-            header = hdu.header
+        header = fits.getheader(path, window)
 
 
-            if "DATE-AVG" in header:
-                data_dict['date-avg'].append(astropy.time.Time(header['DATE-AVG']))
-            elif ("DATE_AVG" in header):
-                data_dict['date-avg'].append(astropy.time.Time(header['DATE_AVG']))
+        if "DATE-AVG" in header:
+            data_dict['date-avg'].append(astropy.time.Time(header['DATE-AVG']))
+        elif ("DATE_AVG" in header):
+            data_dict['date-avg'].append(astropy.time.Time(header['DATE_AVG']))
 
-            if "DSUN_OBS" in header:
-                data_dict['dsun-obs'].append(header['DSUN_OBS'])
-            elif "DSUN-OBS" in header:
-                data_dict['dsun-obs'].append(header['DSUN-OBS'])
+        if "DSUN_OBS" in header:
+            data_dict['dsun-obs'].append(header['DSUN_OBS'])
+        elif "DSUN-OBS" in header:
+            data_dict['dsun-obs'].append(header['DSUN-OBS'])
 
-            # data_dict['telescop'].append(f[idx].header['TELESCOP'])
-            if ("DATE-AVG" not in header) & ("DATE_AVG" not in header):
-                warnings.warn("DATE-AVG not found in header, manually compute it.")
-                if header["TELESCOP"] == "SDO/HMI":
-                    warnings.warn("use date-obs for HMI")
-                    cad = header["TRECSTEP"]
-                    unit = header["TRECUNIT"] 
-                    if unit == 'secs':
-                        data_dict['date-avg'].append(astropy.time.Time(header['DATE-OBS']) + 0.5*cad*u.s)
-                    else:
-                        raise NotImplementedError
+        # data_dict['telescop'].append(f[idx].header['TELESCOP'])
+        if ("DATE-AVG" not in header) & ("DATE_AVG" not in header):
+            warnings.warn("DATE-AVG not found in header, manually compute it.")
+            if header["TELESCOP"] == "SDO/HMI":
+                warnings.warn("use date-obs for HMI")
+                cad = header["TRECSTEP"]
+                unit = header["TRECUNIT"] 
+                if unit == 'secs':
+                    data_dict['date-avg'].append(astropy.time.Time(header['DATE-OBS']) + 0.5*cad*u.s)
                 else:
-                    raise NotImplementedError("The code below does not work for SPICE files. Better to raise an error.")
+                    raise NotImplementedError
+            else:
+                raise NotImplementedError("The code below does not work for SPICE files. Better to raise an error.")
 
     data_dict['path'] = np.array(data_dict['path'])
     data_dict['date-avg'] = np.array(data_dict['date-avg'])
