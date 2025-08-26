@@ -52,7 +52,7 @@ class InputFolderManager(FolderManager):
                       "level": dict_input["in_level"]}
 
         keywords_optionals = [
-            "in_suffix", "in_window", "date_start", "date_stop", "name_list_txt",    
+            "in_suffix", "in_window", "date_start", "date_stop", "in_name_list_txt",    
         ]
 
         for kk in keywords_optionals:
