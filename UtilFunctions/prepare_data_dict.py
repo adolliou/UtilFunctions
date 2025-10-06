@@ -4,7 +4,8 @@ from UtilFunctions.folder_manager import ResultFolderManager, InputFolderManager
 
 def prepare_data_dict(files, data_folder,sequence_folder_name, 
                       results_folder=None, 
-                      results_subfolder=None):
+                      results_subfolder=None,
+                      personalize_name=None):
 
     files["data_folder"] = data_folder
     files["sequence_folder_name"] = sequence_folder_name
@@ -14,8 +15,10 @@ def prepare_data_dict(files, data_folder,sequence_folder_name,
         params_results = {
             "results_folder": results_folder,
             "sequence_folder_name": sequence_folder_name,
-            "name_function": results_subfolder
-        }        
+            "name_function": results_subfolder,
+        }
+        if personalize_name is not None:
+            params_results["personalize_name"] = personalize_name
         folderman["res"] = ResultFolderManager(params_results)["res"]
     if "out_folder" in files:
         folderman["out"] = OutputFolderManager(files)["out"]
