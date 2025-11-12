@@ -37,9 +37,11 @@ def create_dict_file(   suffix: str,
     data_dict = {}
 
     if (name_list_txt is not None) and (path_instrument is not None):
+        paths_ = []
         paths = []
         with open(os.path.join(path_instrument, name_list_txt), "r") as f:
-            paths = f.read().splitlines()
+            paths_ = f.read().splitlines()
+        paths = [n for n in paths_ if suffix in n]
 
     elif path_instrument is not None:
         paths = glob(os.path.join(path_instrument, suffix))
