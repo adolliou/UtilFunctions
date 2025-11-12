@@ -41,7 +41,8 @@ def create_dict_file(   suffix: str,
         paths = []
         with open(os.path.join(path_instrument, name_list_txt), "r") as f:
             paths_ = f.read().splitlines()
-        paths = [n for n in paths_ if suffix in n]
+        suffix_ = suffix.remove("*")
+        paths = [n for n in paths_ if suffix_ in n]
 
     elif path_instrument is not None:
         paths = glob(os.path.join(path_instrument, suffix))
