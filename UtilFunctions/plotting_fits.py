@@ -114,7 +114,7 @@ class PlotFits:
         elif stre == 'log':
             norm = ImageNormalize(vmin=vmin, vmax=vmax, stretch=LogStretch(a))
         else:
-            raise ValueError('Bad stre value: either None or sqrt')
+            raise ValueError('Bad stre value: either linear, sqrt or log')
         return norm
     @staticmethod
     def plot_fov_rectangle(data, slc=None, path_save=None, show=True, plot_colorbar=True, norm=None, angle=0):
