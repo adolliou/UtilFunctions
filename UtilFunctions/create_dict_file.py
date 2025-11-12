@@ -9,9 +9,10 @@ import copy
 import warnings
 
 
-def create_dict_file(   suffix: str,
+def create_dict_file(  
                         path_instrument: str,
                         window: int,
+                        suffix: str = None,
                         name_list_txt: str = None,
                         sort_dict: bool=True,
                         verbose: int=1):
@@ -41,8 +42,9 @@ def create_dict_file(   suffix: str,
         paths = []
         with open(os.path.join(path_instrument, name_list_txt), "r") as f:
             paths_ = f.read().splitlines()
-        suffix_ = suffix.replace("*","")
-        paths = [n for n in paths_ if suffix_ in n]
+        if suffix is not None:
+            suffix_ = suffix.replace("*","")
+            paths = [n for n in paths_ if suffix_ in n]
 
     elif path_instrument is not None:
         paths = glob(os.path.join(path_instrument, suffix))
