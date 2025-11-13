@@ -9,13 +9,12 @@ import copy
 import warnings
 
 
-def create_dict_file(  
-                        path_instrument: str,
-                        window: int,
-                        suffix: str = None,
-                        name_list_txt: str = None,
-                        sort_dict: bool=True,
-                        verbose: int=1):
+def create_dict_file(path_instrument: str,
+                    window: int,
+                    suffix: str = None,
+                    name_list_txt: str = None,
+                    sort_dict: bool=True,
+                    verbose: int=1):
     """
     Create a dict_file dictionnary allowing to deal with the paths of the files, and easily access some of their properties :
     - "paths": list of paths to the FITS files. (list)
