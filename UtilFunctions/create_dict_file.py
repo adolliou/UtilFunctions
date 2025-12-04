@@ -77,7 +77,7 @@ def create_dict_file(path_instrument: str,
         # data_dict['telescop'].append(f[idx].header['TELESCOP'])
         if ("DATE-AVG" not in header) & ("DATE_AVG" not in header):
             warnings.warn("DATE-AVG not found in header, manually compute it.")
-            if "SDO" in header["TELESCOP"]:
+            if "SDO/HMI" in header["TELESCOP"]:
                 warnings.warn("use date-obs for HMI")
                 cad = header["TRECSTEP"]
                 unit = header["TRECUNIT"] 
@@ -85,6 +85,9 @@ def create_dict_file(path_instrument: str,
                     data_dict['date-avg'].append(astropy.time.Time(header['DATE-OBS']) + 0.5*cad*u.s)
                 else:
                     raise NotImplementedError
+            elif "SDO" in header["TELESCOP"]:
+                cad = header["EXPTIME"]
+                data_dict['date-avg'].append(astropy.time.Time(header['DATE-OBS']) + 0.5*cad*u.s)                
             else:
                 raise NotImplementedError("The code below does not work for SPICE files. Better to raise an error.")
 
