@@ -77,7 +77,7 @@ def create_dict_file(path_instrument: str,
         # data_dict['telescop'].append(f[idx].header['TELESCOP'])
         if ("DATE-AVG" not in header) & ("DATE_AVG" not in header):
             warnings.warn("DATE-AVG not found in header, manually compute it.")
-            if header["TELESCOP"] == "SDO/HMI":
+            if "SDO" in header["TELESCOP"]:
                 warnings.warn("use date-obs for HMI")
                 cad = header["TRECSTEP"]
                 unit = header["TRECUNIT"] 
