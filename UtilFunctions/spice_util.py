@@ -44,7 +44,8 @@ class SpiceUtil:
             cal_extn_list = [
                 "VARIABLE_KEYWORDS", 
                 "WCSDVARR", 
-                "SATPIXLIST"
+                "SATPIXLIST", 
+                "SPIKPIXLIST",
             ]
             is_in_cal_extn = np.array([n in extn for n in cal_extn_list], dtype="bool")
             if not is_in_cal_extn.any():
