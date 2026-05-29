@@ -298,10 +298,20 @@ class PlotFits:
         latitude1D = np.arange(np.min(ang2pipi(latitude).to(u.deg).value),
                                np.max(ang2pipi(latitude).to(u.deg).value), dlat)
         if (lonlims is not None) or (latlims is not None):
-            longitude1D = longitude1D[(longitude1D > ang2pipi(lonlims[0]).to("deg").value) &
-                                      (longitude1D < ang2pipi(lonlims[1]).to("deg").value)]
-            latitude1D = latitude1D[(latitude1D > ang2pipi(latlims[0]).to("deg").value) &
-                                    (latitude1D < ang2pipi(latlims[1]).to("deg").value)]
+            # longitude1D = longitude1D[(longitude1D > ang2pipi(lonlims[0]).to("deg").value) &
+            #                           (longitude1D < ang2pipi(lonlims[1]).to("deg").value)]
+            # latitude1D = latitude1D[(latitude1D > ang2pipi(latlims[0]).to("deg").value) &
+            #                         (latitude1D < ang2pipi(latlims[1]).to("deg").value)]
+
+            longitude1D = np.arange(ang2pipi(lonlims[0]).to("deg").value,
+                                    ang2pipi(lonlims[1]).to("deg").value, dlon)
+            latitude1D = np.arange(ang2pipi(latlims[0]).to("deg").value,
+                                   ang2pipi(latlims[1]).to("deg").value, dlat)        
+        else:
+            longitude1D = np.arange(np.min(ang2pipi(longitude).to(u.deg).value),
+                                    np.max(ang2pipi(longitude).to(u.deg).value), dlon)
+            latitude1D = np.arange(np.min(ang2pipi(latitude).to(u.deg).value),
+                                np.max(ang2pipi(latitude).to(u.deg).value), dlat)            
         longitude_grid, latitude_grid = np.meshgrid(longitude1D, latitude1D)
 
         longitude_grid = longitude_grid * u.deg
