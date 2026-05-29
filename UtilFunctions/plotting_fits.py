@@ -293,10 +293,10 @@ class PlotFits:
             def ang2pipi(a):
                 return a
 
-        longitude1D = np.arange(np.min(ang2pipi(longitude).to(u.deg).value),
-                                np.max(ang2pipi(longitude).to(u.deg).value), dlon)
-        latitude1D = np.arange(np.min(ang2pipi(latitude).to(u.deg).value),
-                               np.max(ang2pipi(latitude).to(u.deg).value), dlat)
+        # longitude1D = np.arange(np.min(ang2pipi(longitude).to(u.deg).value),
+        #                         np.max(ang2pipi(longitude).to(u.deg).value), dlon)
+        # latitude1D = np.arange(np.min(ang2pipi(latitude).to(u.deg).value),
+        #                        np.max(ang2pipi(latitude).to(u.deg).value), dlat)
         if (lonlims is not None) or (latlims is not None):
             # longitude1D = longitude1D[(longitude1D > ang2pipi(lonlims[0]).to("deg").value) &
             #                           (longitude1D < ang2pipi(lonlims[1]).to("deg").value)]
