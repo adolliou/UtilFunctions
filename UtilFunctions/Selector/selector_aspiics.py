@@ -53,7 +53,7 @@ class SelectorAspiicsMPS(Selector):
         _(?P<time>\d{8}T\d{6})
         _(?P<version>\w{14})
         (?P<miliseconds>\d+)?
-        _(?P<version>V\d{2})
+        _(?P<version>V\d{2})?
        .fits
        (?P<compression>(.gz))?
         ''',
