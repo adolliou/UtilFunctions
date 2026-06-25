@@ -48,7 +48,7 @@ class SelectorAspiicsMPS(Selector):
         self.re_filename = re.compile(
             r'''
         aspiics
-        _(?P<parameter>(wb|p3|p2|p1|he|fe))?
+        _(?P<parameter>(wb|p3|p2|p1|he|fe|bt|pa))?
         _(?P<level>l[123])
         _(?P<version>\w{14})
         _(?P<time>\d{8}T\d{6})
