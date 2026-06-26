@@ -31,7 +31,7 @@ def prepare_data_dict(files, data_folder,sequence_folder_name,
                                          date_start=files["date_start"], date_stop=files["date_stop"])
 
     if "remove_str" in files:
-        dict_files = remove_paths_with_str(dict_file=dict_files, str_to_remove=dict_files["remove_str"])
+        dict_files = remove_paths_with_str(dict_file=dict_files, str_to_remove=files["remove_str"])
 
     if folderman["in"]["keyword_select"] is not None:  
         dict_files = select_values_in_header_keywords(dict_file=dict_files, 
