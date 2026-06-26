@@ -33,6 +33,58 @@ class Selector:
     def get_regex(self):
         pass
 
+
+    def get_url_from_time_interval(self, time1: Time, time2: Time, file_name_str=None):
+        if file_name_str is None:
+            file_name_str = ""
+        if time1 > time2:
+            raise ValueError(f"{time2=} must be greater than {time1=}")
+
+        tref = Time(time1.fits[:10] + 'T00:00:00.000')
+        url_list_all, time_list_all = self._get_list_from_time(time1, return_time_list=True,
+                                                                   file_name_str=file_name_str)
+
+        while tref < time2:
+            tref += 1 * u.day
+            url_list_, time_list_ = self._get_list_from_time(tref, return_time_list=True,
+                                                                    file_name_str=file_name_str)
+            url_list_all += url_list_
+            time_list_all += time_list_
+            if tref >  time2:
+                break
+
+        if len(time_list_all) == 0:
+            raise ValueError("could not find any FITS file")
+        time_list_all = np.array(time_list_all, dtype="object")
+        url_list_all = np.array(url_list_all, dtype="str")
+        select = np.logical_and(time_list_all >= time1, time_list_all <= time2)
+        self.url_list_all = url_list_all[select]
+        self.time_list_all = time_list_all[select]
+        self._order_time()
+
+        return self.url_list_all, self.time_list_all
+
+    def write_txt(self, path_save_txt: str):
+        if (self.url_list_all is None) or (self.time_list_all is None):
+            raise ValueError("No url_list and time_list available")
+        with open(path_save_txt, 'w') as f:
+            for ii, file in enumerate(self.url_list_all):
+                if ii != (len(self.url_list_all) - 1):
+                    f.write(file + "\n")
+                else:
+                    f.write(file)
+
+    def _order_time(self):
+
+        dt_array    = np.array([(n - self.time_list_all[0]).to("s").value for n in self.time_list_all])
+        sort        = np.argsort(dt_array)
+
+        self.url_list_all   = self.url_list_all[sort]
+        self.time_list_all  = self.time_list_all[sort]
+
+
+
+
     def _find_time_from_file(self, fits_file_name):
         m = self.re_filename.match(fits_file_name)
         if m is None:
@@ -64,12 +116,12 @@ class Selector:
 
         if file_name_str is None:
             file_name_str = ""
-        path_basis = self._find_url_from_time(time)
-        paths_list = None
-        if file_name_str is None:
-            paths_list = glob(os.path.join(path_basis, "*.fits"))
-        else:
-            paths_list =  glob(os.path.join(path_basis, file_name_str))
+        path_basis      = self._find_url_from_time(time)
+        paths_list      = None
+        paths_list     =  glob(os.path.join(path_basis, "*"))
+        if file_name_str is not None:
+            paths_list_     = copy.deepcopy(paths_list)
+            paths_list      =  [n for n in paths_list_ if file_name_str in n]
         if (len(paths_list) == 0) and self.verbose > 0:
             warnings.warn("paths_list is empty") 
         if return_time_list:
@@ -96,40 +148,4 @@ class Selector:
         else:
             return url_list
 
-    def get_url_from_time_interval(self, time1: Time, time2: Time, file_name_str=None):
-        if file_name_str is None:
-            file_name_str = ""
-        if time1 > time2:
-            raise ValueError(f"{time2=} must be greater than {time1=}")
 
-        tref = Time(time1.fits[:10] + 'T00:00:00.000')
-        url_list_all, time_list_all = self._get_list_from_time(time1, return_time_list=True,
-                                                                   file_name_str=file_name_str)
-
-        while tref < time2:
-            tref += 1 * u.day
-            url_list_, time_list_ = self._get_list_from_time(tref, return_time_list=True,
-                                                                    file_name_str=file_name_str)
-            url_list_all += url_list_
-            time_list_all += time_list_
-            if tref >  time2:
-                break
-
-        if len(time_list_all) == 0:
-            raise ValueError("could not find any FITS file")
-        time_list_all = np.array(time_list_all, dtype="object")
-        url_list_all = np.array(url_list_all, dtype="str")
-        select = np.logical_and(time_list_all >= time1, time_list_all <= time2)
-        self.url_list_all = url_list_all[select]
-        self.time_list_all = time_list_all[select]
-        return self.url_list_all, self.time_list_all
-
-    def write_txt(self, path_save_txt: str):
-        if (self.url_list_all is None) or (self.time_list_all is None):
-            raise ValueError("No url_list and time_list available")
-        with open(path_save_txt, 'w') as f:
-            for ii, file in enumerate(self.url_list_all):
-                if ii != (len(self.url_list_all) - 1):
-                    f.write(file + "\n")
-                else:
-                    f.write(file)
