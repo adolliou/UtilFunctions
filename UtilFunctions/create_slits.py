@@ -229,8 +229,10 @@ class CreateSlit:
             len_along               = ttx.shape[1]
             index_perp              = np.round((len_along - 1) * perp_cut)
             width_index             = ttx.shape[0]
-            index_perp_lower        = index_perp - np.round(width_index/2)
-            index_perp_upper        = index_perp + np.round(width_index/2)
+            index_perp_lower        = int(index_perp - np.round(width_index/2))
+            index_perp_upper        = int(index_perp + np.round(width_index/2))
+
+
             if (index_perp_lower < 0) or (index_perp_upper > len_along):
                 raise ValueError("The perpendicular slit does not fit into the original slit : choose a lower width.")  
 
