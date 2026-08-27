@@ -246,8 +246,11 @@ class CreateSlit:
             sin         = np.sin(angle_perp)
             ttx_        = copy.deepcopy(ttx)
             tty_        = copy.deepcopy(tty)            
+            x0          = np.nanmean(ttx_, axis=(0, 1))
+            y0          = np.nanmean(tty_, axis=(0, 1))
 
-            ttx         = ttx_ * cos - tty_ * sin
-            tty         = ttx_ * sin + tty_ * cos 
+
+            ttx         = ((ttx_ - x0) * cos - (tty_ - y0) * sin) + x0
+            tty         = ((ttx_ - x0) * sin + (tty_ - y0) * cos) + xy
         
         return ttx, tty
