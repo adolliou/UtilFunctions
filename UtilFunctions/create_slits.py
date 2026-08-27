@@ -239,8 +239,13 @@ class CreateSlit:
             tty             = tty[:, index_perp_lower:index_perp_upper]
 
             # Transpose the matrix to create a perpendicular slit
-            ttx             = ttx.T
-            tty             = tty.T
+            angle_perp  = np.pi/2
+            cos         = np.cos(angle_perp)
+            sin         = np.sin(angle_perp)
+            ttx_        = copy.deepcopy(ttx)
+            tty_        = copy.deepcopy(tty)            
 
+            ttx         = ttx_ * cos - tty_ * sin
+            tty         = ttx_ * sin + tty_ * cos 
         
         return ttx, tty
