@@ -251,6 +251,6 @@ class CreateSlit:
 
 
             ttx         = ((ttx_ - x0) * cos - (tty_ - y0) * sin) + x0
-            tty         = ((ttx_ - x0) * sin + (tty_ - y0) * cos) + x0
+            tty         = ((ttx_ - x0) * sin + (tty_ - y0) * cos) + y0
         
         return ttx, tty
