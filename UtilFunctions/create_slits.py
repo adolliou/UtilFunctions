@@ -69,7 +69,7 @@ class CreateSlit:
         cut_lat             : list = None, 
         angle               : float = None,
         shift_lonlat        : list = None,
-        perp_float          : int = None
+        perp_cut            : int = None
                                 ):
         """Create slits from multiple successive splines. 
 
@@ -85,7 +85,7 @@ class CreateSlit:
                 one can try rotating the slit with an angle so that one of the reprojected axis will be strictly increasing. 
                 The slit is derotated after, so the angle parameter does not impact the slit coordinates.   
             shift_lonlat (_type_, optional): size 2 list [lon, lat] that shifts the slit by a given vector. 
-            perp_float: choose an location along the slit [0.0 < x < 1.0]. Will return the slit perpendicular to the original
+            perp_cut: choose an location along the slit [0.0 < x < 1.0]. Will return the slit perpendicular to the original
             slit at the index corresponding to this location. The width will be the same as the one provided as input.  
 
         Returns:
@@ -223,11 +223,11 @@ class CreateSlit:
             ttx += shift_lonlat[0]
             tty += shift_lonlat[1]
 
-        if perp_float is not None:
-            if (perp_float < 0) or (perp_float > 1):
+        if perp_cut is not None:
+            if (perp_cut < 0) or (perp_cut > 1):
                 raise ValueError("perp_float input should be a float between 0.0 and 1.0")  
             len_along               = ttx.shape[1]
-            index_perp              = np.round((len_along - 1) * perp_float)
+            index_perp              = np.round((len_along - 1) * perp_cut)
             width_index             = ttx.shape[0]
             index_perp_lower        = index_perp - np.round(width_index/2)
             index_perp_upper        = index_perp + np.round(width_index/2)
