@@ -70,7 +70,7 @@ class CreateSlit:
         angle               : float     = None,
         shift_lonlat        : list      = None,
         perp_cut            : int       = None,
-        length_perp         : float     = None,
+        perp_length         : float     = None,
                                 ):
         """Create slits from multiple successive splines. 
 
@@ -88,7 +88,7 @@ class CreateSlit:
             shift_lonlat (_type_, optional): size 2 list [lon, lat] that shifts the slit by a given vector. 
             perp_cut: choose an location along the slit [0.0 < x < 1.0]. Will return the slit perpendicular to the original
             slit at the index corresponding to this location. The width will be the same as the one provided as input.  
-            length_perp: length of the perpendicular cut, different from its width
+            perp_length: length of the perpendicular cut, different from its width
 
         Returns:
             ttx: (axis, vertical) 2D array of the slit points separated by the pixel size
@@ -174,8 +174,8 @@ class CreateSlit:
             ttx_tmp = np.array([ttx + 0.5 * width * norm[:, 0], ttx - 0.5 * width * norm[:, 0]])
             tty_tmp = np.array([tty + 0.5 * width * norm[:, 1], tty - 0.5 * width * norm[:, 1]])
         else: 
-            ttx_tmp = np.array([ttx + 0.5 * length_perp * norm[:, 0], ttx - 0.5 * length_perp * norm[:, 0]])
-            tty_tmp = np.array([tty + 0.5 * length_perp * norm[:, 1], tty - 0.5 * length_perp * norm[:, 1]])
+            ttx_tmp = np.array([ttx + 0.5 * perp_length * norm[:, 0], ttx - 0.5 * perp_length * norm[:, 0]])
+            tty_tmp = np.array([tty + 0.5 * perp_length * norm[:, 1], tty - 0.5 * perp_length * norm[:, 1]])
 
         if is_increasing_lon:
             index_plus = tty_tmp.argmax(axis=0)
