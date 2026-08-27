@@ -65,11 +65,12 @@ class CreateSlit:
         width               : float,
         lon_points          : list,
         lat_points          : list,
-        cut_lon             : list = None,
-        cut_lat             : list = None, 
-        angle               : float = None,
-        shift_lonlat        : list = None,
-        perp_cut            : int = None
+        cut_lon             : list      = None,
+        cut_lat             : list      = None, 
+        angle               : float     = None,
+        shift_lonlat        : list      = None,
+        perp_cut            : int       = None,
+        length_perp         : float     = None,
                                 ):
         """Create slits from multiple successive splines. 
 
@@ -87,6 +88,7 @@ class CreateSlit:
             shift_lonlat (_type_, optional): size 2 list [lon, lat] that shifts the slit by a given vector. 
             perp_cut: choose an location along the slit [0.0 < x < 1.0]. Will return the slit perpendicular to the original
             slit at the index corresponding to this location. The width will be the same as the one provided as input.  
+            length_perp: length of the perpendicular cut, different from its width
 
         Returns:
             ttx: (axis, vertical) 2D array of the slit points separated by the pixel size
@@ -168,9 +170,13 @@ class CreateSlit:
         tty_plus = np.zeros_like(tty)
         ttx_minus = np.zeros_like(ttx)
         tty_minus = np.zeros_like(tty)
+        if perp_cut is None:
+            ttx_tmp = np.array([ttx + 0.5 * width * norm[:, 0], ttx - 0.5 * width * norm[:, 0]])
+            tty_tmp = np.array([tty + 0.5 * width * norm[:, 1], tty - 0.5 * width * norm[:, 1]])
+        else: 
+            ttx_tmp = np.array([ttx + 0.5 * length_perp * norm[:, 0], ttx - 0.5 * length_perp * norm[:, 0]])
+            tty_tmp = np.array([tty + 0.5 * length_perp * norm[:, 1], tty - 0.5 * length_perp * norm[:, 1]])
 
-        ttx_tmp = np.array([ttx + 0.5 * width * norm[:, 0], ttx - 0.5 * width * norm[:, 0]])
-        tty_tmp = np.array([tty + 0.5 * width * norm[:, 1], tty - 0.5 * width * norm[:, 1]])
         if is_increasing_lon:
             index_plus = tty_tmp.argmax(axis=0)
             index_minus = tty_tmp.argmin(axis=0)
@@ -228,7 +234,7 @@ class CreateSlit:
                 raise ValueError("perp_float input should be a float between 0.0 and 1.0")  
             len_along               = ttx.shape[1]
             index_perp              = np.round((len_along - 1) * perp_cut)
-            width_index             = ttx.shape[0]
+            width_index             = int(width/cdelt)
             index_perp_lower        = int(index_perp - np.round(width_index/2))
             index_perp_upper        = int(index_perp + np.round(width_index/2))
 
