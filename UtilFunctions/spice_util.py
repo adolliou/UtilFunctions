@@ -111,7 +111,7 @@ class SpiceUtil:
             return longitude_small, latitude_small, utc_small
 
     @staticmethod
-    def extract_spice_coordinates_l2(hdr, return_type='xy'):
+    def extract_spice_coordinates_l2(hdr, return_type='xy', sunpy=False):
         w = WCS(hdr)
         w_xyt = w.dropaxis(2)
 
@@ -122,8 +122,12 @@ class SpiceUtil:
             idx_lat = np.where(np.array(w_xy.wcs.ctype, dtype="str") == "HPLT-TAN")[0][0]
             x_small, y_small = np.meshgrid(np.arange(w_xy.pixel_shape[idx_lon]),
                                            np.arange(w_xy.pixel_shape[idx_lat]), )
-            longitude_small, latitude_small = w_xy.pixel_to_world(x_small, y_small)
-            return longitude_small, latitude_small
+            if sunpy:
+                coords_small = w_xy.pixel_to_world(x_small, y_small)
+                return coords_small
+            else:
+                longitude_small, latitude_small = w_xy.pixel_to_world(x_small, y_small)
+                return longitude_small, latitude_small
         elif return_type == 'xyt':
             idx_lon = np.where(np.array(w_xyt.wcs.ctype, dtype="str") == "HPLN-TAN")[0][0]
             idx_lat = np.where(np.array(w_xyt.wcs.ctype, dtype="str") == "HPLT-TAN")[0][0]
@@ -131,8 +135,13 @@ class SpiceUtil:
             x_small, y_small, z_small = np.meshgrid(np.arange(w_xyt.pixel_shape[idx_lon]),
                                                     np.arange(w_xyt.pixel_shape[idx_lat]),
                                                     np.arange(w_xyt.pixel_shape[idx_utc]), )
-            longitude_small, latitude_small, utc_small = w_xyt.pixel_to_world(x_small, y_small, z_small)
-            return longitude_small, latitude_small, utc_small
+            if sunpy:
+                coords_small, utc_small = w_xyt.pixel_to_world(x_small, y_small, z_small)
+                return coords_small, utc_small
+
+            else:
+                longitude_small, latitude_small, utc_small = w_xyt.pixel_to_world(x_small, y_small, z_small)
+                return longitude_small, latitude_small, utc_small
 
     @staticmethod
     def recenter_crpix_in_header_L2(hdr):
