@@ -251,6 +251,9 @@ class CreateSlit:
             ttx             = ttx[:, index_perp_lower:index_perp_upper]
             tty             = tty[:, index_perp_lower:index_perp_upper]
 
+            ttx             = ttx.T
+            tty             = tty.T
+
             # Transpose the matrix to create a perpendicular slit
             # angle_perp  = np.pi/2
             # cos         = np.cos(angle_perp)
