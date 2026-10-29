@@ -54,7 +54,7 @@ class Selector:
                 break
 
         if len(time_list_all) == 0:
-            raise ValueError("could not find any FITS file")
+            raise ValueError(f"could not find any FITS file in {self._find_url_from_time(time1)}")
         time_list_all = np.array(time_list_all, dtype="object")
         url_list_all = np.array(url_list_all, dtype="str")
         select = np.logical_and(time_list_all >= time1, time_list_all <= time2)
