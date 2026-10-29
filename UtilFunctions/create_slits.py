@@ -251,8 +251,8 @@ class CreateSlit:
             ttx             = ttx[:, index_perp_lower:index_perp_upper]
             tty             = tty[:, index_perp_lower:index_perp_upper]
 
-            ttx             = ttx.T
-            tty             = tty.T
+            ttx             = np.swapaxis(ttx, axis1=0, axis2=1)
+            tty             = np.swapaxis(tty, axis1=0, axis2=1)
 
             # Transpose the matrix to create a perpendicular slit
             # angle_perp  = np.pi/2
