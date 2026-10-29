@@ -252,16 +252,16 @@ class CreateSlit:
             tty             = tty[:, index_perp_lower:index_perp_upper]
 
             # Transpose the matrix to create a perpendicular slit
-            angle_perp  = np.pi/2
-            cos         = np.cos(angle_perp)
-            sin         = np.sin(angle_perp)
-            ttx_        = copy.deepcopy(ttx)
-            tty_        = copy.deepcopy(tty)            
-            x0          = np.nanmean(ttx_, axis=(0, 1))
-            y0          = np.nanmean(tty_, axis=(0, 1))
+            # angle_perp  = np.pi/2
+            # cos         = np.cos(angle_perp)
+            # sin         = np.sin(angle_perp)
+            # ttx_        = copy.deepcopy(ttx)
+            # tty_        = copy.deepcopy(tty)            
+            # x0          = np.nanmean(ttx_, axis=(0, 1))
+            # y0          = np.nanmean(tty_, axis=(0, 1))
 
 
-            ttx         = ((ttx_ - x0) * cos - (tty_ - y0) * sin) + x0
-            tty         = ((ttx_ - x0) * sin + (tty_ - y0) * cos) + y0
+            # ttx         = ((ttx_ - x0) * cos - (tty_ - y0) * sin) + x0
+            # tty         = ((ttx_ - x0) * sin + (tty_ - y0) * cos) + y0
         
         return ttx, tty
