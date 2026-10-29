@@ -238,9 +238,9 @@ class CreateSlit:
                 raise ValueError("perp_float input should be a float between 0.0 and 1.0")  
             len_along               = ttx.shape[1]
             index_perp              = np.round((len_along - 1) * perp_cut)
-            width_index             = int(width/cdelt)
-            index_perp_lower        = int(index_perp - 0.5 * np.round(width_index/2))
-            index_perp_upper        = int(index_perp + 0.5 * np.round(width_index/2))
+            half_width_index        = int(round(width*0.5/cdelt))
+            index_perp_lower        = int(index_perp - np.round(half_width_index))
+            index_perp_upper        = int(index_perp + np.round(half_width_index))
 
 
             if (index_perp_lower < 0) or (index_perp_upper > len_along):
