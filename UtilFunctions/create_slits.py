@@ -171,11 +171,15 @@ class CreateSlit:
         ttx_minus = np.zeros_like(ttx)
         tty_minus = np.zeros_like(tty)
         if perp_cut is None:
-            ttx_tmp = np.array([ttx + 0.5 * width * norm[:, 0], ttx - 0.5 * width * norm[:, 0]])
-            tty_tmp = np.array([tty + 0.5 * width * norm[:, 1], tty - 0.5 * width * norm[:, 1]])
+            ttx_tmp = np.array([ttx + 0.5 * width * norm[:, 0],
+                     ttx - 0.5 * width * norm[:, 0]])
+            tty_tmp = np.array([tty + 0.5 * width * norm[:, 1],
+                     tty - 0.5 * width * norm[:, 1]])
         else: 
-            ttx_tmp = np.array([ttx + 0.5 * perp_length * norm[:, 0], ttx - 0.5 * perp_length * norm[:, 0]])
-            tty_tmp = np.array([tty + 0.5 * perp_length * norm[:, 1], tty - 0.5 * perp_length * norm[:, 1]])
+            ttx_tmp = np.array([ttx + 0.5 * perp_length * norm[:, 0],
+                     ttx - 0.5 * perp_length * norm[:, 0]])
+            tty_tmp = np.array([tty + 0.5 * perp_length * norm[:, 1],
+                     tty - 0.5 * perp_length * norm[:, 1]])
 
         if is_increasing_lon:
             index_plus = tty_tmp.argmax(axis=0)
