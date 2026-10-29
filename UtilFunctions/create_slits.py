@@ -239,8 +239,8 @@ class CreateSlit:
             len_along               = ttx.shape[1]
             index_perp              = np.round((len_along - 1) * perp_cut)
             width_index             = int(width/cdelt)
-            index_perp_lower        = int(index_perp - np.round(width_index/2))
-            index_perp_upper        = int(index_perp + np.round(width_index/2))
+            index_perp_lower        = int(index_perp - 0.5 * np.round(width_index/2))
+            index_perp_upper        = int(index_perp + 0.5 * np.round(width_index/2))
 
 
             if (index_perp_lower < 0) or (index_perp_upper > len_along):
