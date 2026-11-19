@@ -87,7 +87,9 @@ def create_dict_file(path_instrument: str,
                     raise NotImplementedError
             elif "SDO" in header["TELESCOP"]:
                 cad = header["EXPTIME"]
-                data_dict['date-avg'].append(astropy.time.Time(header['DATE-OBS']) + 0.5*cad*u.s)                
+                data_dict['date-avg'].append(astropy.time.Time(header['DATE-OBS']) + 0.5*cad*u.s)            
+            elif "IRIS" in header["TELESCOP"]:
+                data_dict['date-avg'].append(astropy.time.Time(header['STARTOBS']) + 0.5*(astropy.time.Time(header["DATE_END"]) - astropy.time.Time(header['STARTOBS'])))            
             else:
                 raise NotImplementedError("The code below does not work for SPICE files. Better to raise an error.")
 
