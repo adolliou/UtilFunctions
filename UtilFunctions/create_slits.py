@@ -170,12 +170,16 @@ class CreateSlit:
         tty_plus = np.zeros_like(tty)
         ttx_minus = np.zeros_like(ttx)
         tty_minus = np.zeros_like(tty)
-        # if perp_cut is None:
-        ttx_tmp = np.array([ttx + 0.5 * width * norm[:, 0], ttx - 0.5 * width * norm[:, 0]])
-        tty_tmp = np.array([tty + 0.5 * width * norm[:, 1], tty - 0.5 * width * norm[:, 1]])
-        # else: 
-        #     ttx_tmp = np.array([ttx + 0.5 * perp_length * norm[:, 0], ttx - 0.5 * perp_length * norm[:, 0]])
-        #     tty_tmp = np.array([tty + 0.5 * perp_length * norm[:, 1], tty - 0.5 * perp_length * norm[:, 1]])
+        if perp_cut is None:
+            ttx_tmp = np.array([ttx + 0.5 * width * norm[:, 0],
+                     ttx - 0.5 * width * norm[:, 0]])
+            tty_tmp = np.array([tty + 0.5 * width * norm[:, 1],
+                     tty - 0.5 * width * norm[:, 1]])
+        else: 
+            ttx_tmp = np.array([ttx + 0.5 * perp_length * norm[:, 0],
+                     ttx - 0.5 * perp_length * norm[:, 0]])
+            tty_tmp = np.array([tty + 0.5 * perp_length * norm[:, 1],
+                     tty - 0.5 * perp_length * norm[:, 1]])
 
         if is_increasing_lon:
             index_plus = tty_tmp.argmax(axis=0)
@@ -234,29 +238,33 @@ class CreateSlit:
                 raise ValueError("perp_float input should be a float between 0.0 and 1.0")  
             len_along               = ttx.shape[1]
             index_perp              = np.round((len_along - 1) * perp_cut)
-            width_index             = int(perp_length/cdelt)
-            index_perp_lower        = int(index_perp - np.round(width_index/2))
-            index_perp_upper        = int(index_perp + np.round(width_index/2))
+            half_width_index        = int(round(width*0.5/cdelt))
+            index_perp_lower        = int(index_perp - np.round(half_width_index))
+            index_perp_upper        = int(index_perp + np.round(half_width_index))
 
 
             if (index_perp_lower < 0) or (index_perp_upper > len_along):
-                raise ValueError("The perpendicular slit does not fit into the original slit : choose a lower width.")  
+                raise ValueError(("The perpendicular slit does not fit into"
+                 "the original slit : choose a lower width."))  
 
             # Cut the original slit so that the width of the final perpendicular is the same as the original slit.  
             ttx             = ttx[:, index_perp_lower:index_perp_upper]
             tty             = tty[:, index_perp_lower:index_perp_upper]
 
+            ttx             = np.swapaxes(ttx, axis1=0, axis2=1)
+            tty             = np.swapaxes(tty, axis1=0, axis2=1)
+
             # Transpose the matrix to create a perpendicular slit
-            angle_perp  = np.pi/2
-            cos         = np.cos(angle_perp)
-            sin         = np.sin(angle_perp)
-            ttx_        = copy.deepcopy(ttx)
-            tty_        = copy.deepcopy(tty)            
-            x0          = np.nanmean(ttx_, axis=(0, 1))
-            y0          = np.nanmean(tty_, axis=(0, 1))
+            # angle_perp  = np.pi/2
+            # cos         = np.cos(angle_perp)
+            # sin         = np.sin(angle_perp)
+            # ttx_        = copy.deepcopy(ttx)
+            # tty_        = copy.deepcopy(tty)            
+            # x0          = np.nanmean(ttx_, axis=(0, 1))
+            # y0          = np.nanmean(tty_, axis=(0, 1))
 
 
-            ttx         = ((ttx_ - x0) * cos - (tty_ - y0) * sin) + x0
-            tty         = ((ttx_ - x0) * sin + (tty_ - y0) * cos) + y0
+            # ttx         = ((ttx_ - x0) * cos - (tty_ - y0) * sin) + x0
+            # tty         = ((ttx_ - x0) * sin + (tty_ - y0) * cos) + y0
         
         return ttx, tty
